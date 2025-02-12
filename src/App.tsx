@@ -1,8 +1,8 @@
 import {ChakraProvider} from "@chakra-ui/react";
 import {system} from "./theme/theme.ts";
-import {Home} from "./components/Home.tsx";
-import {ColorModeProvider} from "./components/ui/color-mode.tsx";
-import {SettingsContextProvider} from "./context/SettingsContextProvider.tsx";
+import {SettingsContextProvider} from "@/context";
+import {ColorModeProvider} from "@/components/ui";
+import {Home} from "@/components/Play";
 
 export function App() {
     return (

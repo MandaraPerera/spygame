@@ -1,12 +1,12 @@
-export type {CloseButtonProps} from "./close-button";
-export type {ColorModeProviderProps, ColorMode, UseColorModeReturn} from "./color-mode";
+export type {CloseButtonProps} from "./close-button.tsx";
+export type {ColorModeProviderProps, ColorMode, UseColorModeReturn} from "./color-mode.tsx";
 
-export {Provider} from "./provider";
-export {toaster, Toaster} from "./toaster";
-export {CloseButton} from "./close-button";
+export {Provider} from "./provider.tsx";
+export {toaster, Toaster} from "./toaster.tsx";
+export {CloseButton} from "./close-button.tsx";
 export {
     ColorModeProvider, useColorMode, useColorModeValue, ColorModeIcon, ColorModeButton, LightMode, DarkMode
-} from "./color-mode";
+} from "./color-mode.tsx";
 export {
     DialogContent,
     DialogCloseTrigger,

@@ -1,2 +1,2 @@
-export {SettingsContext} from "./SettingsContext";
-export {SettingsContextProvider} from "./SettingsContextProvider";
+export {SettingsContext} from "./SettingsContext.ts";
+export {SettingsContextProvider} from "./SettingsContextProvider.tsx";

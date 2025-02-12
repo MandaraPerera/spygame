@@ -1,3 +1,3 @@
-export {SelectCategories} from "./SelectCategories";
-export {SelectPlayers} from "./SelectPlayers";
-export {SelectSpies} from "./SelectSpies";
+export {SelectCategories} from "./SelectCategories.tsx";
+export {SelectPlayers} from "./SelectPlayers.tsx";
+export {SelectSpies} from "./SelectSpies.tsx";

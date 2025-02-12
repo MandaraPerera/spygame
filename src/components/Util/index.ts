@@ -1,2 +1,2 @@
-export {Loading} from "./Loading";
-export {Error} from "./Error";
+export {Loading} from "./Loading.tsx";
+export {Error} from "./Error.tsx";
