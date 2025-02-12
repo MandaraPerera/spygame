@@ -1,3 +1,4 @@
+import {useContext, useState} from "react";
 import {
     AspectRatio,
     Button,
@@ -11,19 +12,19 @@ import {
     useDialog,
     VStack
 } from "@chakra-ui/react";
-import {useContext, useState} from "react";
 import {MdGroups, MdOutlineSubject, MdSettings} from "react-icons/md";
 import {GiSpy} from "react-icons/gi";
-import {SettingsContext} from "../context/SettingsContext.ts";
-import {SelectPlayers} from "./Configuration/SelectPlayers.tsx";
-import {Toaster} from "./ui/toaster.tsx";
+import {Toaster} from "@/components/ui";
+import {SelectPlayers, SelectSpies} from "@/components/Configuration";
+import {SettingsContext} from "@/context";
 
 export function Home() {
     const {players} = useContext(SettingsContext);
-    const [amountOfSpies] = useState<number>(1);
+    const [amountOfSpies, setAmountOfSpies] = useState<number>(1);
     const [categories] = useState<string[]>([]);
 
     const selectPlayersDialog = useDialog();
+    const selectSpiesDialog = useDialog();
 
     return (
         <>
@@ -31,8 +32,8 @@ export function Home() {
                 <VStack w="80%" maxW="500px">
                     <Heading size="3xl" mb={16}>Better Spy</Heading>
                     <Spacer/>
-                    <SimpleGrid columns={{base: 2, md: 1}} gap={4} w="100%">
-                        <AspectRatio ratio={{base: 1, md: 10}}>
+                    <SimpleGrid columns={2} gap={4} w="100%">
+                        <AspectRatio ratio={1}>
                             <Button onClick={() => selectPlayersDialog.setOpen(true)}>
                                 <VStack>
                                     <HStack>
@@ -47,8 +48,9 @@ export function Home() {
                             </Button>
                         </AspectRatio>
 
-                        <AspectRatio ratio={{base: 1, md: 10}}>
+                        <AspectRatio ratio={1}>
                             <Button onClick={() => {
+                                selectSpiesDialog.setOpen(true)
                             }}>
                                 <VStack>
                                     <HStack>
@@ -63,7 +65,7 @@ export function Home() {
                             </Button>
                         </AspectRatio>
 
-                        <AspectRatio ratio={{base: 1, md: 10}}>
+                        <AspectRatio ratio={1}>
                             <Button onClick={() => {
                             }}>
                                 <VStack>
@@ -79,7 +81,7 @@ export function Home() {
                             </Button>
                         </AspectRatio>
 
-                        <AspectRatio ratio={{base: 1, md: 10}}>
+                        <AspectRatio ratio={1}>
                             <Button onClick={() => {
                             }}>
                                 <VStack>
@@ -106,7 +108,12 @@ export function Home() {
                     </Button>
                 </VStack>
             </Center>
-            <SelectPlayers dialog={selectPlayersDialog}/>
+            <SelectPlayers dialog={selectPlayersDialog}
+                           amountOfSpies={amountOfSpies}
+                           setAmountOfSpies={setAmountOfSpies}/>
+            <SelectSpies dialog={selectSpiesDialog}
+                         amountOfSpies={amountOfSpies}
+                         setAmountOfSpies={setAmountOfSpies}/>
             <Toaster/>
         </>
     )

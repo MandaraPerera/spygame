@@ -1,4 +1,4 @@
-import {DialogBackdrop, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "../ui/dialog.tsx";
+import {useContext, useEffect, useState} from "react";
 import {
     Button,
     Center,
@@ -11,15 +11,24 @@ import {
     UseDialogReturn,
     VStack
 } from "@chakra-ui/react";
-import {SettingsContext} from "../../context/SettingsContext.ts";
-import {useContext, useEffect, useState} from "react";
-import {toaster} from "../ui/toaster.tsx";
+import {
+    DialogBackdrop,
+    DialogBody,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    toaster
+} from "@/components/ui";
+import {SettingsContext} from "@/context";
 
 interface SelectPlayersProps {
     dialog: UseDialogReturn;
+    amountOfSpies: number;
+    setAmountOfSpies: (amount: number) => void;
 }
 
-export function SelectPlayers({dialog}: SelectPlayersProps) {
+export function SelectPlayers({dialog, amountOfSpies, setAmountOfSpies}: SelectPlayersProps) {
     const {players, setPlayers} = useContext(SettingsContext);
     const [playersLocal, setPlayersLocal] = useState<string[]>([...players])
 
@@ -47,6 +56,10 @@ export function SelectPlayers({dialog}: SelectPlayersProps) {
             return;
         }
 
+        if (amountOfSpies > Math.floor(playersLocal.length / 2)) {
+            setAmountOfSpies(Math.floor(playersLocal.length / 2));
+        }
+
         setPlayers(playersLocal);
         dialog.setOpen(false);
     }
@@ -54,7 +67,7 @@ export function SelectPlayers({dialog}: SelectPlayersProps) {
     const incrementAmountOfPlayers = () => {
         if (playersLocal.length >= 10) {
             toaster.create({
-                title: "Maximum of 10 players",
+                title: "Maximum number of players is 10.",
                 type: "error",
                 duration: 3000
             })
@@ -66,7 +79,7 @@ export function SelectPlayers({dialog}: SelectPlayersProps) {
     const decrementAmountOfPlayers = () => {
         if (playersLocal.length <= 3) {
             toaster.create({
-                title: "Minimum of 3 players",
+                title: "Minimum number of players is 3.",
                 type: "error",
                 duration: 3000
             })
