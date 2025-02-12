@@ -1,16 +1,22 @@
-import {system} from "./theme/theme.ts";
 import {ChakraProvider} from "@chakra-ui/react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {Home} from "./components/Home/Home.tsx";
+import {system} from "./theme/theme.ts";
+import {Home} from "./components/Home.tsx";
+import {ColorModeProvider} from "./components/ui/color-mode.tsx";
+import {Categories} from "./components/Categories.tsx";
 
 export function App() {
     return (
         <ChakraProvider value={system}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<Home/>}/>
-                </Routes>
-            </BrowserRouter>
+            <ColorModeProvider>
+
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/categories" element={<Categories/>}/>
+                    </Routes>
+                </BrowserRouter>
+            </ColorModeProvider>
         </ChakraProvider>
     )
 }
