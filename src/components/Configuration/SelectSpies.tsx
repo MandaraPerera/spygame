@@ -22,13 +22,11 @@ import {SettingsContext} from "@/context";
 
 interface SelectSpiesProps {
     dialog: UseDialogReturn;
-    amountOfSpies: number;
-    setAmountOfSpies: (amount: number) => void;
 }
 
-export function SelectSpies({dialog, amountOfSpies, setAmountOfSpies}: SelectSpiesProps) {
+export function SelectSpies({dialog}: SelectSpiesProps) {
+    const {players, amountOfSpies, setAmountOfSpies} = useContext(SettingsContext);
     const [amountOfSpiesLocal, setAmountOfSpiesLocal] = useState<number>(amountOfSpies)
-    const {players} = useContext(SettingsContext);
 
     useEffect(() => {
         if (dialog.open) {

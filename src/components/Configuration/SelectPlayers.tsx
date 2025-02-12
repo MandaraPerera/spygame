@@ -24,12 +24,10 @@ import {SettingsContext} from "@/context";
 
 interface SelectPlayersProps {
     dialog: UseDialogReturn;
-    amountOfSpies: number;
-    setAmountOfSpies: (amount: number) => void;
 }
 
-export function SelectPlayers({dialog, amountOfSpies, setAmountOfSpies}: SelectPlayersProps) {
-    const {players, setPlayers} = useContext(SettingsContext);
+export function SelectPlayers({dialog}: SelectPlayersProps) {
+    const {players, setPlayers, amountOfSpies, setAmountOfSpies} = useContext(SettingsContext);
     const [playersLocal, setPlayersLocal] = useState<string[]>([...players])
 
     useEffect(() => {

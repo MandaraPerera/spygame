@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {
     AspectRatio,
     Button,
@@ -15,16 +15,26 @@ import {
 import {MdGroups, MdOutlineSubject, MdSettings} from "react-icons/md";
 import {GiSpy} from "react-icons/gi";
 import {Toaster} from "@/components/ui";
-import {SelectPlayers, SelectSpies} from "@/components/Configuration";
+import {SelectCategories, SelectPlayers, SelectSpies} from "@/components/Configuration";
 import {SettingsContext} from "@/context";
+import {useCategories} from "@/hooks";
+import {Error, Loading} from "@/components/Util";
 
 export function Home() {
-    const {players} = useContext(SettingsContext);
-    const [amountOfSpies, setAmountOfSpies] = useState<number>(1);
-    const [categories] = useState<string[]>([]);
+    const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext);
+    const {data: categories, isLoading, isError} = useCategories();
 
     const selectPlayersDialog = useDialog();
     const selectSpiesDialog = useDialog();
+    const selectCategoriesDialog = useDialog();
+
+    if (isLoading) {
+        return <Loading text={"Categories are being loaded."}/>
+    }
+
+    if (isError || !categories) {
+        return <Error text={"Error loading categories"}/>
+    }
 
     return (
         <>
@@ -67,6 +77,7 @@ export function Home() {
 
                         <AspectRatio ratio={1}>
                             <Button onClick={() => {
+                                selectCategoriesDialog.setOpen(true)
                             }}>
                                 <VStack>
                                     <HStack>
@@ -74,7 +85,7 @@ export function Home() {
                                             <MdOutlineSubject/>
                                         </Icon>
                                         <Spacer/>
-                                        <Heading size="3xl">{categories.length}</Heading>
+                                        <Heading size="3xl">{selectedCategories.length}</Heading>
                                     </HStack>
                                     <Text textStyle="xl">Categories</Text>
                                 </VStack>
@@ -108,12 +119,9 @@ export function Home() {
                     </Button>
                 </VStack>
             </Center>
-            <SelectPlayers dialog={selectPlayersDialog}
-                           amountOfSpies={amountOfSpies}
-                           setAmountOfSpies={setAmountOfSpies}/>
-            <SelectSpies dialog={selectSpiesDialog}
-                         amountOfSpies={amountOfSpies}
-                         setAmountOfSpies={setAmountOfSpies}/>
+            <SelectPlayers dialog={selectPlayersDialog}/>
+            <SelectSpies dialog={selectSpiesDialog}/>
+            <SelectCategories dialog={selectCategoriesDialog} categories={categories}/>
             <Toaster/>
         </>
     )

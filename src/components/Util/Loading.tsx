@@ -11,7 +11,8 @@ export function Loading({text}: LoadingProps) {
             top="50%"
             left="50%"
             transform="translate(-50%, -50%)"
-            maxW="90%"
+            w="90%"
+            maxW="500px"
         >
             <Alert.Root status="info">
                 <Alert.Indicator>
