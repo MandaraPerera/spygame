@@ -2,22 +2,31 @@ import {AspectRatio, Button, Center, Heading, Spacer, Text, VStack} from "@chakr
 import {useContext, useEffect, useState} from "react";
 import {SettingsContext} from "@/context";
 import {useNavigate} from "react-router-dom";
+import {useTerms} from "@/hooks/useTerms.ts";
+import {Error, Loading} from "@/components/Util";
+import {Term} from "@/model";
 
 export function Play() {
-    const navigate = useNavigate()
-    const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext);
     const [currentPlayer, setCurrentPlayer] = useState<number>(0)
     const [spy, setSpy] = useState<number>()
     const [showingRole, setShowingRole] = useState<boolean>(false)
     const [term, setTerm] = useState<string>()
+    const navigate = useNavigate()
+
+    const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext);
+    const categoryIds = selectedCategories.map(category => category.id)
+    const {data: terms, isLoading, isError} = useTerms(categoryIds)
 
     useEffect(() => {
         setSpy(Math.floor(Math.random() * players.length))
     }, [players.length]);
 
     useEffect(() => {
-        setTerm("term")//todo
-    }, []);
+        if (terms && terms.length > 0) {
+            const term = terms[Math.floor(Math.random() * terms.length)] as Term
+            setTerm(term.value)
+        }
+    }, [terms]);
 
     const move = () => {
         if (currentPlayer === players.length - 1 && showingRole) {
@@ -27,13 +36,19 @@ export function Play() {
             if (showingRole) {
                 setCurrentPlayer(currentPlayer + 1)
             }
-            console.log("currentPlayer: " + currentPlayer)
-            console.log("showingRole:" + showingRole)
         }
     }
 
     const exit = () => {
         navigate("/")
+    }
+
+    if (isLoading) {
+        return <Loading text={"Terms are being loaded."}/>
+    }
+
+    if (isError || !terms) {
+        return <Error text={"Error loading terms"}/>
     }
 
     return (
