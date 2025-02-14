@@ -70,7 +70,7 @@ export function SelectPlayers({dialog}: SelectPlayersProps) {
                 duration: 3000
             })
         } else {
-            setPlayersLocal([...playersLocal, `Player${playersLocal.length + 1}`])
+            setPlayersLocal([...playersLocal, `Player ${playersLocal.length + 1}`])
         }
     }
 

@@ -14,19 +14,35 @@ import {
 } from "@chakra-ui/react";
 import {MdGroups, MdOutlineSubject, MdSettings} from "react-icons/md";
 import {GiSpy} from "react-icons/gi";
-import {Toaster} from "@/components/ui";
-import {SelectCategories, SelectPlayers, SelectSpies} from "@/components/Configuration";
+import {toaster, Toaster} from "@/components/ui";
+import {SelectCategories, SelectPlayers, SelectSettings, SelectSpies} from "@/components/Configuration";
 import {SettingsContext} from "@/context";
 import {useCategories} from "@/hooks";
 import {Error, Loading} from "@/components/Util";
+import {useNavigate} from "react-router-dom";
 
 export function Home() {
     const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext);
     const {data: categories, isLoading, isError} = useCategories();
+    const navigate = useNavigate();
 
     const selectPlayersDialog = useDialog();
     const selectSpiesDialog = useDialog();
     const selectCategoriesDialog = useDialog();
+    const selectSettingsDialog = useDialog();
+
+    const play = () => {
+        if (selectedCategories.length === 0) {
+            toaster.create({
+                title: "Select at least one category",
+                type: "error",
+                duration: 3000
+            })
+            return
+        } else {
+            navigate("/play")
+        }
+    }
 
     if (isLoading) {
         return <Loading text={"Categories are being loaded."}/>
@@ -94,6 +110,7 @@ export function Home() {
 
                         <AspectRatio ratio={1}>
                             <Button onClick={() => {
+                                selectSettingsDialog.setOpen(true)
                             }}>
                                 <VStack>
                                     <HStack>
@@ -114,6 +131,7 @@ export function Home() {
                         left="50%"
                         transform="translateX(-50%)"
                         bottom="75px"
+                        onClick={() => play()}
                     >
                         PLAY
                     </Button>
@@ -122,6 +140,7 @@ export function Home() {
             <SelectPlayers dialog={selectPlayersDialog}/>
             <SelectSpies dialog={selectSpiesDialog}/>
             <SelectCategories dialog={selectCategoriesDialog} categories={categories}/>
+            <SelectSettings dialog={selectSettingsDialog}/>
             <Toaster/>
         </>
     )

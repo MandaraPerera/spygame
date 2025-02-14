@@ -1,2 +1,2 @@
-export type {Category} from "./Category.ts";
-export type {Term} from "./Term.ts";
+export type {Category, CategoryData} from "./Category.ts";
+export type {Term, TermData} from "./Term.ts";
