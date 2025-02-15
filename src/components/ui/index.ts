@@ -20,3 +20,4 @@ export {
     DialogTrigger,
     DialogActionTrigger
 } from "./dialog.tsx"
+export {PasswordInput, PasswordStrengthMeter} from "./password-input.tsx"
