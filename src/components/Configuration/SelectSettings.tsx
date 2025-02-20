@@ -1,4 +1,14 @@
-import {Button, Center, DialogRootProvider, SimpleGrid, Text, UseDialogReturn, VStack} from "@chakra-ui/react";
+import {
+    Button,
+    Center,
+    DialogRootProvider,
+    Heading,
+    SimpleGrid,
+    Spacer,
+    Text,
+    UseDialogReturn,
+    VStack
+} from "@chakra-ui/react";
 import {DialogBackdrop, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui";
 import {seedFirestore} from "@/services/seedFirestore.ts";
 import {useNavigate} from "react-router-dom";
@@ -20,12 +30,20 @@ export function SelectSettings({dialog}: SelectSettingsProps) {
         dialog.setOpen(false)
     }
 
-    const handleSignIn = () => {
-        navigate("/login")
-    }
-
     const handleSignOut = async () => {
         await signOut()
+    }
+
+    const handleSuggest = () => {
+        navigate("/suggest")
+    }
+
+    const handleManageData = () => {
+        navigate("/manage-data")
+    }
+
+    const handleLogin = () => {
+        navigate("/login")
     }
 
     if (isError) {
@@ -46,26 +64,37 @@ export function SelectSettings({dialog}: SelectSettingsProps) {
                     <VStack>
                         {user ? (
                             <>
-                                <Text>{user.email}</Text>
+                                <Heading size="md" alignSelf="start">Categories & Terms</Heading>
+                                <Button
+                                    w="100%"
+                                    onClick={() => handleManageData()}
+                                >Manage Data</Button>
+                                <Button
+                                    w="100%"
+                                    onClick={() => {
+                                        seedFirestore().then(r => r)
+                                    }}
+                                >(Reset Data)</Button>
+                                <Spacer/>
+                                <Heading size="md" alignSelf="start">Account</Heading>
+                                <Text alignSelf="start">{user.email}</Text>
                                 <Button
                                     w="100%"
                                     loading={isLoading}
                                     loadingText="Signing out..."
                                     onClick={() => handleSignOut()}
                                 >Sign Out</Button>
-                                <Button
-                                    w="100%"
-                                    onClick={() => {
-                                        seedFirestore().then(r => r)
-                                    }}
-                                >Seed Data</Button>
                             </>
                         ) : (
                             <>
                                 <Button
                                     w="100%"
-                                    onClick={() => handleSignIn()}
-                                >Sign In</Button>
+                                    onClick={() => handleSuggest()}
+                                >Suggest category or word</Button>
+                                <Button
+                                    w="100%"
+                                    onClick={() => handleLogin()}
+                                >Admin login</Button>
                             </>
                         )}
                     </VStack>

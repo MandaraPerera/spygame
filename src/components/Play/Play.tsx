@@ -1,4 +1,4 @@
-import {AspectRatio, Button, Center, Heading, Spacer, Text, VStack} from "@chakra-ui/react";
+import {AspectRatio, Button, Heading, Spacer, Text} from "@chakra-ui/react";
 import {useContext, useEffect, useState} from "react";
 import {SettingsContext} from "@/context";
 import {useNavigate} from "react-router-dom";
@@ -8,7 +8,7 @@ import {Term} from "@/model";
 
 export function Play() {
     const [currentPlayer, setCurrentPlayer] = useState<number>(0)
-    const [spy, setSpy] = useState<number>()
+    const [spies, setSpies] = useState<number[]>([])
     const [showingRole, setShowingRole] = useState<boolean>(false)
     const [term, setTerm] = useState<string>()
     const navigate = useNavigate()
@@ -18,8 +18,15 @@ export function Play() {
     const {data: terms, isLoading, isError} = useTerms(categoryIds)
 
     useEffect(() => {
-        setSpy(Math.floor(Math.random() * players.length))
-    }, [players.length]);
+        if (players.length > 0) {
+            const randomSpies = new Set<number>()
+            while (randomSpies.size < amountOfSpies) {
+                const randomNum = Math.floor(Math.random() * (players.length))
+                randomSpies.add(randomNum)
+            }
+            setSpies(Array.from(randomSpies))
+        }
+    }, [amountOfSpies, players.length]);
 
     useEffect(() => {
         if (terms && terms.length > 0) {
@@ -52,42 +59,40 @@ export function Play() {
     }
 
     return (
-        <Center pt={4}>
-            <VStack w="80%" maxW="500px">
-                <Heading size="3xl" mb={4}>Better Spy</Heading>
-                <Text>Players: {players.length}</Text>
-                <Text>Spies: {amountOfSpies}</Text>
-                <Text mb={12}>Categor{selectedCategories.length === 1 ? "y" : "ies"}: {
-                    selectedCategories.map((category) => category.value).join(", ")
-                }</Text>
-                <Spacer/>
-                <AspectRatio ratio={1} w="100%">
-                    <Button borderRadius="2xl" fontSize="3xl" onClick={() => move()}>
-                        {showingRole ? (
-                            currentPlayer === spy ? (
-                                <Text>SPY</Text>
-                            ) : (
-                                <Text>{term}</Text>
-                            )
+        <>
+            <Heading size="3xl" mb={4}>Better Spy</Heading>
+            <Text>Players: {players.length}</Text>
+            <Text>Spies: {amountOfSpies}</Text>
+            <Text mb={12}>Categor{selectedCategories.length === 1 ? "y" : "ies"}: {
+                selectedCategories.map((category) => category.value).join(", ")
+            }</Text>
+            <Spacer/>
+            <AspectRatio ratio={1} w="100%">
+                <Button borderRadius="2xl" fontSize="3xl" onClick={() => move()}>
+                    {showingRole ? (
+                        spies.includes(currentPlayer) ? (
+                            <Text>SPY</Text>
                         ) : (
-                            <Text>{players[currentPlayer]}</Text>
-                        )}
-                    </Button>
-                </AspectRatio>
-                <Text>Click to reveal the word</Text>
-                <Button
-                    w="80%"
-                    h="50px"
-                    maxW="500px"
-                    position="fixed"
-                    left="50%"
-                    transform="translateX(-50%)"
-                    bottom="75px"
-                    onClick={() => exit()}
-                >
-                    EXIT
+                            <Text>{term}</Text>
+                        )
+                    ) : (
+                        <Text>{players[currentPlayer]}</Text>
+                    )}
                 </Button>
-            </VStack>
-        </Center>
+            </AspectRatio>
+            <Text>Click to reveal the word</Text>
+            <Button
+                w="80%"
+                h="50px"
+                maxW="500px"
+                position="fixed"
+                left="50%"
+                transform="translateX(-50%)"
+                bottom="75px"
+                onClick={() => exit()}
+            >
+                EXIT
+            </Button>
+        </>
     )
 }

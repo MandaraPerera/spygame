@@ -1,0 +1,1 @@
+export {ManageData} from "./ManageData.tsx";

@@ -1,221 +1,177 @@
 {
   "categories": [
     {
-      "value": "Countries",
-      "original": true
+      "value": "Countries"
     },
     {
-      "value": "Objects",
-      "original": true
+      "value": "Objects"
     },
     {
-      "value": "Places",
-      "original": true
+      "value": "Places"
     },
     {
-      "value": "Sports",
-      "original": true
+      "value": "Sports"
     }
   ],
   "terms": [
     {
       "value": "United States",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "Canada",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "Brazil",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "Germany",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "Japan",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "Australia",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "South Africa",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "India",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "France",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "Mexico",
-      "original": true,
       "categoryId": "1"
     },
     {
       "value": "Laptop",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Backpack",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Sunglasses",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Watch",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Bicycle",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Chair",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Smartphone",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Umbrella",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Headphones",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Coffee mug",
-      "original": true,
       "categoryId": "2"
     },
     {
       "value": "Cinema",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "Library",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "Restaurant",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "Hospital",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "Supermarket",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "Gym",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "School",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "Airport",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "Stadium",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "Train Station",
-      "original": true,
       "categoryId": "3"
     },
     {
       "value": "Soccer",
-      "original": true,
       "categoryId": "4"
     },
     {
       "value": "Basketball",
-      "original": true,
       "categoryId": "4"
     },
     {
       "value": "Tennis",
-      "original": true,
       "categoryId": "4"
     },
     {
       "value": "Baseball",
-      "original": true,
       "categoryId": "4"
     },
     {
       "value": "Golf",
-      "original": true,
       "categoryId": "4"
     },
     {
       "value": "Swimming",
-      "original": true,
       "categoryId": "4"
     },
     {
       "value": "Boxing",
-      "original": true,
       "categoryId": "4"
     },
     {
       "value": "Ice Hockey",
-      "original": true,
       "categoryId": "4"
     },
     {
       "value": "Volleyball",
-      "original": true,
       "categoryId": "4"
     },
     {
       "value": "Formula 1",
-      "original": true,
       "categoryId": "4"
     }
   ]
