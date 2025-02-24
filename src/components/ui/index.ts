@@ -21,3 +21,5 @@ export {
     DialogActionTrigger
 } from "./dialog.tsx"
 export {PasswordInput, PasswordStrengthMeter} from "./password-input.tsx"
+
+export {AccordionRoot, AccordionItemContent, AccordionItemTrigger, AccordionItem} from "./accordion.tsx"
