@@ -40,7 +40,7 @@ export function SelectSettings({open, setOpen}: SelectSettingsProps) {
                 <Portal>
                     <Dialog.Backdrop/>
                     <Dialog.Positioner>
-                        <Dialog.Content maxW="90%">
+                        <Dialog.Content maxW="500px" w="90%">
                             <Dialog.Header>
                                 <Dialog.Title>Settings</Dialog.Title>
                             </Dialog.Header>

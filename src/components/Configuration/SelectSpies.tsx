@@ -52,7 +52,7 @@ export function SelectSpies({open, setOpen}: SelectSpiesProps) {
             <Portal>
                 <Dialog.Backdrop/>
                 <Dialog.Positioner>
-                    <Dialog.Content maxW="90%">
+                    <Dialog.Content maxW="500px" w="90%">
                         <Dialog.Header>
                             <Dialog.Title>Spies</Dialog.Title>
                         </Dialog.Header>

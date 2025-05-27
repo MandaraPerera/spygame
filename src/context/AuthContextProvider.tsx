@@ -1,4 +1,4 @@
-import {ReactNode, useEffect, useState} from "react";
+import {ReactNode, useEffect, useRef, useState} from "react";
 import {onAuthStateChanged, User} from "firebase/auth";
 import {AuthContext} from "@/context";
 import {auth} from "@/services/firebase.ts";
@@ -9,7 +9,8 @@ interface AuthContextProviderProps {
 }
 
 export function AuthContextProvider({children}: AuthContextProviderProps) {
-    const [user, setUser] = useState<User | null>(null);
+    const isFirstRender = useRef<boolean>(true);
+    const [user, setUser] = useState<User | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
@@ -23,6 +24,11 @@ export function AuthContextProvider({children}: AuthContextProviderProps) {
     }, []);
 
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false
+            return
+        }
+
         if (user) {
             queueMicrotask(() => {
                 toaster.create({
@@ -32,9 +38,11 @@ export function AuthContextProvider({children}: AuthContextProviderProps) {
                 })
             })
         } else {
-            toaster.create({
-                title: "Signed Out!",
-                type: "warning",
+            queueMicrotask(() => {
+                toaster.create({
+                    title: "Signed Out!",
+                    type: "warning",
+                })
             })
         }
     }, [user]);

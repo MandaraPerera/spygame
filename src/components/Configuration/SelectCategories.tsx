@@ -41,7 +41,7 @@ export function SelectCategories({open, setOpen, categories}: SelectCategoriesPr
             <Portal>
                 <Dialog.Backdrop/>
                 <Dialog.Positioner>
-                    <Dialog.Content maxW="90%">
+                    <Dialog.Content maxW="500px" w="90%">
                         <Dialog.Header>
                             <Dialog.Title>Categories</Dialog.Title>
                         </Dialog.Header>
