@@ -1,2 +1,2 @@
-export {Home} from "./Home"
-export {Play} from "./Play"
+export {Home} from './Home'
+export {Play} from './Play'

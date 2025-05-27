@@ -1,1 +1,1 @@
-export {SuggestData} from "./SuggestData"
+export {SuggestData} from './SuggestData'

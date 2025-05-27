@@ -1,1 +1,1 @@
-export {ManageData} from "./ManageData"
+export {ManageData} from './ManageData'

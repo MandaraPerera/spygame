@@ -6,7 +6,7 @@ import {ManageData} from "@/components/Data";
 import {Home, Play} from "@/components/Play";
 import {SuggestData} from "@/components/Suggest";
 import {ColorModeProvider} from "@/components/ui";
-import {Auth, GeneralLayout, ProtectedRoute} from "@/components/Util";
+import {Auth, GeneralLayout, NotFoundPage} from "@/components/Util";
 
 export function App() {
     return (
@@ -21,8 +21,8 @@ export function App() {
                                     <Route path="/play" element={<Play/>}/>
                                     <Route path="/login" element={<Auth/>}/>
                                     <Route path="/suggest" element={<SuggestData/>}/>
-                                    <Route path="/manage-data"
-                                           element={<ProtectedRoute><ManageData/></ProtectedRoute>}/>
+                                    <Route path="/manage-data" element={<ManageData/>}/>
+                                    <Route path="*" element={<NotFoundPage/>}/>
                                 </Routes>
                             </GeneralLayout>
                         </BrowserRouter>
