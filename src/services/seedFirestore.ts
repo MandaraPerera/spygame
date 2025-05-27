@@ -1,5 +1,5 @@
-import {db} from "@/services/firebase.ts";
 import {collection, doc, getDocs, writeBatch} from "firebase/firestore"
+import {db} from "@/services/firebase.ts";
 import {CategoryData, TermData} from "@/model";
 
 type Data = {

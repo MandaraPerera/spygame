@@ -3,12 +3,12 @@ import {getFirestore} from "firebase/firestore";
 import {getAuth} from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDBCI-gWDTlrhUV8wPaI23ZML-wumwJTlc",
-    authDomain: "betterspy-50c8c.firebaseapp.com",
-    projectId: "betterspy-50c8c",
-    storageBucket: "betterspy-50c8c.firebasestorage.app",
-    messagingSenderId: "48226132790",
-    appId: "1:48226132790:web:9787bb721e8a6e7fce0997"
+    apiKey: "AIzaSyD6PrJ-zIsE8GmLtZ5Rks_4hYraYSltscY",
+    authDomain: "the-spygame.firebaseapp.com",
+    projectId: "the-spygame",
+    storageBucket: "the-spygame.firebasestorage.app",
+    messagingSenderId: "652474821023",
+    appId: "1:652474821023:web:0fe7933f9f2ec5043cf5aa"
 };
 
 const app = initializeApp(firebaseConfig);

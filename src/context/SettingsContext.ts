@@ -1,7 +1,7 @@
 import {createContext} from "react";
 import {Category} from "@/model";
 
-export interface ISettingsContext {
+interface ISettingsContext {
     players: string[];
     setPlayers: (players: string[]) => void;
     amountOfSpies: number;

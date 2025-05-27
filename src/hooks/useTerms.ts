@@ -1,7 +1,7 @@
+import {useQuery} from "@tanstack/react-query";
 import {collection, getDocs, query, where} from "firebase/firestore";
 import {db} from "@/services/firebase.ts";
 import {Term} from "@/model";
-import {useQuery} from "@tanstack/react-query";
 
 const TERMS_COLLECTION = 'terms';
 
