@@ -14,8 +14,8 @@ export function App() {
             <ColorModeProvider>
                 <AuthContextProvider>
                     <SettingsContextProvider>
-                        <GeneralLayout>
-                            <BrowserRouter>
+                        <BrowserRouter>
+                            <GeneralLayout>
                                 <Routes>
                                     <Route path="/" element={<Home/>}/>
                                     <Route path="/play" element={<Play/>}/>
@@ -24,8 +24,8 @@ export function App() {
                                     <Route path="/manage-data"
                                            element={<ProtectedRoute><ManageData/></ProtectedRoute>}/>
                                 </Routes>
-                            </BrowserRouter>
-                        </GeneralLayout>
+                            </GeneralLayout>
+                        </BrowserRouter>
                     </SettingsContextProvider>
                 </AuthContextProvider>
             </ColorModeProvider>

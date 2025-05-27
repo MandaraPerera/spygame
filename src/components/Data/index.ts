@@ -1,1 +1,1 @@
-export {ManageData} from "./ManageData.tsx";
+export {ManageData} from "./ManageData"

@@ -1,20 +1,14 @@
-import {db} from "@/services/firebase.ts";
-import {collection, getDocs} from "firebase/firestore";
-import {Category} from "@/model";
 import {useQuery} from "@tanstack/react-query";
-
-const fetchCategories = async () => {
-    const querySnapshot = await getDocs(collection(db, "categories"));
-    return querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-    })) as Category[];
-}
+import {getAllCategories} from "@/services/firestore";
 
 export const useCategories = () => {
-    return useQuery({
+    const getCategories = useQuery({
         queryKey: ["categories"],
-        queryFn: fetchCategories,
-        staleTime: 1000 * 60 * 5
+        queryFn: getAllCategories,
+        staleTime: 5 * 60 * 1000
     })
+
+    return {
+        getCategories
+    }
 }

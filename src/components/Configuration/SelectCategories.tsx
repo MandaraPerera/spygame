@@ -1,23 +1,23 @@
-import {Button, Center, DialogRootProvider, SimpleGrid, UseDialogReturn, VStack} from "@chakra-ui/react";
-import {DialogBackdrop, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui";
-import {Category} from "@/model";
+import {Button, Dialog, Portal, SimpleGrid, VStack} from "@chakra-ui/react";
 import {useContext, useEffect, useState} from "react";
+import {Category} from "@/model";
 import {SettingsContext} from "@/context";
 
 interface SelectCategoriesProps {
-    dialog: UseDialogReturn;
-    categories: Category[];
+    open: boolean
+    setOpen: (open: boolean) => void
+    categories: Category[]
 }
 
-export function SelectCategories({dialog, categories}: SelectCategoriesProps) {
+export function SelectCategories({open, setOpen, categories}: SelectCategoriesProps) {
     const {selectedCategories, setSelectedCategories} = useContext(SettingsContext);
     const [categoriesLocal, setCategoriesLocal] = useState<Category[]>([]);
 
     useEffect(() => {
-        if (dialog.open) {
+        if (open) {
             setCategoriesLocal(selectedCategories);
         }
-    }, [selectedCategories, dialog.open]);
+    }, [selectedCategories, open]);
 
     const toggleCategory = (category: Category) => {
         setCategoriesLocal((prevCategories) => {
@@ -33,44 +33,46 @@ export function SelectCategories({dialog, categories}: SelectCategoriesProps) {
 
     const onSave = () => {
         setSelectedCategories(categoriesLocal);
-        dialog.setOpen(false)
+        setOpen(false)
     }
 
     return (
-        <DialogRootProvider value={dialog} size={"xs"}>
-            <DialogBackdrop/>
-            <DialogContent>
-                <DialogHeader>
-                    <Center>
-                        <DialogTitle>Categories</DialogTitle>
-                    </Center>
-                </DialogHeader>
-                <DialogBody>
-                    <VStack>
-                        {categories
-                            .slice()
-                            .sort((a, b) => a.value.localeCompare(b.value))
-                            .map((category, index) => (
-                                <Button
-                                    key={index}
-                                    w="100%"
-                                    variant={categoriesLocal.some(c => c.value === category.value) ? "solid" : "outline"}
-                                    onClick={() => toggleCategory(category)}
-                                >
-                                    {category.value}
-                                </Button>
-                            ))}
-                    </VStack>
-                </DialogBody>
-                <DialogFooter>
-                    <SimpleGrid w="100%" columns={2} gap={4}>
-                        <Button onClick={() => {
-                            dialog.setOpen(false)
-                        }} variant="outline">Cancel</Button>
-                        <Button onClick={() => onSave()}>Save</Button>
-                    </SimpleGrid>
-                </DialogFooter>
-            </DialogContent>
-        </DialogRootProvider>
+        <Dialog.Root lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
+            <Portal>
+                <Dialog.Backdrop/>
+                <Dialog.Positioner>
+                    <Dialog.Content maxW="90%">
+                        <Dialog.Header>
+                            <Dialog.Title>Categories</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                            <VStack>
+                                {categories
+                                    .slice()
+                                    .sort((a, b) => a.value.localeCompare(b.value))
+                                    .map((category, index) => (
+                                        <Button
+                                            key={index}
+                                            w="100%"
+                                            variant={categoriesLocal.some(c => c.value === category.value) ? "solid" : "outline"}
+                                            onClick={() => toggleCategory(category)}
+                                        >
+                                            {category.value}
+                                        </Button>
+                                    ))}
+                            </VStack>
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                            <SimpleGrid w="100%" columns={2} gap={4}>
+                                <Button onClick={() => {
+                                    setOpen(false)
+                                }} variant="outline">Cancel</Button>
+                                <Button onClick={() => onSave()}>Save</Button>
+                            </SimpleGrid>
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Portal>
+        </Dialog.Root>
     )
 }

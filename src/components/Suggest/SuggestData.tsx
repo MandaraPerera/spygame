@@ -3,31 +3,38 @@ import {
     Button,
     createListCollection,
     Editable,
+    Flex,
     Heading,
     HStack,
     IconButton,
     Link,
     ListCollection,
+    Select,
     Separator,
+    Skeleton,
     Spacer,
     Switch,
-    Text
+    Text,
+    VStack
 } from "@chakra-ui/react";
 import {useEffect, useState} from "react";
-import {CategoryData, TermValue} from "@/model";
 import {LuCheck, LuPencilLine, LuX} from "react-icons/lu";
-import {FaPlus, FaTrash} from "react-icons/fa";
+import {FaPlus, FaTimes, FaTrash} from "react-icons/fa";
 import {v4 as uuid} from 'uuid';
-import {SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText, toaster, Toaster} from "@/components/ui";
+import {useNavigate} from "react-router-dom";
+import {Category, CategoryData, TermValue} from "@/model";
+import {toaster} from "@/components/ui";
 import {useCategories} from "@/hooks";
-import {Error, Loading} from "@/components/Util";
+import {Error} from "@/components/Util";
 
 export function SuggestData() {
+    const navigate = useNavigate()
+    const {getCategories: {data: categories, isLoading, isError}} = useCategories()
+
     const [category, setCategory] = useState<CategoryData>({value: "Category"})
     const [terms, setTerms] = useState<Map<string, TermValue>>(new Map<string, TermValue>([[uuid(), {value: "Term"}]]))
     const [isNewCategory, setIsNewCategory] = useState<boolean>(true)
-    const {data: categories, isLoading, isError} = useCategories();
-    const [categoriesCollection, setCategoriesCollection] = useState<ListCollection<CategoryData>>()
+    const [categoriesCollection, setCategoriesCollection] = useState<ListCollection<Category> | null>(null)
 
     useEffect(() => {
         if (categories) {
@@ -42,9 +49,10 @@ export function SuggestData() {
     const addTerm = () => {
         if (terms.size > 49) {
             toaster.create({
+                type: "error",
                 title: "Maximum of 50 terms per suggestion",
                 description: "Add more terms once the category gets approved.",
-                type: "error",
+                duration: 3000
             })
             return
         }
@@ -84,7 +92,42 @@ export function SuggestData() {
     }
 
     if (isLoading) {
-        return <Loading text={"Categories are being loaded."}/>
+        return (
+            <VStack maxW="500px" w="90%" flex={1}>
+                <HStack justify="space-between" w="100%" mb={2}>
+                    <Box flex={1}/>
+                    <Heading size="3xl">Better Spy</Heading>
+                    <Flex flex={1} justify="end">
+                        <IconButton variant="plain" mr="-10px" onClick={() => navigate("/")}>
+                            <FaTimes/>
+                        </IconButton>
+                    </Flex>
+                </HStack>
+                <Text fontSize={"sm"} textAlign="justify" w="full">
+                    Here you can suggest categories and terms that you would like to see in the game. Once they are
+                    approved, you will see your content in the game! If you'd like to add to an existing category,
+                    select it
+                    from the dropdown.
+                </Text>
+                <HStack w="100%" mt={6} justify="space-between">
+                    <Heading>Category</Heading>
+                    <Skeleton w="80px" h="5"/>
+                </HStack>
+                <Skeleton w="110px" h="5" mt={2} alignSelf="start"/>
+                <Separator w="100%" mt={2}/>
+                <Heading w="100%" mt={4}>Terms</Heading>
+                <HStack w="100%" justify="space-between">
+                    <Skeleton w="85px" h="5"/>
+                    <Skeleton w="8" h="8"/>
+                </HStack>
+                <HStack w="100%" mt={1} justify="space-between">
+                    <Skeleton w="85px" h="5"/>
+                    <Skeleton w="8" h="8"/>
+                </HStack>
+                <Separator w="100%"/>
+                <Skeleton w="100px" mt={4} h="10" alignSelf="end"/>
+            </VStack>
+        )
     }
 
     if (isError || !categories) {
@@ -92,21 +135,28 @@ export function SuggestData() {
     }
 
     return (
-        <>
-            <Toaster/>
-            <Heading size="3xl">Better Spy</Heading>
-            <Text fontSize={"sm"}>
+        <VStack maxW="500px" w="90%" flex={1}>
+            <HStack justify="space-between" w="100%" mb={2}>
+                <Box flex={1}/>
+                <Heading size="3xl">Better Spy</Heading>
+                <Flex flex={1} justify="end">
+                    <IconButton variant="plain" mr="-10px" onClick={() => navigate("/")}>
+                        <FaTimes/>
+                    </IconButton>
+                </Flex>
+            </HStack>
+            <Text fontSize={"sm"} textAlign="justify" w="full">
                 Here you can suggest categories and terms that you would like to see in the game. Once they are
                 approved, you will see your content in the game! If you'd like to add to an existing category, select it
                 from the dropdown.
             </Text>
-            <HStack mt={4} w="100%">
+            <HStack mt={6} w="100%">
                 <Heading>Category</Heading>
                 <Spacer/>
                 <Text>{isNewCategory ? "New" : "Existing"}</Text>
-                <Switch.Root
-                    checked={isNewCategory}
-                    onCheckedChange={(e) => setIsNewCategory(e.checked)}
+                <Switch.Root gap={0}
+                             checked={isNewCategory}
+                             onCheckedChange={(e) => setIsNewCategory(e.checked)}
                 >
                     <Switch.HiddenInput/>
                     <Switch.Control>
@@ -143,20 +193,20 @@ export function SuggestData() {
                         </Editable.Control>
                     </Editable.Root>
                 ) : categoriesCollection ? (
-                    <SelectRoot collection={categoriesCollection} size="sm" width="320px"
-                                onValueChange={(e) => setCategory({value: e.value[0]})}
+                    <Select.Root collection={categoriesCollection} size="sm" width="320px"
+                                 onValueChange={(e) => setCategory({value: e.value[0]})}
                     >
-                        <SelectTrigger>
-                            <SelectValueText placeholder="Select category"/>
-                        </SelectTrigger>
-                        <SelectContent>
+                        <Select.Trigger>
+                            <Select.ValueText placeholder="Select category"/>
+                        </Select.Trigger>
+                        <Select.Content>
                             {categoriesCollection.items.map((category, index) => (
-                                <SelectItem item={category} key={index}>
+                                <Select.Item item={category} key={index}>
                                     {category.value}
-                                </SelectItem>
+                                </Select.Item>
                             ))}
-                        </SelectContent>
-                    </SelectRoot>
+                        </Select.Content>
+                    </Select.Root>
                 ) : (
                     <></>
                 )}
@@ -211,6 +261,6 @@ export function SuggestData() {
             <Button alignSelf="end" w="100px" mt={4}
                     onClick={submit}
             >Submit</Button>
-        </>
+        </VStack>
     )
 }

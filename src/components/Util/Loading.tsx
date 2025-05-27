@@ -18,8 +18,10 @@ export function Loading({text}: LoadingProps) {
                 <Alert.Indicator>
                     <Spinner size="sm"/>
                 </Alert.Indicator>
-                <Alert.Title>Loading</Alert.Title>
-                <Alert.Description>{text}</Alert.Description>
+                <Alert.Content>
+                    <Alert.Title>Loading</Alert.Title>
+                    <Alert.Description>{text}</Alert.Description>
+                </Alert.Content>
             </Alert.Root>
         </Center>
     )

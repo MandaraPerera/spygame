@@ -1,77 +1,108 @@
-import {Button, Field, Fieldset, Heading, Input, Spacer, Stack, Text} from "@chakra-ui/react";
-import {FormEvent, useContext, useEffect, useState} from "react";
-import {PasswordInput} from "@/components/ui";
+import {
+    Box,
+    Button,
+    Field,
+    Fieldset,
+    Flex,
+    Heading,
+    HStack,
+    IconButton,
+    Input,
+    Stack,
+    Text,
+    VStack
+} from "@chakra-ui/react";
+import {useContext, useEffect} from "react";
+import {useNavigate} from "react-router-dom";
+import {useForm} from "react-hook-form";
+import {FaTimes} from "react-icons/fa";
+import {PasswordInput, toaster} from "@/components/ui";
 import {AuthContext} from "@/context";
 import {useAuth} from "@/hooks";
-import {useNavigate} from "react-router-dom";
 
+interface FormValues {
+    email: string
+    password: string
+}
 
 export function Auth() {
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const {user, isLoading: isLoadingContext} = useContext(AuthContext);
-    const {signIn, isLoading: isLoadingAuth, isError: isErrorAuth} = useAuth();
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+    const {user, isLoading: isLoadingContext} = useContext(AuthContext)
+    const {signIn, isLoading: isLoadingAuth, isError: isErrorAuth} = useAuth()
+    const {register, handleSubmit, formState: {errors}} = useForm<FormValues>()
 
     useEffect(() => {
         if (user) {
-            navigate("/");
+            navigate("/")
         }
     }, [navigate, user]);
 
-    const login = async (e: FormEvent) => {
-        e.preventDefault();
-        await signIn(email, password);
-    }
+    useEffect(() => {
+        if (isErrorAuth) {
+            toaster.create({
+                type: "error",
+                title: "Something went wrong. Please try again.",
+                description: isErrorAuth
+            })
+        }
+    }, [isErrorAuth]);
+
+    const onSubmit = handleSubmit(async (values: FormValues) => {
+        await signIn(values.email, values.password)
+    })
 
     return (
-        <>
-            <Heading size="3xl" mb={16}>Admin Login</Heading>
-            <Spacer/>
-
+        <VStack maxW="500px" w="90%" flex={1}>
+            <HStack justify="space-between" w="100%" mb={12}>
+                <Box flex={1}/>
+                <Heading size="3xl">Admin Login</Heading>
+                <Flex flex={1} justify="end">
+                    <IconButton variant="plain" mr="-10px" onClick={() => navigate("/")}>
+                        <FaTimes/>
+                    </IconButton>
+                </Flex>
+            </HStack>
             <Stack w="100%">
-                <form onSubmit={login}>
+                <form onSubmit={onSubmit}>
                     <Fieldset.Root>
                         <Fieldset.Content>
-                            <Field.Root required>
+                            <Field.Root invalid={!!errors.email}>
                                 <Field.Label>
                                     Email
-                                    <Field.RequiredIndicator/>
+                                    <Text color="red.500">*</Text>
                                 </Field.Label>
-                                <Input
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                                <Field.HelperText/>
-                                <Field.ErrorText/>
+                                <Input autoComplete="email"
+                                       {...register("email", {
+                                           required: "Email is empty",
+                                           pattern: {
+                                               value: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+                                               message: "Enter a valid email"
+                                           }
+                                       })} />
+                                <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
                             </Field.Root>
 
-                            <Field.Root required>
+                            <Field.Root invalid={!!errors.password}>
                                 <Field.Label>
                                     Password
-                                    <Field.RequiredIndicator/>
+                                    <Text color="red.500">*</Text>
                                 </Field.Label>
-                                <PasswordInput
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                                <Field.HelperText/>
-                                <Field.ErrorText/>
+                                <PasswordInput autoComplete="current-password"
+                                               {...register("password", {
+                                                   required: "Password is empty"
+                                               })} />
+                                <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
                             </Field.Root>
                         </Fieldset.Content>
 
-                        {isErrorAuth ? (
-                            <Text color="red.400">
-                                {isErrorAuth}
-                            </Text>
-                        ) : (<></>)}
-
-                        <Button
-                            type="submit"
-                            loading={isLoadingAuth || isLoadingContext}
-                            loadingText="Signing in..."
+                        <Button mt={6}
+                                type="submit"
+                                loading={isLoadingAuth || isLoadingContext}
+                                loadingText="Signing in..."
                         >Sign In</Button>
                     </Fieldset.Root>
                 </form>
             </Stack>
-        </>
+        </VStack>
     )
 }

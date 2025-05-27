@@ -15,8 +15,10 @@ export function Error({text}: ErrorProps) {
         >
             <Alert.Root status="error">
                 <Alert.Indicator/>
-                <Alert.Title>Error</Alert.Title>
-                <Alert.Description>{text}</Alert.Description>
+                <Alert.Content>
+                    <Alert.Title>Error</Alert.Title>
+                    <Alert.Description>{text}</Alert.Description>
+                </Alert.Content>
             </Alert.Root>
         </Center>
     )

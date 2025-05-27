@@ -1,49 +1,33 @@
 import {useContext, useEffect, useState} from "react";
-import {
-    Button,
-    Center,
-    DialogRootProvider,
-    HStack,
-    IconButton,
-    SimpleGrid,
-    Text,
-    UseDialogReturn
-} from "@chakra-ui/react";
-import {
-    DialogBackdrop,
-    DialogBody,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    toaster
-} from "@/components/ui";
+import {Button, Center, Dialog, HStack, IconButton, Portal, SimpleGrid, Text} from "@chakra-ui/react";
+import {toaster} from "@/components/ui";
 import {SettingsContext} from "@/context";
 
 interface SelectSpiesProps {
-    dialog: UseDialogReturn;
+    open: boolean
+    setOpen: (open: boolean) => void
 }
 
-export function SelectSpies({dialog}: SelectSpiesProps) {
+export function SelectSpies({open, setOpen}: SelectSpiesProps) {
     const {players, amountOfSpies, setAmountOfSpies} = useContext(SettingsContext);
     const [amountOfSpiesLocal, setAmountOfSpiesLocal] = useState<number>(amountOfSpies)
 
     useEffect(() => {
-        if (dialog.open) {
+        if (open) {
             setAmountOfSpiesLocal(amountOfSpies);
         }
-    }, [amountOfSpies, dialog.open]);
+    }, [amountOfSpies, open]);
 
     const onSave = () => {
         setAmountOfSpies(amountOfSpiesLocal)
-        dialog.setOpen(false)
+        setOpen(false)
     }
 
     const incrementAmountOfSpies = () => {
         if (amountOfSpiesLocal >= Math.floor(players.length / 2)) {
             toaster.create({
-                title: "Maximum number of spies is half of the players.",
                 type: "error",
+                title: "Maximum number of spies is half of the players.",
                 duration: 3000
             })
         } else {
@@ -54,8 +38,8 @@ export function SelectSpies({dialog}: SelectSpiesProps) {
     const decrementAmountOfSpies = () => {
         if (amountOfSpiesLocal <= 1) {
             toaster.create({
-                title: "Minimum number of spies is 1.",
                 type: "error",
+                title: "Minimum number of spies is 1.",
                 duration: 3000
             })
         } else {
@@ -64,36 +48,38 @@ export function SelectSpies({dialog}: SelectSpiesProps) {
     }
 
     return (
-        <DialogRootProvider value={dialog} size={"xs"}>
-            <DialogBackdrop/>
-            <DialogContent>
-                <DialogHeader>
-                    <Center>
-                        <DialogTitle>Spies</DialogTitle>
-                    </Center>
-                </DialogHeader>
-                <DialogBody>
-                    <Center>
-                        <HStack gap={3} mb={4}>
-                            <IconButton variant="outline" fontSize="xl"
-                                        onClick={() => decrementAmountOfSpies()}
-                            >-</IconButton>
-                            <Text fontSize="xl">{amountOfSpiesLocal}</Text>
-                            <IconButton variant="outline" fontSize="xl"
-                                        onClick={() => incrementAmountOfSpies()}
-                            >+</IconButton>
-                        </HStack>
-                    </Center>
-                </DialogBody>
-                <DialogFooter>
-                    <SimpleGrid w="100%" columns={2} gap={4}>
-                        <Button onClick={() => {
-                            dialog.setOpen(false)
-                        }} variant="outline">Cancel</Button>
-                        <Button onClick={() => onSave()}>Save</Button>
-                    </SimpleGrid>
-                </DialogFooter>
-            </DialogContent>
-        </DialogRootProvider>
+        <Dialog.Root lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
+            <Portal>
+                <Dialog.Backdrop/>
+                <Dialog.Positioner>
+                    <Dialog.Content maxW="90%">
+                        <Dialog.Header>
+                            <Dialog.Title>Spies</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                            <Center>
+                                <HStack gap={3} mb={4}>
+                                    <IconButton variant="outline" fontSize="xl"
+                                                onClick={() => decrementAmountOfSpies()}
+                                    >-</IconButton>
+                                    <Text fontSize="xl">{amountOfSpiesLocal}</Text>
+                                    <IconButton variant="outline" fontSize="xl"
+                                                onClick={() => incrementAmountOfSpies()}
+                                    >+</IconButton>
+                                </HStack>
+                            </Center>
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                            <SimpleGrid w="100%" columns={2} gap={4}>
+                                <Button onClick={() => {
+                                    setOpen(false)
+                                }} variant="outline">Cancel</Button>
+                                <Button onClick={() => onSave()}>Save</Button>
+                            </SimpleGrid>
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Portal>
+        </Dialog.Root>
     )
 }

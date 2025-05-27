@@ -2,6 +2,7 @@ import {ReactNode, useEffect, useState} from "react";
 import {onAuthStateChanged, User} from "firebase/auth";
 import {AuthContext} from "@/context";
 import {auth} from "@/services/firebase.ts";
+import {toaster} from "@/components/ui";
 
 interface AuthContextProviderProps {
     children: ReactNode;
@@ -9,7 +10,7 @@ interface AuthContextProviderProps {
 
 export function AuthContextProvider({children}: AuthContextProviderProps) {
     const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -20,6 +21,23 @@ export function AuthContextProvider({children}: AuthContextProviderProps) {
 
         return () => unsubscribe();
     }, []);
+
+    useEffect(() => {
+        if (user) {
+            queueMicrotask(() => {
+                toaster.create({
+                    title: "Welcome!",
+                    description: user.email,
+                    type: "success",
+                })
+            })
+        } else {
+            toaster.create({
+                title: "Signed Out!",
+                type: "warning",
+            })
+        }
+    }, [user]);
 
     return (
         <AuthContext.Provider

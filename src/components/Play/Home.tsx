@@ -1,40 +1,29 @@
-import {useContext} from "react";
-import {
-    AspectRatio,
-    Button,
-    Heading,
-    HStack,
-    Icon,
-    SimpleGrid,
-    Spacer,
-    Text,
-    useDialog,
-    VStack
-} from "@chakra-ui/react";
+import {useContext, useState} from "react";
+import {AspectRatio, Button, Heading, HStack, Icon, SimpleGrid, Skeleton, Spacer, Text, VStack} from "@chakra-ui/react";
 import {MdGroups, MdOutlineSubject, MdSettings} from "react-icons/md";
 import {GiSpy} from "react-icons/gi";
-import {toaster, Toaster} from "@/components/ui";
+import {useNavigate} from "react-router-dom";
+import {toaster} from "@/components/ui";
 import {SelectCategories, SelectPlayers, SelectSettings, SelectSpies} from "@/components/Configuration";
 import {SettingsContext} from "@/context";
 import {useCategories} from "@/hooks";
-import {Error, Loading} from "@/components/Util";
-import {useNavigate} from "react-router-dom";
+import {Error} from "@/components/Util";
 
 export function Home() {
     const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext);
-    const {data: categories, isLoading, isError} = useCategories();
+    const {getCategories: {data: categories, isLoading, isError}} = useCategories();
     const navigate = useNavigate();
 
-    const selectPlayersDialog = useDialog();
-    const selectSpiesDialog = useDialog();
-    const selectCategoriesDialog = useDialog();
-    const selectSettingsDialog = useDialog();
+    const [openPlayersDialog, setOpenPlayersDialog] = useState<boolean>(false)
+    const [openSpiesDialog, setOpenSpiesDialog] = useState<boolean>(false)
+    const [openCategoriesDialog, setOpenCategoriesDialog] = useState<boolean>(false)
+    const [openSettingsDialog, setOpenSettingsDialog] = useState<boolean>(false)
 
     const play = () => {
         if (selectedCategories.length === 0) {
             toaster.create({
-                title: "Select at least one category",
                 type: "error",
+                title: "Select at least one category",
                 duration: 3000
             })
             return
@@ -44,7 +33,20 @@ export function Home() {
     }
 
     if (isLoading) {
-        return <Loading text={"Categories are being loaded."}/>
+        return (
+            <VStack maxW="500px" w="90%" flex={1}>
+                <Heading size="3xl" mb={16}>Better Spy</Heading>
+                <SimpleGrid columns={2} gap={4} w="100%">
+                    {Array.from({length: 4}, (_, index) => (
+                        <AspectRatio ratio={1} key={index}>
+                            <Skeleton w="100%"/>
+                        </AspectRatio>
+                    ))}
+                </SimpleGrid>
+                <Spacer/>
+                <Skeleton w="100%" h="50px"/>
+            </VStack>
+        )
     }
 
     if (isError || !categories) {
@@ -52,12 +54,11 @@ export function Home() {
     }
 
     return (
-        <>
+        <VStack maxW="500px" w="90%" flex={1}>
             <Heading size="3xl" mb={16}>Better Spy</Heading>
-            <Spacer/>
             <SimpleGrid columns={2} gap={4} w="100%">
                 <AspectRatio ratio={1}>
-                    <Button onClick={() => selectPlayersDialog.setOpen(true)}>
+                    <Button onClick={() => setOpenPlayersDialog(true)}>
                         <VStack>
                             <HStack>
                                 <Icon boxSize="40px">
@@ -73,7 +74,7 @@ export function Home() {
 
                 <AspectRatio ratio={1}>
                     <Button onClick={() => {
-                        selectSpiesDialog.setOpen(true)
+                        setOpenSpiesDialog(true)
                     }}>
                         <VStack>
                             <HStack>
@@ -90,7 +91,7 @@ export function Home() {
 
                 <AspectRatio ratio={1}>
                     <Button onClick={() => {
-                        selectCategoriesDialog.setOpen(true)
+                        setOpenCategoriesDialog(true)
                     }}>
                         <VStack>
                             <HStack>
@@ -107,7 +108,7 @@ export function Home() {
 
                 <AspectRatio ratio={1}>
                     <Button onClick={() => {
-                        selectSettingsDialog.setOpen(true)
+                        setOpenSettingsDialog(true)
                     }}>
                         <VStack>
                             <HStack>
@@ -120,23 +121,15 @@ export function Home() {
                     </Button>
                 </AspectRatio>
             </SimpleGrid>
-            <Button
-                w="80%"
-                h="50px"
-                maxW="500px"
-                position="fixed"
-                left="50%"
-                transform="translateX(-50%)"
-                bottom="75px"
-                onClick={() => play()}
-            >
+            <Spacer/>
+            <Button w="100%" h="50px" left="50%" transform="translateX(-50%)" onClick={() => play()}>
                 PLAY
             </Button>
-            <SelectPlayers dialog={selectPlayersDialog}/>
-            <SelectSpies dialog={selectSpiesDialog}/>
-            <SelectCategories dialog={selectCategoriesDialog} categories={categories}/>
-            <SelectSettings dialog={selectSettingsDialog}/>
-            <Toaster/>
-        </>
+
+            <SelectPlayers open={openPlayersDialog} setOpen={setOpenPlayersDialog}/>
+            <SelectSpies open={openSpiesDialog} setOpen={setOpenSpiesDialog}/>
+            <SelectCategories open={openCategoriesDialog} setOpen={setOpenCategoriesDialog} categories={categories}/>
+            <SelectSettings open={openSettingsDialog} setOpen={setOpenSettingsDialog}/>
+        </VStack>
     )
 }

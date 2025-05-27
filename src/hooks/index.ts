@@ -1,2 +1,2 @@
-export {useCategories} from "./useCategories.ts";
-export {useAuth} from "./useAuth.ts";
+export {useCategories} from "./useCategories"
+export {useAuth} from "./useAuth"

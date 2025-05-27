@@ -1,1 +1,1 @@
-export {SuggestData} from "./SuggestData.tsx";
+export {SuggestData} from "./SuggestData"

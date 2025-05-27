@@ -1,2 +1,2 @@
-export {Home} from "./Home.tsx";
-export {Play} from "./Play.tsx";
+export {Home} from "./Home"
+export {Play} from "./Play"
