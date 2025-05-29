@@ -81,7 +81,10 @@ export function SuggestData() {
     }
 
     const submit = () => {
-        console.log("submit")
+        toaster.create({
+            type: "error",
+            title: "Feature to be implemented."
+        })
         //todo
         //if terms.size < 1
         //if terms any value.length < 4

@@ -6,8 +6,8 @@
 
 - Players: 3 - 10
 - Spies: 1 - _[half of players]_
-- Players task: find the spy
-- Spy task: stay in the game and find out what the subject is.
+- Player's task: find out who the spy is without revealing the subject.
+- Spy's task: stay in the game and find out what the subject is.
 
 ## 2. Setup
 

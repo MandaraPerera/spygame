@@ -1,4 +1,4 @@
-import {Button, Dialog, Heading, Portal, Spacer, VStack} from "@chakra-ui/react";
+import {Button, Dialog, Heading, Portal, VStack} from "@chakra-ui/react";
 import {useNavigate} from "react-router-dom";
 import {useContext} from "react";
 import {AuthContext} from "@/context";
@@ -32,8 +32,7 @@ export function SelectSettings({open, setOpen}: SelectSettingsProps) {
                         <Dialog.Body>
                             <VStack align="start">
                                 <Heading size="md">Categories & Terms</Heading>
-                                <Button w="100%"
-                                        onClick={() => navigate("/suggest")}>
+                                <Button w="100%" onClick={() => navigate("/suggest")}>
                                     Suggest Content
                                 </Button>
                                 {user ? (
@@ -43,19 +42,19 @@ export function SelectSettings({open, setOpen}: SelectSettingsProps) {
                                 ) : (
                                     <></>
                                 )}
-                                <Spacer/>
-                                <Heading size="md">Account</Heading>
+                                <Heading size="md" mt={4}>Help</Heading>
+                                <Button w="100%" onClick={() => navigate("/how-to-play")}>
+                                    How To Play
+                                </Button>
+                                <Heading size="md" mt={4}>Account</Heading>
                                 {user ? (
-                                    <Button w="100%"
-                                            loading={isLoading}
-                                            loadingText="Signing out..."
+                                    <Button w="100%" loading={isLoading} loadingText="Signing out..."
                                             onClick={async () => await signOut()}>
                                         Sign Out
                                     </Button>
                                 ) : (
-                                    <Button w="100%"
-                                            onClick={() => navigate("/login")}>
-                                        Admin login
+                                    <Button w="100%" onClick={() => navigate("/login")}>
+                                        Admin Login
                                     </Button>
                                 )}
                             </VStack>

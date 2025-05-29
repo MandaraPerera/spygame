@@ -6,7 +6,7 @@ export function NotFoundPage() {
 
     return (
         <VStack maxW="500px" w="90%" flex={1}>
-            <Heading size="3xl" mb={12}>Better Spy</Heading>
+            <Heading size="3xl" mb={12}>Spy Game</Heading>
             <Text textAlign="center" mb={4} fontStyle="italic" fontSize="xl">
                 404
             </Text>

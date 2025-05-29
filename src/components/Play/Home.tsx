@@ -1,8 +1,8 @@
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {AspectRatio, Button, Heading, HStack, Icon, SimpleGrid, Skeleton, Spacer, Text, VStack} from "@chakra-ui/react";
 import {MdGroups, MdOutlineSubject, MdSettings} from "react-icons/md";
 import {GiSpy} from "react-icons/gi";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {toaster} from "@/components/ui";
 import {SelectCategories, SelectPlayers, SelectSettings, SelectSpies} from "@/components/Configuration";
 import {SettingsContext} from "@/context";
@@ -12,12 +12,21 @@ import {Error} from "@/components/Util";
 export function Home() {
     const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext)
     const {getCategories: {data: categories, isLoading, isError}} = useCategories()
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+    const location = useLocation()
+    const openSettings = location.state?.openSettings
 
     const [openPlayersDialog, setOpenPlayersDialog] = useState<boolean>(false)
     const [openSpiesDialog, setOpenSpiesDialog] = useState<boolean>(false)
     const [openCategoriesDialog, setOpenCategoriesDialog] = useState<boolean>(false)
     const [openSettingsDialog, setOpenSettingsDialog] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (openSettings === true) {
+            setOpenSettingsDialog(true)
+            navigate(location.pathname, {replace: true, state: {}})
+        }
+    }, [location.pathname, navigate, openSettings])
 
     const play = () => {
         if (selectedCategories.length === 0) {
