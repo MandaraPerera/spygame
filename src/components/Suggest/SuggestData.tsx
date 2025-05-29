@@ -11,7 +11,6 @@ import {
     ListCollection,
     Select,
     Separator,
-    Skeleton,
     Spacer,
     Switch,
     Text,
@@ -26,6 +25,7 @@ import {Category, CategoryData, TermValue} from "@/model";
 import {toaster} from "@/components/ui";
 import {useCategories} from "@/hooks";
 import {Error} from "@/components/Util";
+import {SuggestDataSkeleton} from "@/components/Suggest/SuggestDataSkeleton.tsx";
 
 export function SuggestData() {
     const navigate = useNavigate()
@@ -93,40 +93,7 @@ export function SuggestData() {
 
     if (isLoading) {
         return (
-            <VStack maxW="500px" w="90%" flex={1}>
-                <HStack justify="space-between" w="100%" mb={2}>
-                    <Box flex={1}/>
-                    <Heading size="3xl">Better Spy</Heading>
-                    <Flex flex={1} justify="end">
-                        <IconButton variant="plain" mr="-10px" onClick={() => navigate("/")}>
-                            <FaTimes/>
-                        </IconButton>
-                    </Flex>
-                </HStack>
-                <Text fontSize={"sm"} textAlign="justify" w="full">
-                    Here you can suggest categories and terms that you would like to see in the game. Once they are
-                    approved, you will see your content in the game! If you'd like to add to an existing category,
-                    select it
-                    from the dropdown.
-                </Text>
-                <HStack w="100%" mt={6} justify="space-between">
-                    <Heading>Category</Heading>
-                    <Skeleton w="80px" h="5"/>
-                </HStack>
-                <Skeleton w="110px" h="5" mt={2} alignSelf="start"/>
-                <Separator w="100%" mt={2}/>
-                <Heading w="100%" mt={4}>Terms</Heading>
-                <HStack w="100%" justify="space-between">
-                    <Skeleton w="85px" h="5"/>
-                    <Skeleton w="8" h="8"/>
-                </HStack>
-                <HStack w="100%" mt={1} justify="space-between">
-                    <Skeleton w="85px" h="5"/>
-                    <Skeleton w="8" h="8"/>
-                </HStack>
-                <Separator w="100%"/>
-                <Skeleton w="100px" mt={4} h="10" alignSelf="end"/>
-            </VStack>
+            <SuggestDataSkeleton/>
         )
     }
 
@@ -138,7 +105,7 @@ export function SuggestData() {
         <VStack maxW="500px" w="90%" flex={1}>
             <HStack justify="space-between" w="100%" mb={2}>
                 <Box flex={1}/>
-                <Heading size="3xl">Better Spy</Heading>
+                <Heading size="3xl">Suggest Content</Heading>
                 <Flex flex={1} justify="end">
                     <IconButton variant="plain" mr="-10px" onClick={() => navigate("/")}>
                         <FaTimes/>
@@ -147,8 +114,8 @@ export function SuggestData() {
             </HStack>
             <Text fontSize={"sm"} textAlign="justify" w="full">
                 Here you can suggest categories and terms that you would like to see in the game. Once they are
-                approved, you will see your content in the game! If you'd like to add to an existing category, select it
-                from the dropdown.
+                approved, you will see your content in the game! If you'd like to add to an existing category,
+                select it from the dropdown.
             </Text>
             <HStack mt={6} w="100%">
                 <Heading>Category</Heading>

@@ -1,22 +1,32 @@
-import {AspectRatio, Button, Heading, Skeleton, Spacer, Text, VStack} from "@chakra-ui/react";
+import {AspectRatio, Box, Button, Heading, Skeleton, Spacer, Text, VStack} from "@chakra-ui/react";
 import {useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useGSAP} from "@gsap/react";
+import gsap from 'gsap';
 import {SettingsContext} from "@/context";
 import {useTerms} from "@/hooks/useTerms.ts";
 import {Error} from "@/components/Util";
 import {Term} from "@/model";
 
 export function Play() {
-    const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext);
+    const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext)
     const categoryIds = selectedCategories.map(category => category.id)
     const {getTerms: {data: terms, isLoading, isError}} = useTerms(categoryIds)
     const navigate = useNavigate()
+    const {contextSafe} = useGSAP()
 
-    const [currentPlayer, setCurrentPlayer] = useState<number>(0)
-    const [spies, setSpies] = useState<number[]>([])
-    const [showingRole, setShowingRole] = useState<boolean>(false)
-    const [term, setTerm] = useState<string>()
+    const [term, setTerm] = useState<string | null>(null)
+    const [spies, setSpies] = useState<number[] | null>(null)
 
+    const [frontCard, setFrontCard] = useState<string | null>(null)
+    const [backCard, setBackCard] = useState<string | null>(null)
+
+    const [currentMove, setCurrentMove] = useState<number>(0)
+    const [isAnimating, setIsAnimating] = useState<boolean>(false)
+
+    useEffect(() => {
+        console.log("currentMove", currentMove, "frontCard", frontCard, "backCard", backCard)
+    }, [currentMove, frontCard, backCard]);
 
     useEffect(() => {
         if (players.length > 0) {
@@ -36,25 +46,55 @@ export function Play() {
         }
     }, [terms]);
 
+    useEffect(() => {
+        if (term && spies) {
+            setFrontCard(players[0])
+            setBackCard(spies.includes(0) ? "SPY" : term)
+        }
+    }, [term, spies, players]);
+
     const move = () => {
-        if (currentPlayer === players.length - 1 && showingRole) {
+        if (isAnimating) return
+
+        if (currentMove === players.length * 2 - 1) {
             navigate("/")
         } else {
-            setShowingRole(!showingRole)
-            if (showingRole) {
-                setCurrentPlayer(currentPlayer + 1)
-            }
+            onClickAnimation(() => {
+                if ((currentMove + 2) % 2 === 0) {
+                    setFrontCard(players[Math.floor((currentMove + 2) / 2)])
+                } else {
+                    setBackCard(spies!.includes(Math.floor((currentMove + 2) / 2)) ? "SPY" : term)
+                }
+                setCurrentMove(currentMove + 1)
+            })
         }
     }
+
+    const onClickAnimation = contextSafe((onComplete: () => void) => {
+        setIsAnimating(true)
+
+        const tl = gsap.timeline({
+            paused: true,
+            onComplete: () => {
+                setIsAnimating(false)
+                onComplete()
+            },
+        })
+
+        tl.to(".cardFront", {duration: 0.5, rotationY: "+=180"})
+            .to(".cardBack", {duration: 0.5, rotationY: "+=180"}, 0);
+
+        tl.play()
+    })
 
     const exit = () => {
         navigate("/")
     }
 
-    if (isLoading) {
+    if (isLoading || !term || !spies) {
         return (
             <VStack maxW="500px" w="90%" flex={1}>
-                <Heading size="3xl" mb={4}>Better Spy</Heading>
+                <Heading size="3xl" mb={4}>Spy Game</Heading>
                 <Skeleton h="5" w="75px" mb={1}/>
                 <Skeleton h="5" w="60px" mb={1}/>
                 <Skeleton h="5" w="150px" mb={12}/>
@@ -63,7 +103,9 @@ export function Play() {
                 </AspectRatio>
                 <Skeleton h="5" w="180px"/>
                 <Spacer/>
-                <Skeleton w="100%" h="50px"/>
+                <Button w="100%" h="50px" onClick={() => exit()}>
+                    EXIT
+                </Button>
             </VStack>
         )
     }
@@ -74,7 +116,7 @@ export function Play() {
 
     return (
         <VStack maxW="500px" w="90%" flex={1}>
-            <Heading size="3xl" mb={4}>Better Spy</Heading>
+            <Heading size="3xl" mb={4}>Spy Game</Heading>
             <Text>Players: {players.length}</Text>
             <Text>Spies: {amountOfSpies}</Text>
             <Text mb={12}>
@@ -82,21 +124,38 @@ export function Play() {
                 {selectedCategories.map((category) => category.value).join(", ")}
             </Text>
             <AspectRatio ratio={1} w="100%">
-                <Button borderRadius="2xl" fontSize="3xl" onClick={() => move()}>
-                    {showingRole ? (
-                        spies.includes(currentPlayer) ? (
-                            <Text>SPY</Text>
-                        ) : (
-                            <Text>{term}</Text>
-                        )
-                    ) : (
-                        <Text>{players[currentPlayer]}</Text>
-                    )}
-                </Button>
+                <Box position="relative" w="100%" onClick={move} className="card"
+                     style={{transformStyle: "preserve-3d", perspective: 2000, overflow: "visible"}}>
+                    <AspectRatio ratio={1} w="100%" className="cardFront" position="absolute"
+                                 style={{
+                                     backfaceVisibility: "hidden",
+                                     WebkitBackfaceVisibility: "hidden",
+                                     MozBackfaceVisibility: "hidden"
+                                 }}>
+                        <Button borderRadius="2xl" fontSize="3xl" pointerEvents={isAnimating ? "none" : "auto"}>
+                            {frontCard}
+                        </Button>
+                    </AspectRatio>
+                    <AspectRatio ratio={1} w="100%" className="cardBack" position="absolute"
+                                 transform="rotateY(-180deg)"
+                                 style={{
+                                     backfaceVisibility: "hidden",
+                                     WebkitBackfaceVisibility: "hidden",
+                                     MozBackfaceVisibility: "hidden"
+                                 }}>
+                        <Button borderRadius="2xl" fontSize="3xl" pointerEvents={isAnimating ? "none" : "auto"}>
+                            {backCard}
+                        </Button>
+                    </AspectRatio>
+                </Box>
             </AspectRatio>
-            <Text>Click to reveal the word</Text>
+            <Text textAlign="center">
+                {(currentMove + 2) % 2 === 0
+                    ? "Tap the card to reveal the subject."
+                    : "Tap again and pass on the phone."}
+            </Text>
             <Spacer/>
-            <Button w="100%" h="50px" left="50%" transform="translateX(-50%)" onClick={() => exit()}>
+            <Button w="100%" h="50px" onClick={() => exit()}>
                 EXIT
             </Button>
         </VStack>

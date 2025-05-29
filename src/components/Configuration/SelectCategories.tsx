@@ -20,15 +20,11 @@ export function SelectCategories({open, setOpen, categories}: SelectCategoriesPr
     }, [selectedCategories, open]);
 
     const toggleCategory = (category: Category) => {
-        setCategoriesLocal((prevCategories) => {
-            const isSelected = prevCategories.some(c => c.value === category.value);
-
-            if (isSelected) {
-                return prevCategories.filter(c => c.value !== category.value);
-            } else {
-                return [...prevCategories, category];
-            }
-        })
+        if (categoriesLocal.some(c => c.value === category.value)) {
+            setCategoriesLocal(categoriesLocal.filter(c => c.value !== category.value))
+        } else {
+            setCategoriesLocal([...categoriesLocal, category])
+        }
     }
 
     const onSave = () => {

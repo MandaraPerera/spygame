@@ -10,8 +10,8 @@ import {useCategories} from "@/hooks";
 import {Error} from "@/components/Util";
 
 export function Home() {
-    const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext);
-    const {getCategories: {data: categories, isLoading, isError}} = useCategories();
+    const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext)
+    const {getCategories: {data: categories, isLoading, isError}} = useCategories()
     const navigate = useNavigate();
 
     const [openPlayersDialog, setOpenPlayersDialog] = useState<boolean>(false)
@@ -35,7 +35,7 @@ export function Home() {
     if (isLoading) {
         return (
             <VStack maxW="500px" w="90%" flex={1}>
-                <Heading size="3xl" mb={16}>Better Spy</Heading>
+                <Heading size="3xl" mb={16}>Spy Game</Heading>
                 <SimpleGrid columns={2} gap={4} w="100%">
                     {Array.from({length: 4}, (_, index) => (
                         <AspectRatio ratio={1} key={index}>
@@ -55,7 +55,7 @@ export function Home() {
 
     return (
         <VStack maxW="500px" w="90%" flex={1}>
-            <Heading size="3xl" mb={16}>Better Spy</Heading>
+            <Heading size="3xl" mb={16}>Spy Game</Heading>
             <SimpleGrid columns={2} gap={4} w="100%">
                 <AspectRatio ratio={1}>
                     <Button onClick={() => setOpenPlayersDialog(true)}>
