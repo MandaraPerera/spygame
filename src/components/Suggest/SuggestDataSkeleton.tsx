@@ -18,15 +18,16 @@ export function SuggestDataSkeleton() {
             </HStack>
             <Text fontSize={"sm"} textAlign="justify" w="full">
                 Here you can suggest categories and terms that you would like to see in the game. Once they are
-                approved, you will see your content in the game! If you'd like to add to an existing category,
-                select it from the dropdown.
+                approved, you will see your content in the game! Add to an existing category using the dropdown, or add
+                your own by setting the toggle from <span style={{fontStyle: "italic"}}>Existing</span> to
+                <span style={{fontStyle: "italic"}}> New</span>.
             </Text>
             <HStack w="100%" mt={6} justify="space-between">
                 <Heading>Category</Heading>
-                <Skeleton w="80px" h="5"/>
+                <Skeleton w="110px" h="5"/>
             </HStack>
-            <Skeleton w="110px" h="5" mt={2} alignSelf="start"/>
-            <Separator w="100%" mt={2}/>
+            <Skeleton minW="170px" width="50%" h="9" alignSelf="start"/>
+            <Separator w="100%"/>
             <Heading w="100%" mt={4}>Terms</Heading>
             <HStack w="100%" justify="space-between">
                 <Skeleton w="85px" h="5"/>

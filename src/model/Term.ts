@@ -1,6 +1,6 @@
 export type Term = {
-    id: string,
-    value: string,
+    id: string
+    value: string
     categoryId: string
 }
 

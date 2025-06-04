@@ -64,12 +64,12 @@ export function ManageData() {
                             </Dialog.Body>
                             <Dialog.Footer>
                                 <SimpleGrid w="100%" columns={2} gap={4}>
-                                    <Button onClick={() => setOpenConfirmResetData(false)} variant="outline">
-                                        Cancel
-                                    </Button>
-                                    <Button onClick={handleResetData}>
-                                        Confirm
-                                    </Button>
+                                    <SimpleGrid w="100%" columns={2} gap={4}>
+                                        <Dialog.ActionTrigger asChild>
+                                            <Button variant="outline">Cancel</Button>
+                                        </Dialog.ActionTrigger>
+                                        <Button onClick={handleResetData}>Save</Button>
+                                    </SimpleGrid>
                                 </SimpleGrid>
                             </Dialog.Footer>
                         </Dialog.Content>

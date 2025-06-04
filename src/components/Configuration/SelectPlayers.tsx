@@ -102,10 +102,10 @@ export function SelectPlayers({open, setOpen}: SelectPlayersProps) {
                         </Dialog.Body>
                         <Dialog.Footer>
                             <SimpleGrid w="100%" columns={2} gap={4}>
-                                <Button onClick={() => {
-                                    setOpen(false)
-                                }} variant="outline">Cancel</Button>
-                                <Button onClick={() => onSave()}>Save</Button>
+                                <Dialog.ActionTrigger asChild>
+                                    <Button variant="outline">Cancel</Button>
+                                </Dialog.ActionTrigger>
+                                <Button onClick={onSave}>Save</Button>
                             </SimpleGrid>
                         </Dialog.Footer>
                     </Dialog.Content>

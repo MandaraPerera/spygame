@@ -1,3 +1,4 @@
 export {getAllCategories} from './categories'
-export {getAllTermsByCategoryId} from './terms'
 export {seedFirestore} from './seedFirestore'
+export {createSuggestedContent} from './suggestedContent'
+export {getAllTermsByCategoryId} from './terms'
