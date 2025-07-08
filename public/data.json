@@ -1,178 +1,1007 @@
 {
   "categories": [
     {
-      "value": "Countries"
+      "value": "Countries",
+      "isOriginal": true
     },
     {
-      "value": "Objects"
+      "value": "Objects",
+      "isOriginal": true
     },
     {
-      "value": "Places"
+      "value": "Places",
+      "isOriginal": true
     },
     {
-      "value": "Sports"
+      "value": "Sports",
+      "isOriginal": true
     }
   ],
   "terms": [
     {
       "value": "United States",
-      "categoryId": "1"
+      "categoryId": "1",
+      "isOriginal": true
     },
     {
       "value": "Canada",
-      "categoryId": "1"
-    },
-    {
-      "value": "Brazil",
-      "categoryId": "1"
-    },
-    {
-      "value": "Germany",
-      "categoryId": "1"
-    },
-    {
-      "value": "Japan",
-      "categoryId": "1"
-    },
-    {
-      "value": "Australia",
-      "categoryId": "1"
-    },
-    {
-      "value": "South Africa",
-      "categoryId": "1"
-    },
-    {
-      "value": "India",
-      "categoryId": "1"
-    },
-    {
-      "value": "France",
-      "categoryId": "1"
+      "categoryId": "1",
+      "isOriginal": true
     },
     {
       "value": "Mexico",
-      "categoryId": "1"
+      "categoryId": "1",
+      "isOriginal": true
     },
     {
-      "value": "Laptop",
-      "categoryId": "2"
+      "value": "Brazil",
+      "categoryId": "1",
+      "isOriginal": true
     },
     {
-      "value": "Backpack",
-      "categoryId": "2"
+      "value": "Argentina",
+      "categoryId": "1",
+      "isOriginal": true
     },
     {
-      "value": "Sunglasses",
-      "categoryId": "2"
+      "value": "United Kingdom",
+      "categoryId": "1",
+      "isOriginal": true
     },
     {
-      "value": "Watch",
-      "categoryId": "2"
+      "value": "France",
+      "categoryId": "1",
+      "isOriginal": true
     },
     {
-      "value": "Bicycle",
-      "categoryId": "2"
+      "value": "Germany",
+      "categoryId": "1",
+      "isOriginal": true
     },
     {
-      "value": "Chair",
-      "categoryId": "2"
+      "value": "Italy",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Spain",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Portugal",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Netherlands",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Belgium",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Switzerland",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Sweden",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Norway",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Denmark",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Russia",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "China",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Japan",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "South Korea",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "India",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Pakistan",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Indonesia",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Thailand",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Philippines",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Australia",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "New Zealand",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Egypt",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "South Africa",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Morocco",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Turkey",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Saudi Arabia",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "United Arab Emirates",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Greece",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Israel",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Iran",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Iraq",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Vietnam",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Malaysia",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Singapore",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Cuba",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Colombia",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Peru",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Chile",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Venezuela",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Nigeria",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Kenya",
+      "categoryId": "1",
+      "isOriginal": true
+    },
+    {
+      "value": "Ireland",
+      "categoryId": "1",
+      "isOriginal": true
     },
     {
       "value": "Smartphone",
-      "categoryId": "2"
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Laptop",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Microwave",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Light Bulb",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Car",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Bicycle",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Motorcycle",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Airplane",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Train",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Boat",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Scissors",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Hammer",
+      "categoryId": "2",
+      "isOriginal": true
     },
     {
       "value": "Umbrella",
-      "categoryId": "2"
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Backpack",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Mirror",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Clock",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Glasses",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Wallet",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Toothbrush",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Candle",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Camera",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Drone",
+      "categoryId": "2",
+      "isOriginal": true
     },
     {
       "value": "Headphones",
-      "categoryId": "2"
+      "categoryId": "2",
+      "isOriginal": true
     },
     {
-      "value": "Coffee mug",
-      "categoryId": "2"
+      "value": "Sofa",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Bed",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Pillow",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Suitcase",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Knife",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Speaker",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Chair",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Table",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Phone Charger",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Plant",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Deck of Cards",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Lighter",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Tissue Box",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Trash Can",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Sunglasses",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Chalkboard",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Bottle Opener",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Painting",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Lamp",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Handbag",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Guitar",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "TV Remote",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Toaster",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Computer Keyboard",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Coffee Machine",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Beer Tap",
+      "categoryId": "2",
+      "isOriginal": true
+    },
+    {
+      "value": "Sink",
+      "categoryId": "2",
+      "isOriginal": true
     },
     {
       "value": "Cinema",
-      "categoryId": "3"
-    },
-    {
-      "value": "Library",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isOriginal": true
     },
     {
       "value": "Restaurant",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isOriginal": true
     },
     {
       "value": "Hospital",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isOriginal": true
     },
     {
       "value": "Supermarket",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isOriginal": true
     },
     {
       "value": "Gym",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isOriginal": true
     },
     {
       "value": "School",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isOriginal": true
     },
     {
       "value": "Airport",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isOriginal": true
     },
     {
       "value": "Stadium",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isOriginal": true
     },
     {
       "value": "Train Station",
-      "categoryId": "3"
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Bus Stop",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Hotel Lobby",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Library",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Beach",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Park",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Office",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Zoo",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Bakery",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Museum",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Post Office",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Nightclub",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Coffee Shop",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Barbershop",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Garage",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Concert Hall",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Theater",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Pharmacy",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Mall",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Gas Station",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Police Station",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Fire Station",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Aquarium",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Amusement Park",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Wedding Hall",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Recording Studio",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Laundry",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Dentist's Office",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Hardware Store",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Bookstore",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Bowling Alley",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Swimming Pool",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Clothing Store",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Ice Rink",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Camping Ground",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Art Gallery",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Courthouse",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "TV Studio",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Dog Park",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Bar",
+      "categoryId": "3",
+      "isOriginal": true
+    },
+    {
+      "value": "Garage Sale",
+      "categoryId": "3",
+      "isOriginal": true
     },
     {
       "value": "Soccer",
-      "categoryId": "4"
+      "categoryId": "4",
+      "isOriginal": true
     },
     {
       "value": "Basketball",
-      "categoryId": "4"
+      "categoryId": "4",
+      "isOriginal": true
     },
     {
       "value": "Tennis",
-      "categoryId": "4"
+      "categoryId": "4",
+      "isOriginal": true
     },
     {
       "value": "Baseball",
-      "categoryId": "4"
+      "categoryId": "4",
+      "isOriginal": true
     },
     {
       "value": "Golf",
-      "categoryId": "4"
+      "categoryId": "4",
+      "isOriginal": true
     },
     {
       "value": "Swimming",
-      "categoryId": "4"
+      "categoryId": "4",
+      "isOriginal": true
     },
     {
       "value": "Boxing",
-      "categoryId": "4"
-    },
-    {
-      "value": "Ice Hockey",
-      "categoryId": "4"
+      "categoryId": "4",
+      "isOriginal": true
     },
     {
       "value": "Volleyball",
-      "categoryId": "4"
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Badminton",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Cricket",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Table Tennis",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Rugby",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Hockey",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Cycling",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Karate",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Judo",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Skateboarding",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Surfing",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Snowboarding",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Skiing",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Wrestling",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Fencing",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Archery",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Diving",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Rowing",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Horse Racing",
+      "categoryId": "4",
+      "isOriginal": true
     },
     {
       "value": "Formula 1",
-      "categoryId": "4"
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Handball",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Padel",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Water Polo",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Polo",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Ice Hockey",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Bowling",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Snooker",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Paintball",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Darts",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Rock Climbing",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Triathlon",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Paragliding",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Kickboxing",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Weightlifting",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "CrossFit",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Parkour",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Running",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Squash",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Canoeing",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "BMX Racing",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Bodyboarding",
+      "categoryId": "4",
+      "isOriginal": true
+    },
+    {
+      "value": "Lacrosse",
+      "categoryId": "4",
+      "isOriginal": true
     }
   ]
 }

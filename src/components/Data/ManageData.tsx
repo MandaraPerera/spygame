@@ -54,7 +54,7 @@ export function ManageData() {
                 <Portal>
                     <Dialog.Backdrop/>
                     <Dialog.Positioner>
-                        <Dialog.Content maxW="90%">
+                        <Dialog.Content maxW="500px" w="90%">
                             <Dialog.CloseTrigger/>
                             <Dialog.Header>
                                 <Dialog.Title>Reset All Data?</Dialog.Title>
@@ -64,12 +64,10 @@ export function ManageData() {
                             </Dialog.Body>
                             <Dialog.Footer>
                                 <SimpleGrid w="100%" columns={2} gap={4}>
-                                    <SimpleGrid w="100%" columns={2} gap={4}>
-                                        <Dialog.ActionTrigger asChild>
-                                            <Button variant="outline">Cancel</Button>
-                                        </Dialog.ActionTrigger>
-                                        <Button onClick={handleResetData}>Save</Button>
-                                    </SimpleGrid>
+                                    <Dialog.ActionTrigger asChild>
+                                        <Button variant="outline">Cancel</Button>
+                                    </Dialog.ActionTrigger>
+                                    <Button onClick={handleResetData}>Save</Button>
                                 </SimpleGrid>
                             </Dialog.Footer>
                         </Dialog.Content>

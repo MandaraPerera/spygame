@@ -7,6 +7,7 @@ import {SettingsContext} from "@/context";
 import {useTerms} from "@/hooks/useTerms.ts";
 import {Error} from "@/components/Util";
 import {Term} from "@/model";
+import {PlayCard} from "@/components/Play/PlayCard.tsx";
 
 export function Play() {
     const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext)
@@ -23,10 +24,6 @@ export function Play() {
 
     const [currentMove, setCurrentMove] = useState<number>(0)
     const [isAnimating, setIsAnimating] = useState<boolean>(false)
-
-    useEffect(() => {
-        console.log("currentMove", currentMove, "frontCard", frontCard, "backCard", backCard)
-    }, [currentMove, frontCard, backCard]);
 
     useEffect(() => {
         if (players.length > 0) {
@@ -119,7 +116,7 @@ export function Play() {
             <Heading size="3xl" mb={4}>Spy Game</Heading>
             <Text>Players: {players.length}</Text>
             <Text>Spies: {amountOfSpies}</Text>
-            <Text mb={12}>
+            <Text mb={12} textAlign="center">
                 {selectedCategories.length === 1 ? "Category: " : "Categories: "}
                 {selectedCategories.map((category) => category.value).join(", ")}
             </Text>
@@ -132,9 +129,9 @@ export function Play() {
                                      WebkitBackfaceVisibility: "hidden",
                                      MozBackfaceVisibility: "hidden"
                                  }}>
-                        <Button borderRadius="2xl" fontSize="3xl" pointerEvents={isAnimating ? "none" : "auto"}>
-                            {frontCard}
-                        </Button>
+                        <PlayCard isAnimating={isAnimating} backCard={false} isSpy={false}>
+                            <Heading fontSize="3xl" fontWeight="semibold">{frontCard}</Heading>
+                        </PlayCard>
                     </AspectRatio>
                     <AspectRatio ratio={1} w="100%" className="cardBack" position="absolute"
                                  transform="rotateY(-180deg)"
@@ -143,9 +140,9 @@ export function Play() {
                                      WebkitBackfaceVisibility: "hidden",
                                      MozBackfaceVisibility: "hidden"
                                  }}>
-                        <Button borderRadius="2xl" fontSize="3xl" pointerEvents={isAnimating ? "none" : "auto"}>
-                            {backCard}
-                        </Button>
+                        <PlayCard isAnimating={isAnimating} backCard={true} isSpy={backCard === "SPY"}>
+                            <Heading fontSize="3xl" fontWeight="semibold">{backCard}</Heading>
+                        </PlayCard>
                     </AspectRatio>
                 </Box>
             </AspectRatio>

@@ -27,7 +27,6 @@ export function ProtectedRoute({children}: ProtectedRouteProps) {
     }, [user]);
 
     if (isLoading || isAuthorized === null) {
-        console.log(isLoading, isAuthorized)
         return <Loading text={"Checking authorization"}/>
     }
 
