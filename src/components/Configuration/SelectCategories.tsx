@@ -1,5 +1,5 @@
-import {Button, Dialog, Portal, SimpleGrid, VStack} from "@chakra-ui/react";
-import {useContext, useEffect, useState} from "react";
+import {Button, Dialog, Portal, VStack} from "@chakra-ui/react";
+import {useContext} from "react";
 import {Category} from "@/model";
 import {SettingsContext} from "@/context";
 
@@ -11,25 +11,13 @@ interface SelectCategoriesProps {
 
 export function SelectCategories({open, setOpen, categories}: SelectCategoriesProps) {
     const {selectedCategories, setSelectedCategories} = useContext(SettingsContext);
-    const [categoriesLocal, setCategoriesLocal] = useState<Category[]>([]);
-
-    useEffect(() => {
-        if (open) {
-            setCategoriesLocal(selectedCategories);
-        }
-    }, [selectedCategories, open]);
 
     const toggleCategory = (category: Category) => {
-        if (categoriesLocal.some(c => c.value === category.value)) {
-            setCategoriesLocal(categoriesLocal.filter(c => c.value !== category.value))
+        if (selectedCategories.some(c => c.value === category.value)) {
+            setSelectedCategories(selectedCategories.filter(c => c.value !== category.value))
         } else {
-            setCategoriesLocal([...categoriesLocal, category])
+            setSelectedCategories([...selectedCategories, category])
         }
-    }
-
-    const onSave = () => {
-        setSelectedCategories(categoriesLocal);
-        setOpen(false)
     }
 
     return (
@@ -50,7 +38,7 @@ export function SelectCategories({open, setOpen, categories}: SelectCategoriesPr
                                         <Button
                                             key={index}
                                             w="100%"
-                                            variant={categoriesLocal.some(c => c.value === category.value) ? "solid" : "outline"}
+                                            variant={selectedCategories.some(c => c.value === category.value) ? "solid" : "outline"}
                                             onClick={() => toggleCategory(category)}
                                         >
                                             {category.value}
@@ -59,12 +47,11 @@ export function SelectCategories({open, setOpen, categories}: SelectCategoriesPr
                             </VStack>
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <SimpleGrid w="100%" columns={2} gap={4}>
-                                <Dialog.ActionTrigger asChild>
-                                    <Button variant="outline">Cancel</Button>
-                                </Dialog.ActionTrigger>
-                                <Button onClick={onSave}>Save</Button>
-                            </SimpleGrid>
+                            <Dialog.ActionTrigger asChild>
+                                <Button variant="solid" w="100%">
+                                    Close
+                                </Button>
+                            </Dialog.ActionTrigger>
                         </Dialog.Footer>
                     </Dialog.Content>
                 </Dialog.Positioner>

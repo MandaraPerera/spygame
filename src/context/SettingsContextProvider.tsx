@@ -8,14 +8,14 @@ interface SettingsContextProviderProps {
 }
 
 export function SettingsContextProvider({children}: SettingsContextProviderProps) {
-    const [players, setPlayers] = useLocalStorage('players', ["Player 1", "Player 2", "Player 3", "Player 4"])
+    const [amountOfPlayers, setAmountOfPlayers] = useLocalStorage('amountOfPlayers', 3)
     const [amountOfSpies, setAmountOfSpies] = useLocalStorage('amountOfSpies', 1)
     const [selectedCategories, setSelectedCategories] = useLocalStorage<Category[]>('selectedCategories', [])
 
     return (
         <SettingsContext.Provider
             value={{
-                players, setPlayers,
+                amountOfPlayers, setAmountOfPlayers,
                 amountOfSpies, setAmountOfSpies,
                 selectedCategories, setSelectedCategories
             }}

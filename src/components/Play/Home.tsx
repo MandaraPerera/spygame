@@ -10,7 +10,7 @@ import {useCategories} from "@/hooks";
 import {Error} from "@/components/Util";
 
 export function Home() {
-    const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext)
+    const {amountOfPlayers, amountOfSpies, selectedCategories} = useContext(SettingsContext)
     const {getCategories: {data: categories, isLoading, isError}} = useCategories()
     const navigate = useNavigate()
     const location = useLocation()
@@ -74,7 +74,7 @@ export function Home() {
                                     <MdGroups/>
                                 </Icon>
                                 <Spacer/>
-                                <Heading size="3xl">{players.length}</Heading>
+                                <Heading size="3xl">{amountOfPlayers}</Heading>
                             </HStack>
                             <Text textStyle="xl">Players</Text>
                         </VStack>

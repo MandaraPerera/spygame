@@ -1,5 +1,5 @@
-import {useContext, useEffect, useState} from "react";
-import {Button, Center, Dialog, HStack, IconButton, Portal, SimpleGrid, Text} from "@chakra-ui/react";
+import {useContext} from "react";
+import {Button, Center, Dialog, HStack, IconButton, Portal, Text} from "@chakra-ui/react";
 import {toaster} from "@/components/ui";
 import {SettingsContext} from "@/context";
 
@@ -9,41 +9,29 @@ interface SelectSpiesProps {
 }
 
 export function SelectSpies({open, setOpen}: SelectSpiesProps) {
-    const {players, amountOfSpies, setAmountOfSpies} = useContext(SettingsContext);
-    const [amountOfSpiesLocal, setAmountOfSpiesLocal] = useState<number>(amountOfSpies)
-
-    useEffect(() => {
-        if (open) {
-            setAmountOfSpiesLocal(amountOfSpies);
-        }
-    }, [amountOfSpies, open]);
-
-    const onSave = () => {
-        setAmountOfSpies(amountOfSpiesLocal)
-        setOpen(false)
-    }
+    const {amountOfPlayers, amountOfSpies, setAmountOfSpies} = useContext(SettingsContext);
 
     const incrementAmountOfSpies = () => {
-        if (amountOfSpiesLocal >= Math.floor(players.length / 2)) {
+        if (amountOfSpies >= Math.floor(amountOfPlayers / 2)) {
             toaster.create({
                 type: "error",
                 title: "Maximum number of spies is half of the players.",
                 duration: 3000
             })
         } else {
-            setAmountOfSpiesLocal(amountOfSpiesLocal + 1)
+            setAmountOfSpies(amountOfSpies + 1)
         }
     }
 
     const decrementAmountOfSpies = () => {
-        if (amountOfSpiesLocal <= 1) {
+        if (amountOfSpies <= 1) {
             toaster.create({
                 type: "error",
                 title: "Minimum number of spies is 1.",
                 duration: 3000
             })
         } else {
-            setAmountOfSpiesLocal(amountOfSpiesLocal - 1)
+            setAmountOfSpies(amountOfSpies - 1)
         }
     }
 
@@ -62,7 +50,7 @@ export function SelectSpies({open, setOpen}: SelectSpiesProps) {
                                     <IconButton variant="outline" fontSize="xl"
                                                 onClick={() => decrementAmountOfSpies()}
                                     >-</IconButton>
-                                    <Text fontSize="xl">{amountOfSpiesLocal}</Text>
+                                    <Text fontSize="xl">{amountOfSpies}</Text>
                                     <IconButton variant="outline" fontSize="xl"
                                                 onClick={() => incrementAmountOfSpies()}
                                     >+</IconButton>
@@ -70,12 +58,11 @@ export function SelectSpies({open, setOpen}: SelectSpiesProps) {
                             </Center>
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <SimpleGrid w="100%" columns={2} gap={4}>
-                                <Dialog.ActionTrigger asChild>
-                                    <Button variant="outline">Cancel</Button>
-                                </Dialog.ActionTrigger>
-                                <Button onClick={onSave}>Save</Button>
-                            </SimpleGrid>
+                            <Dialog.ActionTrigger asChild>
+                                <Button variant="outline" w="100%">
+                                    Close
+                                </Button>
+                            </Dialog.ActionTrigger>
                         </Dialog.Footer>
                     </Dialog.Content>
                 </Dialog.Positioner>

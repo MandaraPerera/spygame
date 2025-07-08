@@ -10,7 +10,7 @@ import {Term} from "@/model";
 import {PlayCard} from "@/components/Play/PlayCard.tsx";
 
 export function Play() {
-    const {players, amountOfSpies, selectedCategories} = useContext(SettingsContext)
+    const {amountOfPlayers, amountOfSpies, selectedCategories} = useContext(SettingsContext)
     const categoryIds = selectedCategories.map(category => category.id)
     const {getTerms: {data: terms, isLoading, isError}} = useTerms(categoryIds)
     const navigate = useNavigate()
@@ -19,22 +19,21 @@ export function Play() {
     const [term, setTerm] = useState<string | null>(null)
     const [spies, setSpies] = useState<number[] | null>(null)
 
-    const [frontCard, setFrontCard] = useState<string | null>(null)
     const [backCard, setBackCard] = useState<string | null>(null)
 
     const [currentMove, setCurrentMove] = useState<number>(0)
     const [isAnimating, setIsAnimating] = useState<boolean>(false)
 
     useEffect(() => {
-        if (players.length > 0) {
+        if (amountOfPlayers > 0) {
             const randomSpies = new Set<number>()
             while (randomSpies.size < amountOfSpies) {
-                const randomNum = Math.floor(Math.random() * (players.length))
+                const randomNum = Math.floor(Math.random() * (amountOfPlayers))
                 randomSpies.add(randomNum)
             }
             setSpies(Array.from(randomSpies))
         }
-    }, [amountOfSpies, players.length]);
+    }, [amountOfSpies, amountOfPlayers]);
 
     useEffect(() => {
         if (terms && terms.length > 0) {
@@ -45,21 +44,18 @@ export function Play() {
 
     useEffect(() => {
         if (term && spies) {
-            setFrontCard(players[0])
             setBackCard(spies.includes(0) ? "SPY" : term)
         }
-    }, [term, spies, players]);
+    }, [term, spies]);
 
     const move = () => {
         if (isAnimating) return
 
-        if (currentMove === players.length * 2 - 1) {
+        if (currentMove === amountOfPlayers * 2 - 1) {
             navigate("/")
         } else {
             onClickAnimation(() => {
-                if ((currentMove + 2) % 2 === 0) {
-                    setFrontCard(players[Math.floor((currentMove + 2) / 2)])
-                } else {
+                if ((currentMove + 2) % 2 != 0) {
                     setBackCard(spies!.includes(Math.floor((currentMove + 2) / 2)) ? "SPY" : term)
                 }
                 setCurrentMove(currentMove + 1)
@@ -114,7 +110,7 @@ export function Play() {
     return (
         <VStack maxW="500px" w="90%" flex={1}>
             <Heading size="3xl" mb={4}>Spy Game</Heading>
-            <Text>Players: {players.length}</Text>
+            <Text>Players: {amountOfPlayers}</Text>
             <Text>Spies: {amountOfSpies}</Text>
             <Text mb={12} textAlign="center">
                 {selectedCategories.length === 1 ? "Category: " : "Categories: "}
@@ -129,9 +125,7 @@ export function Play() {
                                      WebkitBackfaceVisibility: "hidden",
                                      MozBackfaceVisibility: "hidden"
                                  }}>
-                        <PlayCard isAnimating={isAnimating} backCard={false} isSpy={false}>
-                            <Heading fontSize="3xl" fontWeight="semibold">{frontCard}</Heading>
-                        </PlayCard>
+                        <PlayCard isAnimating={isAnimating} backCard={false} isSpy={false}/>
                     </AspectRatio>
                     <AspectRatio ratio={1} w="100%" className="cardBack" position="absolute"
                                  transform="rotateY(-180deg)"

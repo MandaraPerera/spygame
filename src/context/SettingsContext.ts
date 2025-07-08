@@ -2,8 +2,8 @@ import {createContext} from "react";
 import {Category} from "@/model";
 
 interface ISettingsContext {
-    players: string[];
-    setPlayers: (players: string[]) => void;
+    amountOfPlayers: number;
+    setAmountOfPlayers: (players: number) => void;
     amountOfSpies: number;
     setAmountOfSpies: (amountOfSpies: number) => void;
     selectedCategories: Category[];
@@ -11,8 +11,8 @@ interface ISettingsContext {
 }
 
 export const SettingsContext = createContext<ISettingsContext>({
-    players: [],
-    setPlayers: () => {
+    amountOfPlayers: 3,
+    setAmountOfPlayers: () => {
     },
     amountOfSpies: 1,
     setAmountOfSpies: () => {

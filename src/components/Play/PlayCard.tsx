@@ -1,12 +1,13 @@
 import {ReactNode} from "react";
 import {Button, Heading, Icon, VStack} from "@chakra-ui/react";
-import {GiSemiClosedEye, GiSpy} from "react-icons/gi";
+import {GiSpy} from "react-icons/gi";
+import {AiOutlineQuestion} from "react-icons/ai";
 
 interface PlayCardProps {
     isAnimating: boolean
     backCard: boolean
     isSpy: boolean
-    children: ReactNode
+    children?: ReactNode
 }
 
 export function PlayCard({isAnimating, backCard, isSpy, children}: PlayCardProps) {
@@ -37,7 +38,7 @@ export function PlayCard({isAnimating, backCard, isSpy, children}: PlayCardProps
                     ) :
                     <>
                         <Icon boxSize="40%">
-                            <GiSemiClosedEye/>
+                            <AiOutlineQuestion/>
                         </Icon>
                         {children}
                     </>

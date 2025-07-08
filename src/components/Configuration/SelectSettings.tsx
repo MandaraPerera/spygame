@@ -60,9 +60,11 @@ export function SelectSettings({open, setOpen}: SelectSettingsProps) {
                             </VStack>
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <Button variant="outline" w="100%" onClick={() => setOpen(false)}>
-                                Close
-                            </Button>
+                            <Dialog.ActionTrigger asChild>
+                                <Button variant="outline" w="100%">
+                                    Close
+                                </Button>
+                            </Dialog.ActionTrigger>
                         </Dialog.Footer>
                     </Dialog.Content>
                 </Dialog.Positioner>
