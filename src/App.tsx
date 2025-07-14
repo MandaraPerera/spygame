@@ -11,7 +11,7 @@ import {Auth, GeneralLayout, NotFoundPage} from "@/components/Util";
 export function App() {
     return (
         <ChakraProvider value={system}>
-            <ColorModeProvider>
+            <ColorModeProvider forcedTheme="dark" enableSystem={false}>
                 <AuthContextProvider>
                     <SettingsContextProvider>
                         <BrowserRouter>
