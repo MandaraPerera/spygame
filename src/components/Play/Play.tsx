@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {useGSAP} from "@gsap/react";
 import gsap from 'gsap';
 import {SettingsContext} from "@/context";
-import {useTerms} from "@/hooks/useTerms.ts";
+import {useTerms} from "@/hooks";
 import {Error} from "@/components/Util";
 import {Term} from "@/model";
 import {PlayCard} from "@/components/Play/PlayCard.tsx";

@@ -24,17 +24,16 @@ import {LuCheck, LuPencilLine, LuX} from "react-icons/lu";
 import {FaPlus, FaTimes, FaTrash} from "react-icons/fa";
 import {v4 as uuid} from 'uuid';
 import {useNavigate} from "react-router-dom";
-import {Category, SuggestedContentData} from "@/model";
+import {Category, SuggestionData} from "@/model";
 import {toaster} from "@/components/ui";
-import {useCategories} from "@/hooks";
+import {useCategories, useSuggestions} from "@/hooks";
 import {Error} from "@/components/Util";
-import {SuggestDataSkeleton} from "@/components/Suggest/SuggestDataSkeleton.tsx";
-import {useSuggestedContent} from "@/hooks/useSuggestedContent.ts";
+import {SuggestSkeleton} from "@/components/Suggest";
 
-export function SuggestData() {
+export function Suggest() {
     const navigate = useNavigate()
     const {getCategories: {data: categories, isLoading, isError}} = useCategories()
-    const {addSuggestedContent} = useSuggestedContent()
+    const {addSuggestion} = useSuggestions()
 
     const [category, setCategory] = useState<string>("New category...")
     const [terms, setTerms] = useState<Map<string, string>>(new Map<string, string>([[uuid(), "Term"]]))
@@ -143,13 +142,13 @@ export function SuggestData() {
     }
 
     const onSubmit = () => {
-        const content: SuggestedContentData = {
+        const suggestion: SuggestionData = {
             category,
             terms: Array.from(terms.values()),
             isNewCategory
         }
 
-        addSuggestedContent.mutate(content, {
+        addSuggestion.mutate(suggestion, {
             onSuccess: () => {
                 navigate('/')
                 toaster.create({
@@ -164,7 +163,7 @@ export function SuggestData() {
 
     if (isLoading) {
         return (
-            <SuggestDataSkeleton/>
+            <SuggestSkeleton/>
         )
     }
 
@@ -187,8 +186,7 @@ export function SuggestData() {
                 <Text fontSize={"sm"} textAlign="justify" w="full">
                     Here you can suggest categories and terms that you would like to see in the game. Once they are
                     approved, you will see your content in the game! Add to an existing category using the dropdown, or
-                    add
-                    your own by setting the toggle from <span style={{fontStyle: "italic"}}>Existing</span> to
+                    add your own by setting the toggle from <span style={{fontStyle: "italic"}}>Existing</span> to
                     <span style={{fontStyle: "italic"}}> New</span>.
                 </Text>
                 <HStack mt={6} w="100%">

@@ -2,7 +2,7 @@ import {Box, Flex, Heading, HStack, IconButton, Separator, Skeleton, Text, VStac
 import {FaTimes} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
 
-export function SuggestDataSkeleton() {
+export function SuggestSkeleton() {
     const navigate = useNavigate();
 
     return (

@@ -1,2 +1,2 @@
-export {SuggestData} from './SuggestData'
-export {SuggestDataSkeleton} from './SuggestDataSkeleton'
+export {Suggest} from './Suggest.tsx'
+export {SuggestSkeleton} from './SuggestSkeleton.tsx'
