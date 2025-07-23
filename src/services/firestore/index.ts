@@ -1,4 +1,6 @@
 export {
+    createCategory,
+    getCategoryIdByName,
     getAllCategories,
     getAmountOfCategories
 } from './categories'
@@ -12,12 +14,14 @@ export {
     createSuggestion,
     getAmountOfSuggestions,
     getAllSuggestionsPaginated,
-    listenSuggestions
+    listenSuggestions,
+    deleteSuggestion
 } from './suggestions'
 
 export type {PaginatedSuggestions} from './suggestions'
 
 export {
+    createTerm,
     getAllTermsByCategoryId,
     getAmountOfTerms
 } from './terms'

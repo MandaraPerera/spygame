@@ -141,14 +141,14 @@ export function Suggest() {
         setOpen(true)
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         const suggestion: SuggestionData = {
             category,
             terms: Array.from(terms.values()),
             isNewCategory
         }
 
-        addSuggestion.mutate(suggestion, {
+        await addSuggestion.mutateAsync(suggestion, {
             onSuccess: () => {
                 navigate('/')
                 toaster.create({

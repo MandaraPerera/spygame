@@ -1,8 +1,15 @@
-import {collection, getCountFromServer, getDocs, query, where} from "firebase/firestore";
-import {Term} from "@/model";
+import {addDoc, collection, getCountFromServer, getDocs, query, where} from "firebase/firestore";
+import {Term, TermData} from "@/model";
 import {db} from "@/services/firebase.ts";
 
 const TERMS_COLLECTION = 'terms'
+
+export const createTerm = async (termData: TermData) => {
+    const termsRef = collection(db, TERMS_COLLECTION)
+    const termDoc = await addDoc(termsRef, termData)
+
+    return {id: termDoc.id, ...termData} as Term
+}
 
 export const getAllTermsByCategoryId = async (categoryIds: string[]) => {
     const terms: Term[] = []

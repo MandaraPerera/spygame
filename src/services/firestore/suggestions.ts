@@ -1,6 +1,8 @@
 import {
     addDoc,
     collection,
+    deleteDoc,
+    doc,
     getCountFromServer,
     getDocs,
     limit,
@@ -70,6 +72,11 @@ export const listenSuggestions = (pageSize: number, onSuccess: () => void, onErr
     return onSnapshot(suggestionsQuery, () => {
         onSuccess()
     }, onError)
+}
+
+export const deleteSuggestion = (suggestionId: string) => {
+    const suggestionRef = doc(db, SUGGESTION_COLLECTION, suggestionId)
+    return deleteDoc(suggestionRef)
 }
 
 export interface PaginatedSuggestions {

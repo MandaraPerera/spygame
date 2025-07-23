@@ -1,8 +1,20 @@
-import {Accordion, Box, Button, Flex, Heading, HStack, IconButton, Text, VStack} from "@chakra-ui/react";
+import {
+    Accordion,
+    Box,
+    Button,
+    Flex,
+    Heading,
+    HStack,
+    IconButton,
+    SimpleGrid,
+    Skeleton,
+    Text,
+    VStack
+} from "@chakra-ui/react";
 import {useNavigate} from "react-router-dom";
 import {FaArrowLeftLong} from "react-icons/fa6";
 import {useState} from "react";
-import {Error, Loading, ProtectedRoute} from "@/components/Util";
+import {Error, ProtectedRoute} from "@/components/Util";
 import {useSuggestionsRealtime} from "@/hooks";
 import {SuggestionItem} from "@/components/Data/SuggestionItem.tsx";
 
@@ -37,13 +49,17 @@ export function Suggestions() {
                 {isPending || !suggestions ? (
                     isError ?
                         <Error text="Something went wrong."/> :
-                        <Loading text="Suggestions are loading."/>
+                        <SimpleGrid>
+                            {Array.from({length: 4}, (_, index) => (
+                                <Skeleton key={index} w="100%" h="68px" mb={2}/>
+                            ))}
+                        </SimpleGrid>
                 ) : (
                     <>
                         {suggestions.length === 0 ? (
                             <Text>There are no suggestions to be reviewed.</Text>
                         ) : (
-                            <Accordion.Root collapsible variant="subtle" value={value}
+                            <Accordion.Root collapsible variant="subtle" value={value} spaceY={2}
                                             onValueChange={(e) => setValue(e.value)}>
                                 {suggestions.map((suggestion, index) => (
                                     <SuggestionItem suggestion={suggestion} key={index}/>
