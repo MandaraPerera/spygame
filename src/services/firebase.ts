@@ -1,4 +1,5 @@
 import {initializeApp} from "firebase/app";
+import {getAnalytics} from "firebase/analytics";
 import {getAuth} from "firebase/auth";
 import {getFirestore} from "firebase/firestore";
 import {initializeAppCheck, ReCaptchaEnterpriseProvider} from "firebase/app-check";
@@ -9,10 +10,12 @@ const firebaseConfig = {
     projectId: "the-spygame",
     storageBucket: "the-spygame.firebasestorage.app",
     messagingSenderId: "652474821023",
-    appId: "1:652474821023:web:0fe7933f9f2ec5043cf5aa"
+    appId: "1:652474821023:web:0fe7933f9f2ec5043cf5aa",
+    measurementId: "G-BQ0V44L4ZF"
 };
 
 const app = initializeApp(firebaseConfig);
+export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
