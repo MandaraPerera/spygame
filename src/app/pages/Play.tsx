@@ -60,6 +60,13 @@ export function Play() {
     const currentPlayer = Math.min(Math.floor(currentMove / 2) + 1, amountOfPlayers)
     const isRevealed = currentMove % 2 === 1
     const isSpy = deal.spies.includes(currentPlayer - 1)
+    const nextPlayer = Math.min(currentPlayer + 1, amountOfPlayers)
+    // While a role is open the front faces away, so it already shows the next player: closing the file never shows
+    // the number change.
+    const playerOnFront = isRevealed ? nextPlayer : currentPlayer
+    // The title, progress and hint move on to the next player as soon as the file starts closing, with the card.
+    const isHandingOver = isRevealed && isAnimating && currentPlayer < amountOfPlayers
+    const playerOnScreen = isHandingOver ? nextPlayer : currentPlayer
     const goHome = () => navigate("/")
     const toHome = {label: "Back to setup", onClick: goHome}
 
@@ -169,11 +176,11 @@ export function Play() {
     )
 
     return (
-        <Screen header={<TopBar start={closeButton} title={`Player ${currentPlayer} of ${amountOfPlayers}`} isTitleLive/>}>
+        <Screen header={<TopBar start={closeButton} title={`Player ${playerOnScreen} of ${amountOfPlayers}`} isTitleLive/>}>
             <HStack gap="1.5" aria-hidden>
                 {Array.from({length: amountOfPlayers}, (_, index) => {
-                    const isCurrent = index === currentPlayer - 1
-                    const isDone = index < currentPlayer - 1
+                    const isCurrent = index === playerOnScreen - 1
+                    const isDone = index < playerOnScreen - 1
 
                     return (
                         <Box key={index} flex="1" h="1" rounded="full"
@@ -185,12 +192,12 @@ export function Play() {
 
             <Flex direction="column" flex="1" justify="center" gap="5">
                 <Box ref={cardScopeRef}>
-                    <RoleCard player={currentPlayer} isRevealed={isRevealed} isSpy={isSpy} term={term}
+                    <RoleCard player={playerOnFront} isRevealed={isRevealed} isSpy={isSpy} term={term}
                               amountOfSpies={deal.spies.length} isBusy={isAnimating} onPress={move}/>
                 </Box>
 
                 <Text textAlign="center" color="fg.muted" maxW="20rem" mx="auto" minH="3lh" aria-live="polite">
-                    {hintFor(currentPlayer, amountOfPlayers, isRevealed)}
+                    {hintFor(playerOnScreen, amountOfPlayers, isRevealed && !isHandingOver)}
                 </Text>
             </Flex>
 
