@@ -1,7 +1,9 @@
-import {InfiniteData, useInfiniteQuery, useQueryClient} from "@tanstack/react-query";
-import {QueryDocumentSnapshot} from "firebase/firestore";
+import {type InfiniteData, useInfiniteQuery, useQueryClient} from "@tanstack/react-query";
+import type {QueryDocumentSnapshot} from "firebase/firestore";
 import {useEffect, useRef} from "react";
-import {getAllSuggestionsPaginated, listenSuggestions, PaginatedSuggestions} from "@/services/firestore";
+import {suggestionKeys} from "@/config";
+import type {PaginatedSuggestions} from "@/model";
+import {listenSuggestions, readSuggestionsPaginated} from "@/services";
 
 const PAGE_SIZE = 10
 
@@ -12,12 +14,12 @@ export function useSuggestionsRealtime() {
         PaginatedSuggestions,
         Error,
         InfiniteData<PaginatedSuggestions>,
-        ['suggestions', 'paginated'],
+        typeof suggestionKeys.paginated,
         QueryDocumentSnapshot | undefined
     >({
-        queryKey: ['suggestions', 'paginated'],
+        queryKey: suggestionKeys.paginated,
         initialPageParam: undefined,
-        queryFn: ({pageParam}) => getAllSuggestionsPaginated(PAGE_SIZE, pageParam),
+        queryFn: ({pageParam}) => readSuggestionsPaginated(PAGE_SIZE, pageParam),
         getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
         staleTime: 1000 * 60 * 5
     })
@@ -34,7 +36,7 @@ export function useSuggestionsRealtime() {
 
         unsubscribeRef.current = listenSuggestions(
             totalSize,
-            () => queryClient.invalidateQueries({queryKey: ['suggestions', 'paginated']})
+            () => queryClient.invalidateQueries({queryKey: suggestionKeys.paginated})
         )
 
         return () => {

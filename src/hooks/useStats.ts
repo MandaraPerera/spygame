@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {getAmountOfCategories, getAmountOfLogs, getAmountOfSuggestions, getAmountOfTerms} from "@/services/firestore";
+import {readAmountOfCategories, readAmountOfLogs, readAmountOfSuggestions, readAmountOfTerms} from "@/services";
 
 export function useStats() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -13,10 +13,10 @@ export function useStats() {
             setIsLoading(true)
 
             try {
-                await getAmountOfCategories().then(setCategories)
-                await getAmountOfTerms().then(setTerms)
-                await getAmountOfSuggestions().then(setSuggestions)
-                await getAmountOfLogs().then(setLogs)
+                await readAmountOfCategories().then(setCategories)
+                await readAmountOfTerms().then(setTerms)
+                await readAmountOfSuggestions().then(setSuggestions)
+                await readAmountOfLogs().then(setLogs)
             } catch (error) {
                 console.error(error)
             }

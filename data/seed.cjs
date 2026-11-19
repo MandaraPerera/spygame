@@ -1,6 +1,7 @@
 require("dotenv").config();
 
-const admin = require("firebase-admin");
+const {cert, initializeApp} = require("firebase-admin/app");
+const {getFirestore} = require("firebase-admin/firestore");
 const fs = require("fs");
 const path = require("path");
 
@@ -13,11 +14,11 @@ if (!serviceAccountPath) {
 
 const serviceAccount = require(serviceAccountPath);
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+initializeApp({
+    credential: cert(serviceAccount)
 });
 
-const db = admin.firestore();
+const db = getFirestore();
 
 const dataPath = path.join(__dirname, "data.json");
 const data = JSON.parse(fs.readFileSync(dataPath, "utf-8"));

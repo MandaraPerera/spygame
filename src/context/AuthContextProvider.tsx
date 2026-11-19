@@ -1,8 +1,8 @@
-import {ReactNode, useEffect, useRef, useState} from "react";
-import {onAuthStateChanged, User} from "firebase/auth";
-import {AuthContext} from "@/context";
-import {auth} from "@/services/firebase.ts";
+import {onAuthStateChanged, type User} from "firebase/auth";
+import {type ReactNode, useEffect, useRef, useState} from "react";
 import {toaster} from "@/components/ui";
+import {auth} from "@/services";
+import {AuthContext} from "./AuthContext";
 
 interface AuthContextProviderProps {
     children: ReactNode;

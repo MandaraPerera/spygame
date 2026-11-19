@@ -1,6 +1,7 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {SuggestionData} from "@/model";
-import {createSuggestion, deleteSuggestion} from "@/services/firestore";
+import {suggestionKeys} from "@/config";
+import type {SuggestionData} from "@/model";
+import {createSuggestion, deleteSuggestion} from "@/services";
 
 export function useSuggestions() {
     const queryClient = useQueryClient()
@@ -8,8 +9,8 @@ export function useSuggestions() {
     const addSuggestion = useMutation({
         mutationFn: (suggestionData: SuggestionData) => createSuggestion(suggestionData),
         onSuccess: async (suggestion) => {
-            await queryClient.invalidateQueries({queryKey: ['suggestions']})
-            await queryClient.invalidateQueries({queryKey: ['suggestions', suggestion.id]})
+            await queryClient.invalidateQueries({queryKey: suggestionKeys.all})
+            await queryClient.invalidateQueries({queryKey: suggestionKeys.detail(suggestion.id)})
         },
         onError: async (error) => {
             console.error(error)
@@ -19,7 +20,7 @@ export function useSuggestions() {
     const removeSuggestion = useMutation({
         mutationFn: (suggestionId: string) => deleteSuggestion(suggestionId),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({queryKey: ['suggestions']})
+            await queryClient.invalidateQueries({queryKey: suggestionKeys.all})
         }
     })
 

@@ -1,5 +1,5 @@
 import {createContext} from "react";
-import {Category} from "@/model";
+import type {Category} from "@/model";
 
 interface ISettingsContext {
     amountOfPlayers: number;

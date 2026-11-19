@@ -1,6 +1,6 @@
-import {useCallback, useState} from "react";
 import {signInWithEmailAndPassword, signOut} from "firebase/auth";
-import {auth} from "@/services/firebase.ts";
+import {useCallback, useState} from "react";
+import {auth} from "@/services";
 
 export function useAuth() {
     const [isLoading, setIsLoading] = useState<boolean>(false);

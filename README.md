@@ -65,3 +65,23 @@ Be creative and think of funny questions.
 
 The more categories and words, the better! If you would like to add some of your own, you can do so through the
 settings. Once they are approved by an admin, you will see your content in the game!
+
+## 6. Development
+
+1. `npm install`
+2. `npm run dev`
+
+Seed Firestore with `node data/seed.cjs` (needs `FIREBASE_ADMINSDK_SERVICE_ACCOUNT_PATH` in `.env`).
+
+## 7. Conventions
+
+- `src/app` holds the app shell (`App`, `AppProvider`, `AppRouter`), `src/app/pages` the route-level pages.
+- `src/components/<feature>` holds the components used by those pages, each folder with an `index.ts` barrel.
+- The folder `src/components/ui` and its files are provided by Chakra UI. Don't rename them.
+- Shared types are in `src/model`, request/response shapes such as `PaginatedSuggestions` too.
+- Query keys are centralized in `src/config/queryKeys.ts`.
+- Flow of data: service -> hook -> component.
+    - Firestore calls only live in `src/services` (`create*`, `read*`, `delete*`, `listen*`).
+    - Components only use hooks.
+- Import through the `@/` barrels, without file extensions, `import type` for types. `npm run lint` sorts the
+  imports (`eslint --fix`).

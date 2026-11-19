@@ -1,8 +1,8 @@
-import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
+import {initializeApp} from "firebase/app";
+import {initializeAppCheck, ReCaptchaEnterpriseProvider} from "firebase/app-check";
 import {getAuth} from "firebase/auth";
 import {getFirestore} from "firebase/firestore";
-import {initializeAppCheck, ReCaptchaEnterpriseProvider} from "firebase/app-check";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD6PrJ-zIsE8GmLtZ5Rks_4hYraYSltscY",

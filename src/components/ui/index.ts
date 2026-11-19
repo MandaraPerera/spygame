@@ -1,5 +1,5 @@
-export {ColorModeProvider} from './ColorMode'
-export {PasswordInput} from './PasswordInput'
-export {toaster, Toaster} from './Toaster'
+export {ColorModeProvider} from './color-mode'
+export {PasswordInput} from './password-input'
+export {toaster, Toaster} from './toaster'
 
-export type {ColorModeProviderProps} from './ColorMode'
+export type {ColorModeProviderProps} from './color-mode'

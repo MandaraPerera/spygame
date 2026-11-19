@@ -1,9 +1,10 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useCallback, useState} from "react";
-import {createCategory, getAllCategories, getCategoryIdByName} from "@/services/firestore";
-import {CategoryData} from "@/model";
+import {categoryKeys} from "@/config";
+import type {CategoryData} from "@/model";
+import {createCategory, readCategories, readCategoryIdByName} from "@/services";
 
-export const useCategories = () => {
+export function useCategories() {
     const queryClient = useQueryClient()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isError, setIsError] = useState<string | null>(null)
@@ -11,15 +12,15 @@ export const useCategories = () => {
     const addCategory = useMutation({
         mutationFn: (categoryData: CategoryData) => createCategory(categoryData),
         onSuccess: async (category) => {
-            await queryClient.invalidateQueries({queryKey: ['categories']})
-            await queryClient.invalidateQueries({queryKey: ['categories', category.id]})
+            await queryClient.invalidateQueries({queryKey: categoryKeys.all})
+            await queryClient.invalidateQueries({queryKey: categoryKeys.detail(category.id)})
         }
     })
 
-    const getCategoryIdOnName = useCallback(async (categoryName: string) => {
+    const getCategoryIdByName = useCallback(async (categoryName: string) => {
         setIsLoading(true)
         try {
-            return await getCategoryIdByName(categoryName)
+            return await readCategoryIdByName(categoryName)
         } catch (e) {
             setIsError((e as Error).message)
         } finally {
@@ -28,15 +29,15 @@ export const useCategories = () => {
     }, []);
 
     const getCategories = useQuery({
-        queryKey: ["categories"],
-        queryFn: getAllCategories,
+        queryKey: categoryKeys.all,
+        queryFn: readCategories,
         staleTime: 5 * 60 * 1000
     })
 
     return {
         isLoading, isError,
         addCategory,
-        getCategoryIdByName: getCategoryIdOnName,
+        getCategoryIdByName,
         getCategories
     }
 }

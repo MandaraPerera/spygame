@@ -1,7 +1,7 @@
-import {ReactNode} from "react";
+import type {ReactNode} from "react";
 import {useLocalStorage} from "usehooks-ts";
-import {Category} from "@/model";
-import {SettingsContext} from "./";
+import type {Category} from "@/model";
+import {SettingsContext} from "./SettingsContext";
 
 interface SettingsContextProviderProps {
     children: ReactNode;
