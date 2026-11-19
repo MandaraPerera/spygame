@@ -1,15 +1,22 @@
-import {screen} from "@testing-library/react";
+import {fireEvent, screen, waitFor} from "@testing-library/react";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {type ISettingsContext, SettingsContext} from "@/context";
 import {useCategories, useTerms} from "@/hooks";
 import type {Term} from "@/model";
 import {renderWithProviders} from "@/test/render";
+import {prefersReducedMotion} from "@/utils";
 import {Play} from "./Play";
 
 vi.mock("@/hooks", async (importOriginal) => ({
     ...(await importOriginal<typeof import("@/hooks")>()),
     useCategories: vi.fn(),
     useTerms: vi.fn()
+}))
+
+// The card flips without animating, so a move completes right away.
+vi.mock("@/utils", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("@/utils")>()),
+    prefersReducedMotion: vi.fn(() => true)
 }))
 
 const lion: Term = {id: "t1", value: "Lion", categoryId: "animals", isOriginal: true}
@@ -80,5 +87,39 @@ describe("Play", () => {
 
         expect(screen.getByText("Lion")).toBeInTheDocument()
         expect(screen.queryByText("Tiger")).not.toBeInTheDocument()
+    })
+
+    it("puts the next player on the front while a role is open, so closing the file shows no number change", async () => {
+        renderWithProviders(playWith())
+        expect(screen.getByText("1")).toBeInTheDocument()
+
+        fireEvent.click(screen.getByRole("button", {name: /tap to open your file/i}))
+        await screen.findByText(/pass the phone to player 2/)
+
+        expect(screen.getByText("Player 1 of 3")).toBeInTheDocument()
+        expect(screen.getByText("2")).toBeInTheDocument()
+        expect(screen.queryByText("1")).not.toBeInTheDocument()
+
+        fireEvent.click(screen.getByRole("button", {name: /your word/i}))
+        await waitFor(() => expect(screen.getByText("Player 2 of 3")).toBeInTheDocument())
+        expect(screen.getByText("2")).toBeInTheDocument()
+    })
+
+    it("moves the title and hint on to the next player as soon as the file starts closing", async () => {
+        renderWithProviders(playWith())
+        fireEvent.click(screen.getByRole("button", {name: /tap to open your file/i}))
+        await screen.findByText(/pass the phone to player 2/)
+
+        // This flip animates, so the checks below run while the file is still closing.
+        vi.mocked(prefersReducedMotion).mockReturnValueOnce(false)
+        const card = screen.getByRole("button", {name: /your word/i})
+        fireEvent.click(card)
+
+        expect(card).toHaveAttribute("aria-disabled", "true")
+        expect(screen.getByText("Player 2 of 3")).toBeInTheDocument()
+        expect(screen.getByText("Player 2, tap the file when nobody else can see the screen.")).toBeInTheDocument()
+
+        await waitFor(() => expect(card).not.toHaveAttribute("aria-disabled"), {timeout: 2000})
+        expect(screen.getByText("Player 2 of 3")).toBeInTheDocument()
     })
 })
