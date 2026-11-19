@@ -4,7 +4,8 @@ export const system = createSystem(defaultConfig, {
     theme: {
         tokens: {
             fonts: {
-                body: {value: "Inter, sans-serif"}
+                heading: {value: "'Inter Variable', sans-serif"},
+                body: {value: "'Inter Variable', sans-serif"}
             }
         }
     }

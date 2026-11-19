@@ -6,5 +6,3 @@ export type Term = {
 }
 
 export type TermData = Omit<Term, "id">
-
-export type TermValue = Omit<Term, "id" | "categoryId">

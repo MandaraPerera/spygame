@@ -6,14 +6,7 @@ interface LoadingProps {
 
 export function Loading({text}: LoadingProps) {
     return (
-        <Center
-            position="fixed"
-            top="50%"
-            left="50%"
-            transform="translate(-50%, -50%)"
-            w="90%"
-            maxW="500px"
-        >
+        <Center flex={1} w="90%" maxW="500px">
             <Alert.Root status="info">
                 <Alert.Indicator>
                     <Spinner size="sm"/>

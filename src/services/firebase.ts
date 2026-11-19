@@ -1,7 +1,6 @@
-import {getAnalytics} from "firebase/analytics";
 import {initializeApp} from "firebase/app";
 import {initializeAppCheck, ReCaptchaEnterpriseProvider} from "firebase/app-check";
-import {getAuth} from "firebase/auth";
+import {browserSessionPersistence, initializeAuth} from "firebase/auth";
 import {getFirestore} from "firebase/firestore";
 
 const firebaseConfig = {
@@ -14,13 +13,19 @@ const firebaseConfig = {
     measurementId: "G-BQ0V44L4ZF"
 };
 
-const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const app = initializeApp(firebaseConfig);
 
-// self.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_FIREBASE_APPCHECK_DEBUG_TOKEN;
+// Development builds only. Production builds replace import.meta.env.DEV with false and drop this branch,
+// so the token never reaches the public bundle (checked by `npm run check:bundle`).
+if (import.meta.env.DEV && import.meta.env.VITE_FIREBASE_APPCHECK_DEBUG_TOKEN) {
+    globalThis.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_FIREBASE_APPCHECK_DEBUG_TOKEN;
+}
+
 export const appCheck = initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider("6LcwHEwrAAAAAN_6-qT1xHggsOrxDe9AtdaLfpAv"),
     isTokenAutoRefreshEnabled: true,
 })
+
+// The phone is passed between players, so an admin session ends when the tab is closed.
+export const auth = initializeAuth(app, {persistence: browserSessionPersistence});
+export const db = getFirestore(app);

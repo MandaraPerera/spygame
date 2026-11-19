@@ -10,13 +10,13 @@ interface SelectCategoriesProps {
 }
 
 export function SelectCategories({open, setOpen, categories}: SelectCategoriesProps) {
-    const {selectedCategories, setSelectedCategories} = useContext(SettingsContext);
+    const {selectedCategoryIds, setSelectedCategoryIds} = useContext(SettingsContext);
 
     const toggleCategory = (category: Category) => {
-        if (selectedCategories.some(c => c.value === category.value)) {
-            setSelectedCategories(selectedCategories.filter(c => c.value !== category.value))
+        if (selectedCategoryIds.includes(category.id)) {
+            setSelectedCategoryIds(selectedCategoryIds.filter((id) => id !== category.id))
         } else {
-            setSelectedCategories([...selectedCategories, category])
+            setSelectedCategoryIds([...selectedCategoryIds, category.id])
         }
     }
 
@@ -34,16 +34,21 @@ export function SelectCategories({open, setOpen, categories}: SelectCategoriesPr
                                 {categories
                                     .slice()
                                     .sort((a, b) => a.value.localeCompare(b.value))
-                                    .map((category, index) => (
-                                        <Button
-                                            key={index}
-                                            w="100%"
-                                            variant={selectedCategories.some(c => c.value === category.value) ? "solid" : "outline"}
-                                            onClick={() => toggleCategory(category)}
-                                        >
-                                            {category.value}
-                                        </Button>
-                                    ))}
+                                    .map((category) => {
+                                        const isSelected = selectedCategoryIds.includes(category.id)
+
+                                        return (
+                                            <Button
+                                                key={category.id}
+                                                w="100%"
+                                                aria-pressed={isSelected}
+                                                variant={isSelected ? "solid" : "outline"}
+                                                onClick={() => toggleCategory(category)}
+                                            >
+                                                {category.value}
+                                            </Button>
+                                        )
+                                    })}
                             </VStack>
                         </Dialog.Body>
                         <Dialog.Footer>

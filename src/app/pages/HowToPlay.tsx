@@ -1,24 +1,15 @@
-import {Box, Breadcrumb, Flex, Heading, HStack, IconButton, List, Text, VStack} from "@chakra-ui/react";
-import {FaTimes} from "react-icons/fa";
-import {useNavigate} from "react-router-dom";
+import {Breadcrumb, Heading, List, Text, VStack} from "@chakra-ui/react";
+import {Link as RouterLink} from "react-router-dom";
+import {PageHeader} from "@/components/util";
+import {MAX_PLAYERS, MIN_PLAYERS} from "@/config";
 
 export function HowToPlay() {
-    const navigate = useNavigate();
-
     return (
         <VStack maxW="500px" w="90%" flex={1} align="start">
-            <HStack justify="space-between" w="100%">
-                <Box flex={1}/>
-                <Heading size="3xl">How To Play?</Heading>
-                <Flex flex={1} justify="end">
-                    <IconButton variant="plain" mr="-10px" onClick={() => navigate("/")}>
-                        <FaTimes/>
-                    </IconButton>
-                </Flex>
-            </HStack>
+            <PageHeader title="How To Play?" closeTo="/" mb={0}/>
             <Heading as="h2" size="2xl" mt={8}>1. Game Info</Heading>
             <List.Root pl={8} mt={2}>
-                <List.Item>Players: 3 - 10</List.Item>
+                <List.Item>Players: {MIN_PLAYERS} - {MAX_PLAYERS}</List.Item>
                 <List.Item>Spies: 1 - <span style={{fontStyle: "italic"}}>[half of players]</span></List.Item>
                 <List.Item>Player's task: find out who the spy is without revealing the subject.</List.Item>
                 <List.Item>Spy's task: stay in the game and find out what the subject is.</List.Item>
@@ -31,7 +22,7 @@ export function HowToPlay() {
                 <List.Item>Click Play.</List.Item>
                 <List.Item>Player 1 clicks (without anyone else looking) on the card on the device.</List.Item>
                 <List.Item>Next it will either show the subject or <span style={{fontStyle: "italic"}}>SPY</span>.
-                    Player 1 now knows his role.</List.Item>
+                    Player 1 now knows their role.</List.Item>
                 <List.Item>Player 1 clicks on the card again to hide the content and passes the phone to player 2.
                 </List.Item>
                 <List.Item>Repeat steps 5-7 for each player.</List.Item>
@@ -80,16 +71,21 @@ export function HowToPlay() {
             <Breadcrumb.Root size="sm">
                 <Breadcrumb.List>
                     <Breadcrumb.Item>
-                        <Breadcrumb.Link onClick={() => navigate('/')}>Home</Breadcrumb.Link>
+                        <Breadcrumb.Link asChild>
+                            <RouterLink to="/">Home</RouterLink>
+                        </Breadcrumb.Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Separator/>
                     <Breadcrumb.Item>
-                        <Breadcrumb.Link
-                            onClick={() => navigate('/', {state: {openSettings: true}})}>Settings</Breadcrumb.Link>
+                        <Breadcrumb.Link asChild>
+                            <RouterLink to="/" state={{openSettings: true}}>Settings</RouterLink>
+                        </Breadcrumb.Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Separator/>
                     <Breadcrumb.Item>
-                        <Breadcrumb.Link onClick={() => navigate('/suggest')}>Suggest Content</Breadcrumb.Link>
+                        <Breadcrumb.Link asChild>
+                            <RouterLink to="/suggest">Suggest Content</RouterLink>
+                        </Breadcrumb.Link>
                     </Breadcrumb.Item>
                 </Breadcrumb.List>
             </Breadcrumb.Root>

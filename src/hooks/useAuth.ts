@@ -1,56 +1,59 @@
-import {signInWithEmailAndPassword, signOut} from "firebase/auth";
+import {useQueryClient} from "@tanstack/react-query";
 import {useCallback, useState} from "react";
-import {auth} from "@/services";
+import {logKeys, statsKeys, suggestionKeys} from "@/config";
+import {signIn as signInService, signOut as signOutService} from "@/services";
+
+function toSignInMessage(error: unknown): string {
+    const code = typeof error === "object" && error !== null && "code" in error ? error.code : undefined
+
+    if (code === "auth/invalid-email") return "Invalid email format."
+    if (code === "auth/invalid-credential") return "Incorrect email or password. Try again."
+    if (code === "auth/too-many-requests") return "Too many attempts. Please wait and try again later."
+    return "Something went wrong."
+}
 
 export function useAuth() {
+    const queryClient = useQueryClient()
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isError, setIsError] = useState<string | null>();
+    const [error, setError] = useState<string | null>(null);
 
     const signIn = useCallback(async (email: string, password: string) => {
         setIsLoading(true)
-        setIsError(null)
+        setError(null)
 
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                let errorMsg = "Something went wrong."
-                const firebaseError = error as { code?: string }
-
-                if (firebaseError.code === "auth/invalid-email") {
-                    errorMsg = "Invalid email format."
-                } else if (firebaseError.code === "auth/invalid-credential") {
-                    errorMsg = "Incorrect email or password. Try again."
-                } else if (firebaseError.code === "auth/too-many-requests") {
-                    errorMsg = "Too many attempts. Please wait and try again later."
-                }
-
-                setIsError(errorMsg)
-            }
+            await signInService(email, password)
+        } catch (signInError: unknown) {
+            setError(toSignInMessage(signInError))
         } finally {
             setIsLoading(false)
         }
     }, []);
 
-    const logOut = useCallback(async () => {
+    // Returns the error message, or null when signed out. Admin data is dropped from the cache.
+    const signOut = useCallback(async (): Promise<string | null> => {
         setIsLoading(true)
-        setIsError(null)
+        setError(null)
 
         try {
-            await signOut(auth)
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                setIsError(error.message)
+            await signOutService()
+            for (const queryKey of [suggestionKeys.all, statsKeys.all, logKeys.all]) {
+                queryClient.removeQueries({queryKey})
             }
+            return null
+        } catch (signOutError: unknown) {
+            const message = signOutError instanceof Error ? signOutError.message : "Something went wrong."
+            setError(message)
+            return message
         } finally {
             setIsLoading(false)
         }
-    }, []);
+    }, [queryClient]);
 
     return {
         signIn,
-        signOut: logOut,
+        signOut,
         isLoading,
-        isError
+        error
     }
 }

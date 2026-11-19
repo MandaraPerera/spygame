@@ -1,6 +1,7 @@
 import {useBreakpointValue, VStack} from "@chakra-ui/react";
 import {type ReactNode, useEffect} from "react";
 import {Toaster} from "@/components/ui";
+import {ConsentBanner} from "./ConsentBanner";
 
 interface GeneralLayoutProps {
     children: ReactNode;
@@ -31,6 +32,7 @@ export function GeneralLayout({children}: GeneralLayoutProps) {
                 </VStack>
             </VStack>
             <Toaster/>
+            <ConsentBanner/>
         </>
     )
 }

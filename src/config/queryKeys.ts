@@ -1,16 +1,21 @@
 export const categoryKeys = {
-    all: ['categories'] as const,
-    detail: (id: string) => ['categories', id] as const
+    all: ['categories'] as const
 }
 
 export const suggestionKeys = {
     all: ['suggestions'] as const,
-    paginated: ['suggestions', 'paginated'] as const,
-    detail: (id: string) => ['suggestions', id] as const
+    paginated: ['suggestions', 'paginated'] as const
 }
 
 export const termKeys = {
     all: ['terms'] as const,
-    categories: (categoryIds: string[]) => ['terms', categoryIds] as const,
-    detail: (id: string) => ['terms', id] as const
+    byCategories: (categoryIds: string[]) => ['terms', 'categories', [...categoryIds].sort()] as const
+}
+
+export const statsKeys = {
+    all: ['stats'] as const
+}
+
+export const logKeys = {
+    all: ['logs'] as const
 }

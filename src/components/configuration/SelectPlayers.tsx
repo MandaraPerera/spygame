@@ -1,7 +1,9 @@
 import {Button, Center, Dialog, HStack, IconButton, Portal, Text} from "@chakra-ui/react";
 import {useContext} from "react";
 import {toaster} from "@/components/ui";
+import {MAX_PLAYERS, MIN_PLAYERS} from "@/config";
 import {SettingsContext} from "@/context";
+import {maxSpies} from "@/utils";
 
 interface SelectPlayersProps {
     open: boolean
@@ -9,29 +11,41 @@ interface SelectPlayersProps {
 }
 
 export function SelectPlayers({open, setOpen}: SelectPlayersProps) {
-    const {amountOfPlayers, setAmountOfPlayers} = useContext(SettingsContext);
+    const {amountOfPlayers, setAmountOfPlayers, amountOfSpies} = useContext(SettingsContext);
 
     const incrementAmountOfPlayers = () => {
-        if (amountOfPlayers >= 10) {
+        if (amountOfPlayers >= MAX_PLAYERS) {
             toaster.create({
                 type: "error",
-                title: "Maximum number of players is 10.",
+                title: `Maximum number of players is ${MAX_PLAYERS}.`,
                 duration: 3000
             })
-        } else {
-            setAmountOfPlayers(amountOfPlayers + 1)
+            return
         }
+
+        setAmountOfPlayers(amountOfPlayers + 1)
     }
 
     const decrementAmountOfPlayers = () => {
-        if (amountOfPlayers <= 3) {
+        if (amountOfPlayers <= MIN_PLAYERS) {
             toaster.create({
                 type: "error",
-                title: "Minimum number of players is 3.",
+                title: `Minimum number of players is ${MIN_PLAYERS}.`,
                 duration: 3000
             })
-        } else {
-            setAmountOfPlayers(amountOfPlayers - 1)
+            return
+        }
+
+        const nextMaxSpies = maxSpies(amountOfPlayers - 1)
+        setAmountOfPlayers(amountOfPlayers - 1)
+
+        if (amountOfSpies > nextMaxSpies) {
+            toaster.create({
+                type: "info",
+                title: `Spies lowered to ${nextMaxSpies}.`,
+                description: "There can be at most one spy for every two players.",
+                duration: 3000
+            })
         }
     }
 
@@ -47,12 +61,12 @@ export function SelectPlayers({open, setOpen}: SelectPlayersProps) {
                         <Dialog.Body>
                             <Center>
                                 <HStack gap={3} mb={4}>
-                                    <IconButton variant="outline" fontSize="xl"
-                                                onClick={() => decrementAmountOfPlayers()}
+                                    <IconButton variant="outline" fontSize="xl" aria-label="Remove a player"
+                                                onClick={decrementAmountOfPlayers}
                                     >-</IconButton>
-                                    <Text fontSize="xl">{amountOfPlayers}</Text>
-                                    <IconButton variant="outline" fontSize="xl"
-                                                onClick={() => incrementAmountOfPlayers()}
+                                    <Text fontSize="xl" aria-live="polite">{amountOfPlayers}</Text>
+                                    <IconButton variant="outline" fontSize="xl" aria-label="Add a player"
+                                                onClick={incrementAmountOfPlayers}
                                     >+</IconButton>
                                 </HStack>
                             </Center>

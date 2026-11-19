@@ -1,12 +1,16 @@
+export type LogType = "suggestion" | "category" | "term"
+
+export type LogAction = "approved" | "denied" | "updated" | "deleted"
+
 export type Log = {
     id: string
-    timestamp: Date
-    user: string
-    type: "suggestion" | "category" | "term"
-    action: "approved" | "denied" | "created" | "updated" | "deleted"
-    isNewCategory: boolean | null
-    term: string | null
+    timestamp: Date | null
+    userId: string
+    type: LogType
+    action: LogAction
     category: string
+    terms: string[]
+    isNewCategory: boolean | null
 }
 
-export type LogData = Omit<Omit<Log, "id">, "timestamp">
+export type LogData = Omit<Log, "id" | "timestamp">

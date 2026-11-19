@@ -7,7 +7,7 @@ import importPlugin from "eslint-plugin-import";
 import {defineConfig, globalIgnores} from 'eslint/config'
 
 export default defineConfig([
-    globalIgnores(['dist']),
+    globalIgnores(['dist', 'coverage']),
     {
         files: ['**/*.{ts,tsx}'],
         extends: [
@@ -40,6 +40,7 @@ export default defineConfig([
                 }
             ],
             'import/no-unresolved': 'error',
+            'import/extensions': ['error', 'ignorePackages', {ts: 'never', tsx: 'never', js: 'never', jsx: 'never'}],
             'import/no-extraneous-dependencies': 'error',
         },
         settings: {

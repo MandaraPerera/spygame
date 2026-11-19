@@ -1,55 +1,52 @@
-import {AspectRatio, Box, Button, Heading, Skeleton, Spacer, Text, VStack} from "@chakra-ui/react";
+import {AspectRatio, Box, Button, Heading, Spacer, Text, VStack} from "@chakra-ui/react";
 import {useGSAP} from "@gsap/react";
 import gsap from 'gsap';
 import {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {PlayCard} from "@/components/play";
-import {Error} from "@/components/util";
+import {PlayCard, PlaySkeleton} from "@/components/play";
+import {AlertMessage, ConfirmDialog} from "@/components/util";
 import {SettingsContext} from "@/context";
-import {useTerms} from "@/hooks";
-import type {Term} from "@/model";
+import {useCategories, useTerms} from "@/hooks";
+import {pickSpies} from "@/utils";
+
+const CARD_FACE_STYLE = {
+    backfaceVisibility: "hidden",
+    WebkitBackfaceVisibility: "hidden",
+    MozBackfaceVisibility: "hidden"
+} as const
 
 export function Play() {
-    const {amountOfPlayers, amountOfSpies, selectedCategories} = useContext(SettingsContext)
-    const categoryIds = selectedCategories.map(category => category.id)
-    const {getTerms: {data: terms, isLoading, isError}} = useTerms(categoryIds)
+    const {amountOfPlayers, amountOfSpies, selectedCategoryIds} = useContext(SettingsContext)
+    const {getCategories} = useCategories()
+    const selectedCategories = getCategories.data?.filter((category) => selectedCategoryIds.includes(category.id)) ?? []
+    const {getTerms} = useTerms(selectedCategories.map((category) => category.id))
     const navigate = useNavigate()
     const {contextSafe} = useGSAP()
 
-    const [spies] = useState<number[] | null>(() => {
-        if (amountOfPlayers <= 0) return null
-
-        const randomSpies = new Set<number>()
-        while (randomSpies.size < amountOfSpies) {
-            const randomNum = Math.floor(Math.random() * (amountOfPlayers))
-            randomSpies.add(randomNum)
-        }
-        return Array.from(randomSpies)
-    })
+    const [spies] = useState<number[]>(() => pickSpies(amountOfPlayers, amountOfSpies))
     const [termSeed] = useState<number>(() => Math.random())
-
+    const [frozenTerm, setFrozenTerm] = useState<string | null>(null)
     const [currentMove, setCurrentMove] = useState<number>(0)
     const [isAnimating, setIsAnimating] = useState<boolean>(false)
+    const [isExitDialogOpen, setIsExitDialogOpen] = useState<boolean>(false)
 
-    const term = terms && terms.length > 0 ? (terms[Math.floor(termSeed * terms.length)] as Term).value : null
-    const backCard = term && spies ? (spies.includes(Math.floor(currentMove / 2)) ? "SPY" : term) : null
-
-    const move = () => {
-        if (isAnimating) return
-
-        if (currentMove === amountOfPlayers * 2 - 1) {
-            navigate("/")
-        } else {
-            onClickAnimation(() => {
-                setCurrentMove(currentMove + 1)
-            })
-        }
+    // The subject is picked once: a refetch during the deal must not give later players another one.
+    const terms = getTerms.data
+    const term = frozenTerm ?? (terms && terms.length > 0 ? terms[Math.floor(termSeed * terms.length)].value : null)
+    if (frozenTerm === null && term !== null) {
+        setFrozenTerm(term)
     }
 
-    const onClickAnimation = contextSafe((onComplete: () => void) => {
+    const currentPlayer = Math.floor(currentMove / 2) + 1
+    const isRevealed = currentMove % 2 === 1
+    const isSpy = spies.includes(currentPlayer - 1)
+    const goHome = () => navigate("/")
+    const toHome = {label: "Back to home", onClick: goHome}
+
+    const flipCard = contextSafe((onComplete: () => void) => {
         setIsAnimating(true)
 
-        const tl = gsap.timeline({
+        const timeline = gsap.timeline({
             paused: true,
             onComplete: () => {
                 setIsAnimating(false)
@@ -57,37 +54,60 @@ export function Play() {
             },
         })
 
-        tl.to(".cardFront", {duration: 0.5, rotationY: "+=180"})
+        timeline.to(".cardFront", {duration: 0.5, rotationY: "+=180"})
             .to(".cardBack", {duration: 0.5, rotationY: "+=180"}, 0);
 
-        tl.play()
+        timeline.play()
     })
 
-    const exit = () => {
-        navigate("/")
+    const move = () => {
+        if (isAnimating) return
+
+        if (currentMove === amountOfPlayers * 2 - 1) {
+            goHome()
+            return
+        }
+
+        flipCard(() => setCurrentMove((previousMove) => previousMove + 1))
     }
 
-    if (isLoading || !term || !spies) {
+    const exit = () => {
+        if (currentMove > 0) {
+            setIsExitDialogOpen(true)
+            return
+        }
+
+        goHome()
+    }
+
+    if (getCategories.isError) {
+        return <AlertMessage status="error" title="Error" text="Error loading categories" action={toHome}/>
+    }
+
+    if (getCategories.isPending) {
+        return <PlaySkeleton onExit={goHome}/>
+    }
+
+    if (selectedCategories.length === 0) {
         return (
-            <VStack maxW="500px" w="90%" flex={1}>
-                <Heading size="3xl" mb={4}>Spy Game</Heading>
-                <Skeleton h="5" w="75px" mb={1}/>
-                <Skeleton h="5" w="60px" mb={1}/>
-                <Skeleton h="5" w="150px" mb={12}/>
-                <AspectRatio ratio={1} w="100%" mb={1}>
-                    <Skeleton w="100%" borderRadius="2xl"/>
-                </AspectRatio>
-                <Skeleton h="5" w="180px"/>
-                <Spacer/>
-                <Button w="100%" h="50px" onClick={() => exit()}>
-                    EXIT
-                </Button>
-            </VStack>
+            <AlertMessage status="info" title="No categories selected"
+                          text="Select at least one category before you start a game." action={toHome}/>
         )
     }
 
-    if (isError || !terms) {
-        return <Error text={"Error loading terms"}/>
+    if (term === null && getTerms.isError) {
+        return <AlertMessage status="error" title="Error" text="Error loading terms" action={toHome}/>
+    }
+
+    if (term === null && getTerms.isPending) {
+        return <PlaySkeleton onExit={goHome}/>
+    }
+
+    if (term === null) {
+        return (
+            <AlertMessage status="info" title="No words to play with"
+                          text="The selected categories have no words yet. Pick other categories." action={toHome}/>
+        )
     }
 
     return (
@@ -95,43 +115,42 @@ export function Play() {
             <Heading size="3xl" mb={4}>Spy Game</Heading>
             <Text>Players: {amountOfPlayers}</Text>
             <Text>Spies: {amountOfSpies}</Text>
-            <Text mb={12} textAlign="center">
+            <Text mb={8} textAlign="center">
                 {selectedCategories.length === 1 ? "Category: " : "Categories: "}
                 {selectedCategories.map((category) => category.value).join(", ")}
+            </Text>
+            <Text fontWeight="semibold" mb={4} aria-live="polite">
+                Player {currentPlayer} of {amountOfPlayers}
             </Text>
             <AspectRatio ratio={1} w="100%">
                 <Box position="relative" w="100%" onClick={move} className="card"
                      style={{transformStyle: "preserve-3d", perspective: 2000, overflow: "visible"}}>
                     <AspectRatio ratio={1} w="100%" className="cardFront" position="absolute"
-                                 style={{
-                                     backfaceVisibility: "hidden",
-                                     WebkitBackfaceVisibility: "hidden",
-                                     MozBackfaceVisibility: "hidden"
-                                 }}>
-                        <PlayCard isAnimating={isAnimating} backCard={false} isSpy={false}/>
+                                 style={CARD_FACE_STYLE}>
+                        <PlayCard isAnimating={isAnimating} isBackCard={false} isSpy={false} isHidden={isRevealed}
+                                  label={`Player ${currentPlayer}: reveal your role`}/>
                     </AspectRatio>
                     <AspectRatio ratio={1} w="100%" className="cardBack" position="absolute"
                                  transform="rotateY(-180deg)"
-                                 style={{
-                                     backfaceVisibility: "hidden",
-                                     WebkitBackfaceVisibility: "hidden",
-                                     MozBackfaceVisibility: "hidden"
-                                 }}>
-                        <PlayCard isAnimating={isAnimating} backCard={true} isSpy={backCard === "SPY"}>
-                            <Heading fontSize="3xl" fontWeight="semibold">{backCard}</Heading>
+                                 style={CARD_FACE_STYLE}>
+                        <PlayCard isAnimating={isAnimating} isBackCard={true} isSpy={isSpy} isHidden={!isRevealed}>
+                            <Heading fontSize="3xl" fontWeight="semibold">{term}</Heading>
                         </PlayCard>
                     </AspectRatio>
                 </Box>
             </AspectRatio>
             <Text textAlign="center">
-                {(currentMove + 2) % 2 === 0
-                    ? "Tap the card to reveal the subject."
-                    : "Tap again and pass on the phone."}
+                {isRevealed ? "Tap again and pass on the phone." : "Tap the card to reveal the subject."}
             </Text>
             <Spacer/>
-            <Button w="100%" h="50px" onClick={() => exit()}>
+            <Button w="100%" h="50px" onClick={exit}>
                 EXIT
             </Button>
+
+            <ConfirmDialog open={isExitDialogOpen} setOpen={setIsExitDialogOpen}
+                           title="Leave this game?"
+                           text="Roles have already been dealt. Starting again deals new roles and a new subject."
+                           confirmLabel="Leave" isDestructive onConfirm={goHome}/>
         </VStack>
     )
 }

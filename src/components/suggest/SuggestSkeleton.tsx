@@ -1,27 +1,12 @@
-import {Box, Flex, Heading, HStack, IconButton, Separator, Skeleton, Text, VStack} from "@chakra-ui/react";
-import {FaTimes} from "react-icons/fa";
-import {useNavigate} from "react-router-dom";
+import {Heading, HStack, Separator, Skeleton, VStack} from "@chakra-ui/react";
+import {PageHeader} from "@/components/util";
+import {SuggestIntro} from "./SuggestIntro";
 
 export function SuggestSkeleton() {
-    const navigate = useNavigate();
-
     return (
         <VStack maxW="500px" w="90%" flex={1}>
-            <HStack justify="space-between" w="100%" mb={2}>
-                <Box flex={1}/>
-                <Heading size="3xl">Suggest Content</Heading>
-                <Flex flex={1} justify="end">
-                    <IconButton variant="plain" mr="-10px" onClick={() => navigate("/")}>
-                        <FaTimes/>
-                    </IconButton>
-                </Flex>
-            </HStack>
-            <Text fontSize={"sm"} textAlign="justify" w="full">
-                Here you can suggest categories and terms that you would like to see in the game. Once they are
-                approved, you will see your content in the game! Add to an existing category using the dropdown, or add
-                your own by setting the toggle from <span style={{fontStyle: "italic"}}>Existing</span> to
-                <span style={{fontStyle: "italic"}}> New</span>.
-            </Text>
+            <PageHeader title="Suggest Content" closeTo="/" mb={2}/>
+            <SuggestIntro/>
             <HStack w="100%" mt={6} justify="space-between">
                 <Heading>Category</Heading>
                 <Skeleton w="110px" h="5"/>
@@ -30,13 +15,10 @@ export function SuggestSkeleton() {
             <Separator w="100%"/>
             <Heading w="100%" mt={4}>Terms</Heading>
             <HStack w="100%" justify="space-between">
-                <Skeleton w="85px" h="5"/>
-                <Skeleton w="8" h="8"/>
+                <Skeleton flex={1} h="10"/>
+                <Skeleton w="10" h="10"/>
             </HStack>
-            <HStack w="100%" mt={1} justify="space-between">
-                <Skeleton w="85px" h="5"/>
-                <Skeleton w="8" h="8"/>
-            </HStack>
+            <Skeleton w="120px" h="8" alignSelf="start"/>
             <Separator w="100%"/>
             <Skeleton w="100px" mt={4} h="10" alignSelf="end"/>
         </VStack>

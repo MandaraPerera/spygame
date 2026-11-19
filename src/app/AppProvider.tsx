@@ -2,6 +2,7 @@ import {ChakraProvider} from "@chakra-ui/react";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import type {ReactNode} from "react";
 import {ColorModeProvider} from "@/components/ui";
+import {ErrorBoundary} from "@/components/util";
 import {AuthContextProvider, SettingsContextProvider} from "@/context";
 import {system} from "@/theme";
 
@@ -16,11 +17,13 @@ export function AppProvider({children}: AppProviderProps) {
         <QueryClientProvider client={queryClient}>
             <ChakraProvider value={system}>
                 <ColorModeProvider forcedTheme="dark" enableSystem={false}>
-                    <AuthContextProvider>
-                        <SettingsContextProvider>
-                            {children}
-                        </SettingsContextProvider>
-                    </AuthContextProvider>
+                    <ErrorBoundary>
+                        <AuthContextProvider>
+                            <SettingsContextProvider>
+                                {children}
+                            </SettingsContextProvider>
+                        </AuthContextProvider>
+                    </ErrorBoundary>
                 </ColorModeProvider>
             </ChakraProvider>
         </QueryClientProvider>

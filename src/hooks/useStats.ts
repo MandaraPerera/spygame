@@ -1,35 +1,22 @@
-import {useEffect, useState} from "react";
+import {useQuery} from "@tanstack/react-query";
+import {statsKeys} from "@/config";
 import {readAmountOfCategories, readAmountOfLogs, readAmountOfSuggestions, readAmountOfTerms} from "@/services";
 
+async function readStats() {
+    const [categories, terms, suggestions, logs] = await Promise.all([
+        readAmountOfCategories(),
+        readAmountOfTerms(),
+        readAmountOfSuggestions(),
+        readAmountOfLogs()
+    ])
+
+    return {categories, terms, suggestions, logs}
+}
+
 export function useStats() {
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [categories, setCategories] = useState<number | null>(null)
-    const [terms, setTerms] = useState<number | null>(null)
-    const [suggestions, setSuggestions] = useState<number | null>(null)
-    const [logs, setLogs] = useState<number | null>(null)
-
-    useEffect(() => {
-        const fetchStats = async () => {
-            setIsLoading(true)
-
-            try {
-                await readAmountOfCategories().then(setCategories)
-                await readAmountOfTerms().then(setTerms)
-                await readAmountOfSuggestions().then(setSuggestions)
-                await readAmountOfLogs().then(setLogs)
-            } catch (error) {
-                console.error(error)
-            }
-        }
-
-        fetchStats().then(() => setIsLoading(false))
-    }, []);
-
-    return {
-        isLoading,
-        categories,
-        terms,
-        suggestions,
-        logs
-    }
+    return useQuery({
+        queryKey: statsKeys.all,
+        queryFn: readStats,
+        staleTime: 60 * 1000
+    })
 }

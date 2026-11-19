@@ -1,32 +1,15 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {useCallback, useState} from "react";
-import {categoryKeys} from "@/config";
-import type {CategoryData} from "@/model";
-import {createCategory, readCategories, readCategoryIdByName} from "@/services";
+import {categoryKeys, logKeys, statsKeys, termKeys} from "@/config";
+import type {Category} from "@/model";
+import {deleteCategory, readCategories, updateCategory} from "@/services";
 
 export function useCategories() {
     const queryClient = useQueryClient()
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [isError, setIsError] = useState<string | null>(null)
 
-    const addCategory = useMutation({
-        mutationFn: (categoryData: CategoryData) => createCategory(categoryData),
-        onSuccess: async (category) => {
-            await queryClient.invalidateQueries({queryKey: categoryKeys.all})
-            await queryClient.invalidateQueries({queryKey: categoryKeys.detail(category.id)})
-        }
-    })
-
-    const getCategoryIdByName = useCallback(async (categoryName: string) => {
-        setIsLoading(true)
-        try {
-            return await readCategoryIdByName(categoryName)
-        } catch (e) {
-            setIsError((e as Error).message)
-        } finally {
-            setIsLoading(false)
-        }
-    }, []);
+    const invalidate = async () => {
+        await Promise.all([categoryKeys.all, termKeys.all, statsKeys.all, logKeys.all]
+            .map((queryKey) => queryClient.invalidateQueries({queryKey})))
+    }
 
     const getCategories = useQuery({
         queryKey: categoryKeys.all,
@@ -34,10 +17,19 @@ export function useCategories() {
         staleTime: 5 * 60 * 1000
     })
 
+    const renameCategory = useMutation({
+        mutationFn: ({category, value}: { category: Category, value: string }) => updateCategory(category, value),
+        onSuccess: invalidate
+    })
+
+    const removeCategory = useMutation({
+        mutationFn: (category: Category) => deleteCategory(category),
+        onSuccess: invalidate
+    })
+
     return {
-        isLoading, isError,
-        addCategory,
-        getCategoryIdByName,
-        getCategories
+        getCategories,
+        renameCategory,
+        removeCategory
     }
 }

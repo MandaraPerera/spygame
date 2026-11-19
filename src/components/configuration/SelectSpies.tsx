@@ -1,7 +1,9 @@
 import {Button, Center, Dialog, HStack, IconButton, Portal, Text} from "@chakra-ui/react";
 import {useContext} from "react";
 import {toaster} from "@/components/ui";
+import {MIN_SPIES} from "@/config";
 import {SettingsContext} from "@/context";
+import {maxSpies} from "@/utils";
 
 interface SelectSpiesProps {
     open: boolean
@@ -12,27 +14,29 @@ export function SelectSpies({open, setOpen}: SelectSpiesProps) {
     const {amountOfPlayers, amountOfSpies, setAmountOfSpies} = useContext(SettingsContext);
 
     const incrementAmountOfSpies = () => {
-        if (amountOfSpies >= Math.floor(amountOfPlayers / 2)) {
+        if (amountOfSpies >= maxSpies(amountOfPlayers)) {
             toaster.create({
                 type: "error",
                 title: "Maximum number of spies is half of the players.",
                 duration: 3000
             })
-        } else {
-            setAmountOfSpies(amountOfSpies + 1)
+            return
         }
+
+        setAmountOfSpies(amountOfSpies + 1)
     }
 
     const decrementAmountOfSpies = () => {
-        if (amountOfSpies <= 1) {
+        if (amountOfSpies <= MIN_SPIES) {
             toaster.create({
                 type: "error",
-                title: "Minimum number of spies is 1.",
+                title: `Minimum number of spies is ${MIN_SPIES}.`,
                 duration: 3000
             })
-        } else {
-            setAmountOfSpies(amountOfSpies - 1)
+            return
         }
+
+        setAmountOfSpies(amountOfSpies - 1)
     }
 
     return (
@@ -47,12 +51,12 @@ export function SelectSpies({open, setOpen}: SelectSpiesProps) {
                         <Dialog.Body>
                             <Center>
                                 <HStack gap={3} mb={4}>
-                                    <IconButton variant="outline" fontSize="xl"
-                                                onClick={() => decrementAmountOfSpies()}
+                                    <IconButton variant="outline" fontSize="xl" aria-label="Remove a spy"
+                                                onClick={decrementAmountOfSpies}
                                     >-</IconButton>
-                                    <Text fontSize="xl">{amountOfSpies}</Text>
-                                    <IconButton variant="outline" fontSize="xl"
-                                                onClick={() => incrementAmountOfSpies()}
+                                    <Text fontSize="xl" aria-live="polite">{amountOfSpies}</Text>
+                                    <IconButton variant="outline" fontSize="xl" aria-label="Add a spy"
+                                                onClick={incrementAmountOfSpies}
                                     >+</IconButton>
                                 </HStack>
                             </Center>

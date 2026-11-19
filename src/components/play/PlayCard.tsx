@@ -5,16 +5,22 @@ import {GiSpy} from "react-icons/gi";
 
 interface PlayCardProps {
     isAnimating: boolean
-    backCard: boolean
+    isBackCard: boolean
     isSpy: boolean
+    isHidden: boolean
+    label?: string
     children?: ReactNode
 }
 
-export function PlayCard({isAnimating, backCard, isSpy, children}: PlayCardProps) {
+// Both faces stay mounted for the flip; the face turned away is hidden from screen readers and the tab order.
+export function PlayCard({isAnimating, isBackCard, isSpy, isHidden, label, children}: PlayCardProps) {
     return (
-        <Button bgColor="gray.50" color="gray.950" borderRadius="2xl"
-                pointerEvents={isAnimating ? "none" : "auto"} position="relative">
-            <Icon boxSize="100%" position="absolute" top="0" left="0" zIndex={1}>
+        <Button bgColor="gray.50" color="gray.950" borderRadius="2xl" position="relative"
+                pointerEvents={isAnimating ? "none" : "auto"}
+                aria-hidden={isHidden}
+                aria-label={label}
+                tabIndex={isHidden ? -1 : 0}>
+            <Icon boxSize="100%" position="absolute" top="0" left="0" zIndex={1} aria-hidden>
                 <svg viewBox="0 0 500 500">
                     <path stroke="#111111" strokeWidth="5px" fill="none"
                           d="M460,317.5l0,122.5c0,11.05-8.95,20-20,20l-122.5,0"/>
@@ -27,22 +33,20 @@ export function PlayCard({isAnimating, backCard, isSpy, children}: PlayCardProps
                 </svg>
             </Icon>
             <VStack width="100%">
-                {backCard ?
-                    (isSpy ?
-                            <>
-                                <Icon boxSize="40%">
-                                    <GiSpy/>
-                                </Icon>
-                                <Heading fontSize="2xl" fontWeight="semibold">YOU'RE A SPY</Heading>
-                            </> : children
-                    ) :
+                {isBackCard && isSpy ? (
                     <>
-                        <Icon boxSize="40%">
-                            <AiOutlineQuestion/>
+                        <Icon boxSize="40%" aria-hidden>
+                            <GiSpy/>
                         </Icon>
-                        {children}
+                        <Heading fontSize="2xl" fontWeight="semibold">YOU'RE A SPY</Heading>
                     </>
-                }
+                ) : null}
+                {isBackCard && !isSpy ? children : null}
+                {!isBackCard ? (
+                    <Icon boxSize="40%" aria-hidden>
+                        <AiOutlineQuestion/>
+                    </Icon>
+                ) : null}
             </VStack>
         </Button>
     )

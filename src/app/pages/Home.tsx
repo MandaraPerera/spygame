@@ -5,13 +5,13 @@ import {MdGroups, MdOutlineSubject, MdSettings} from "react-icons/md";
 import {useLocation, useNavigate} from "react-router-dom";
 import {SelectCategories, SelectPlayers, SelectSettings, SelectSpies} from "@/components/configuration";
 import {toaster} from "@/components/ui";
-import {Error} from "@/components/util";
+import {AlertMessage} from "@/components/util";
 import {SettingsContext} from "@/context";
 import {useCategories} from "@/hooks";
 
 export function Home() {
-    const {amountOfPlayers, amountOfSpies, selectedCategories} = useContext(SettingsContext)
-    const {getCategories: {data: categories, isLoading, isError}} = useCategories()
+    const {amountOfPlayers, amountOfSpies, selectedCategoryIds} = useContext(SettingsContext)
+    const {getCategories: {data: categories, isPending, isError, refetch}} = useCategories()
     const navigate = useNavigate()
     const location = useLocation()
     const openSettings = location.state?.openSettings
@@ -27,6 +27,9 @@ export function Home() {
         }
     }, [location.pathname, navigate, openSettings])
 
+    // Ids of categories that no longer exist (renamed, deleted or re-seeded) are ignored.
+    const selectedCategories = categories?.filter((category) => selectedCategoryIds.includes(category.id)) ?? []
+
     const play = () => {
         if (selectedCategories.length === 0) {
             toaster.create({
@@ -35,12 +38,12 @@ export function Home() {
                 duration: 3000
             })
             return
-        } else {
-            navigate("/play")
         }
+
+        navigate("/play")
     }
 
-    if (isLoading) {
+    if (isPending) {
         return (
             <VStack maxW="500px" w="90%" flex={1}>
                 <Heading size="3xl" mb={16}>Spy Game</Heading>
@@ -57,8 +60,11 @@ export function Home() {
         )
     }
 
-    if (isError || !categories) {
-        return <Error text={"Error loading categories"}/>
+    if (isError) {
+        return (
+            <AlertMessage status="error" title="Error" text="Error loading categories"
+                          action={{label: "Try again", onClick: () => refetch()}}/>
+        )
     }
 
     return (
@@ -130,13 +136,14 @@ export function Home() {
                 </AspectRatio>
             </SimpleGrid>
             <Spacer/>
-            <Button w="100%" h="50px" left="50%" transform="translateX(-50%)" onClick={() => play()}>
+            <Button w="100%" h="50px" onClick={play}>
                 PLAY
             </Button>
 
             <SelectPlayers open={openPlayersDialog} setOpen={setOpenPlayersDialog}/>
             <SelectSpies open={openSpiesDialog} setOpen={setOpenSpiesDialog}/>
-            <SelectCategories open={openCategoriesDialog} setOpen={setOpenCategoriesDialog} categories={categories}/>
+            <SelectCategories open={openCategoriesDialog} setOpen={setOpenCategoriesDialog}
+                              categories={categories ?? []}/>
             <SelectSettings open={openSettingsDialog} setOpen={setOpenSettingsDialog}/>
         </VStack>
     )

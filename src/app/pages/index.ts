@@ -1,11 +1,7 @@
-export {Categories} from './Categories'
+// Public pages only. The admin pages in ./admin are lazy-loaded by AppRouter and have no barrel,
+// so players never download them.
 export {Home} from './Home'
 export {HowToPlay} from './HowToPlay'
-export {Login} from './Login'
-export {Logs} from './Logs'
-export {ManageData} from './ManageData'
 export {NotFound} from './NotFound'
 export {Play} from './Play'
 export {Suggest} from './Suggest'
-export {Suggestions} from './Suggestions'
-export {Terms} from './Terms'

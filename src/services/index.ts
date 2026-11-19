@@ -1,27 +1,36 @@
-export {auth, db} from './firebase'
+export {startAnalytics, stopAnalytics} from './analytics'
 
 export {
-    createCategory,
-    readCategoryIdByName,
+    listenAuthState,
+    readIsAdmin,
+    signIn,
+    signOut
+} from './auth'
+
+export {
+    deleteCategory,
+    readAmountOfCategories,
     readCategories,
-    readAmountOfCategories
+    updateCategory
 } from './category'
 
 export {
-    createLog,
-    readAmountOfLogs
+    readAmountOfLogs,
+    readLogs
 } from './log'
 
 export {
+    approveSuggestion,
     createSuggestion,
+    denySuggestion,
+    listenNewSuggestions,
     readAmountOfSuggestions,
-    readSuggestionsPaginated,
-    listenSuggestions,
-    deleteSuggestion
+    readSuggestionsPaginated
 } from './suggestion'
 
 export {
-    createTerm,
+    deleteTerm,
+    readAmountOfTerms,
     readTermsByCategoryIds,
-    readAmountOfTerms
+    updateTerm
 } from './term'

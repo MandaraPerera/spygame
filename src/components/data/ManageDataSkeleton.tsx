@@ -1,32 +1,10 @@
-import {
-    AspectRatio,
-    Box,
-    Flex,
-    Heading,
-    HStack,
-    IconButton,
-    SimpleGrid,
-    Skeleton,
-    Text,
-    VStack
-} from "@chakra-ui/react";
-import {FaTimes} from "react-icons/fa";
-import {useNavigate} from "react-router-dom";
+import {AspectRatio, SimpleGrid, Skeleton, Text, VStack} from "@chakra-ui/react";
+import {PageHeader} from "@/components/util";
 
 export function ManageDataSkeleton() {
-    const navigate = useNavigate();
-
     return (
         <VStack maxW="500px" w="90%" flex={1}>
-            <HStack justify="space-between" w="100%" mb={4}>
-                <Box flex={1}/>
-                <Heading size="3xl">Manage Data</Heading>
-                <Flex flex={1} justify="end">
-                    <IconButton variant="plain" mr="-10px" onClick={() => navigate("/")}>
-                        <FaTimes/>
-                    </IconButton>
-                </Flex>
-            </HStack>
+            <PageHeader title="Manage Data" closeTo="/" mb={4}/>
 
             <Text textAlign="center" w="100%">Signed in as</Text>
             <Skeleton w="250px" h="5" mb={8}/>

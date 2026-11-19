@@ -1,6 +1,7 @@
 import {
     AbsoluteCenter,
     Accordion,
+    Alert,
     Badge,
     Box,
     Button,
@@ -13,89 +14,51 @@ import {
 } from "@chakra-ui/react";
 import {useState} from "react";
 import {FaCheck, FaTimes} from "react-icons/fa";
-import {Error} from "@/components/util";
-import {useCategories, useSuggestions, useTerms} from "@/hooks";
-import type {CategoryData, Suggestion} from "@/model";
+import {toaster} from "@/components/ui";
+import {ConfirmDialog} from "@/components/util";
+import {useSuggestions} from "@/hooks";
+import type {Suggestion} from "@/model";
 import {formatDate} from "@/utils";
 
 interface SuggestionItemProps {
     suggestion: Suggestion
 }
 
-export function SuggestionItem({suggestion}: SuggestionItemProps) {
-    const {addCategory, getCategoryIdByName} = useCategories()
-    const {addTerm} = useTerms()
-    const {removeSuggestion} = useSuggestions()
+function toMessage(error: unknown): string {
+    return error instanceof Error ? error.message : "Something went wrong. Please try again."
+}
 
-    const [loading, setLoading] = useState<boolean>(false)
+export function SuggestionItem({suggestion}: SuggestionItemProps) {
+    const {approveSuggestion, denySuggestion} = useSuggestions()
+
     const [error, setError] = useState<string | null>(null)
-    const [open, setOpen] = useState<boolean>(false)
+    const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false)
+    const [isDenyDialogOpen, setIsDenyDialogOpen] = useState<boolean>(false)
+    const isBusy = approveSuggestion.isPending || denySuggestion.isPending
 
     const handleApprove = async () => {
-        setLoading(true)
+        setError(null)
 
-        if (suggestion.isNewCategory) {
-            const categoryData: CategoryData = {
-                value: suggestion.category,
-                isOriginal: false
-            }
-
-            await addCategory.mutateAsync(categoryData, {
-                onSuccess: async (newCategory) => {
-                    try {
-                        for (const term of suggestion.terms) {
-                            const termData = {
-                                value: term,
-                                categoryId: newCategory.id,
-                                isOriginal: false
-                            }
-
-                            await addTerm.mutateAsync(termData)
-                        }
-                    } catch (e) {
-                        setError((e as Error).message)
-                    } finally {
-                        await removeSuggestion.mutateAsync(suggestion.id)
-                        setLoading(false)
-                    }
-                }
-            })
-        } else {
-            const categoryId = await getCategoryIdByName(suggestion.category)
-            if (!categoryId) {
-                setError("Existing category not found")
-                setLoading(false)
-                return
-            }
-
-            try {
-                for (const term of suggestion.terms) {
-                    const termData = {
-                        value: term,
-                        categoryId: categoryId,
-                        isOriginal: false
-                    }
-
-                    await addTerm.mutateAsync(termData)
-                }
-            } catch (e) {
-                setError((e as Error).message)
-            } finally {
-                await removeSuggestion.mutateAsync(suggestion.id)
-                setLoading(false)
-            }
+        try {
+            await approveSuggestion.mutateAsync(suggestion)
+            toaster.create({type: "success", title: "Suggestion approved", description: suggestion.category})
+        } catch (approveError) {
+            setError(toMessage(approveError))
         }
     }
 
     const handleDeny = async () => {
-        await removeSuggestion.mutateAsync(suggestion.id)
+        setError(null)
+
+        try {
+            await denySuggestion.mutateAsync(suggestion)
+            toaster.create({type: "info", title: "Suggestion denied", description: suggestion.category})
+        } catch (denyError) {
+            setError(toMessage(denyError))
+        } finally {
+            setIsDenyDialogOpen(false)
+        }
     }
-
-    //TODO: add logs
-    //TODO: confirmation when denying/approving
-    //TODO: toaster messages
-
-    if (error) return <Error text="Something went wrong. Please try again."/>
 
     return (
         <>
@@ -114,23 +77,42 @@ export function SuggestionItem({suggestion}: SuggestionItemProps) {
                     <AbsoluteCenter axis="vertical" insetEnd={4}>
                         <Button size="sm" w="75px" onClick={(e) => {
                             e.stopPropagation()
-                            setOpen(true)
+                            setIsDetailsOpen(true)
                         }}>Details</Button>
                     </AbsoluteCenter>
                 </Box>
 
                 <Accordion.ItemContent>
                     <Accordion.ItemBody py={2}>
+                        {error ? (
+                            <Alert.Root status="error" size="sm" mb={2}>
+                                <Alert.Indicator/>
+                                <Alert.Description>{error}</Alert.Description>
+                            </Alert.Root>
+                        ) : null}
+                        {!suggestion.isValid ? (
+                            <Text fontSize="sm" mb={2}>This suggestion is malformed and can only be denied.</Text>
+                        ) : null}
                         <HStack>
                             <Button flex={1} size="sm" onClick={handleApprove}
-                                    loading={loading}><FaCheck/>Approve</Button>
-                            <Button flex={1} size="sm" onClick={handleDeny} loading={loading}><FaTimes/>Deny</Button>
+                                    loading={approveSuggestion.isPending}
+                                    disabled={isBusy || !suggestion.isValid}><FaCheck/>Approve</Button>
+                            <Button flex={1} size="sm" onClick={() => setIsDenyDialogOpen(true)}
+                                    disabled={isBusy}><FaTimes/>Deny</Button>
                         </HStack>
                     </Accordion.ItemBody>
                 </Accordion.ItemContent>
             </Accordion.Item>
 
-            <Dialog.Root lazyMount open={open} onOpenChange={(e) => setOpen(e.open)} placement="center">
+            <ConfirmDialog open={isDenyDialogOpen} setOpen={setIsDenyDialogOpen}
+                           title="Deny suggestion?"
+                           text={`"${suggestion.category}" and its ${suggestion.terms.length} terms will be deleted. This cannot be undone.`}
+                           confirmLabel="Deny" isDestructive
+                           isPending={denySuggestion.isPending}
+                           onConfirm={handleDeny}/>
+
+            <Dialog.Root lazyMount open={isDetailsOpen} onOpenChange={(e) => setIsDetailsOpen(e.open)}
+                         placement="center">
                 <Portal>
                     <Dialog.Backdrop/>
                     <Dialog.Positioner>

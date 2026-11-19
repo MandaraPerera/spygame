@@ -1,4 +1,5 @@
-import {AppProvider, AppRouter} from "@/app";
+import {AppProvider} from "./AppProvider";
+import {AppRouter} from "./AppRouter";
 
 export function App() {
     return (

@@ -1,22 +1,9 @@
-import {
-    Box,
-    Button,
-    Field,
-    Fieldset,
-    Flex,
-    Heading,
-    HStack,
-    IconButton,
-    Input,
-    Stack,
-    Text,
-    VStack
-} from "@chakra-ui/react";
+import {Button, Field, Fieldset, Input, Stack, Text, VStack} from "@chakra-ui/react";
 import {useContext, useEffect} from "react";
 import {useForm} from "react-hook-form";
-import {FaTimes} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
 import {PasswordInput, toaster} from "@/components/ui";
+import {PageHeader} from "@/components/util";
 import {AuthContext} from "@/context";
 import {useAuth} from "@/hooks";
 
@@ -28,7 +15,7 @@ interface FormValues {
 export function Login() {
     const navigate = useNavigate()
     const {user, isLoading: isLoadingContext} = useContext(AuthContext)
-    const {signIn, isLoading: isLoadingAuth, isError: isErrorAuth} = useAuth()
+    const {signIn, isLoading: isLoadingAuth, error} = useAuth()
     const {register, handleSubmit, formState: {errors}} = useForm<FormValues>()
 
     useEffect(() => {
@@ -38,14 +25,14 @@ export function Login() {
     }, [navigate, user]);
 
     useEffect(() => {
-        if (isErrorAuth) {
+        if (error) {
             toaster.create({
                 type: "error",
                 title: "Something went wrong. Please try again.",
-                description: isErrorAuth
+                description: error
             })
         }
-    }, [isErrorAuth]);
+    }, [error]);
 
     const onSubmit = handleSubmit(async (values: FormValues) => {
         await signIn(values.email, values.password)
@@ -53,15 +40,7 @@ export function Login() {
 
     return (
         <VStack maxW="500px" w="90%" flex={1}>
-            <HStack justify="space-between" w="100%" mb={12}>
-                <Box flex={1}/>
-                <Heading size="3xl">Admin Login</Heading>
-                <Flex flex={1} justify="end">
-                    <IconButton variant="plain" mr="-10px" onClick={() => navigate("/")}>
-                        <FaTimes/>
-                    </IconButton>
-                </Flex>
-            </HStack>
+            <PageHeader title="Admin Login" closeTo="/"/>
             <Stack w="100%">
                 <form onSubmit={onSubmit}>
                     <Fieldset.Root>

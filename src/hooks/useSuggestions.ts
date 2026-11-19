@@ -1,31 +1,33 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {suggestionKeys} from "@/config";
-import type {SuggestionData} from "@/model";
-import {createSuggestion, deleteSuggestion} from "@/services";
+import {categoryKeys, logKeys, statsKeys, suggestionKeys, termKeys} from "@/config";
+import type {Suggestion, SuggestionData} from "@/model";
+import {approveSuggestion as approve, createSuggestion, denySuggestion as deny} from "@/services";
 
 export function useSuggestions() {
     const queryClient = useQueryClient()
 
+    const invalidate = async (queryKeys: readonly (readonly string[])[]) => {
+        await Promise.all(queryKeys.map((queryKey) => queryClient.invalidateQueries({queryKey})))
+    }
+
+    // Visitors cannot read suggestions, so a new one invalidates nothing on their device.
     const addSuggestion = useMutation({
-        mutationFn: (suggestionData: SuggestionData) => createSuggestion(suggestionData),
-        onSuccess: async (suggestion) => {
-            await queryClient.invalidateQueries({queryKey: suggestionKeys.all})
-            await queryClient.invalidateQueries({queryKey: suggestionKeys.detail(suggestion.id)})
-        },
-        onError: async (error) => {
-            console.error(error)
-        }
+        mutationFn: (suggestionData: SuggestionData) => createSuggestion(suggestionData)
     })
 
-    const removeSuggestion = useMutation({
-        mutationFn: (suggestionId: string) => deleteSuggestion(suggestionId),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({queryKey: suggestionKeys.all})
-        }
+    const approveSuggestion = useMutation({
+        mutationFn: (suggestion: Suggestion) => approve(suggestion),
+        onSuccess: () => invalidate([suggestionKeys.all, categoryKeys.all, termKeys.all, statsKeys.all, logKeys.all])
+    })
+
+    const denySuggestion = useMutation({
+        mutationFn: (suggestion: Suggestion) => deny(suggestion),
+        onSuccess: () => invalidate([suggestionKeys.all, statsKeys.all, logKeys.all])
     })
 
     return {
         addSuggestion,
-        removeSuggestion
+        approveSuggestion,
+        denySuggestion
     }
 }
