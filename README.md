@@ -66,10 +66,24 @@ Be creative and think of funny questions.
 The more categories and words, the better! If you would like to add some of your own, you can do so through the
 settings. Once they are approved by an admin, you will see your content in the game!
 
+### Managing content (admins)
+
+`Settings -> Manage Data` shows the counts and leads to four pages:
+
+- **Categories**: create a category with its first terms, rename or delete one. Each row shows its number of terms
+  and opens it on the Terms page; a category without terms is marked, because players cannot pick it.
+- **Terms**: pick a category (it is kept in the URL), filter its terms, add several at once (one per line; terms it
+  already has are skipped), rename or delete one.
+- **Suggestions**: open a suggestion to see where it goes, untick the terms to leave out, and approve the rest, or
+  deny it. Terms the category already has are shown and skipped. New suggestions appear without a reload.
+- **Logs**: every approval, denial, creation, rename and deletion, newest first, with who did it.
+
+Every change and its log entry are written in one batch, so there is never one without the other.
+
 ## 6. Development
 
 1. `npm install` (Node 22.12 or later, see `.nvmrc`)
-2. `npm run dev`
+2. `npm run dev` (uses the live Firebase project), or the local emulators below
 
 | Command | What it does |
 |---|---|
@@ -80,6 +94,20 @@ settings. Once they are approved by an admin, you will see your content in the g
 | `npm run check:bundle` | Fails if the build contains an App Check debug token |
 
 CI runs all of these on every pull request and before every deploy of `main`.
+
+### Local emulators
+
+To try the admin pages without touching live data (needs Java 21+), run these in order; the first and the last keep
+running:
+
+1. `npm run emulators`: the Auth and Firestore emulators with `firestore.rules`, project `demo-spygame`.
+2. `npm run emulators:seed`: the content of `data/data.json`, four suggestions to review (one malformed) and an
+   emulator-only admin account; its email and password are in `scripts/seed-emulators.cjs`. Run it again after
+   `npm run test:rules`, which clears the emulator.
+3. `npm run dev:emulators`: the app in mode `emulators` (`.env.emulators`), which connects to the emulators and skips
+   App Check. Production builds never contain this switch.
+
+Emulator data is lost when the emulators stop.
 
 ### Environment
 
@@ -95,7 +123,8 @@ See `.env.example`. Never commit the real files; they are git-ignored.
 
 - `firestore.rules` is the only server-side authorization: anyone reads categories and terms and creates suggestions;
   everything else needs the `admin` custom claim. Deploy it with `npx firebase deploy --only firestore:rules`, and
-  keep its limits in sync with `src/config/limits.ts`.
+  keep its limits in sync with `src/config/limits.ts`. Creating categories and adding terms writes logs with the
+  action `created`, which only these rules allow: deploy them before using those pages on the live site.
 - Grant or revoke the admin claim with `node scripts/set-admin.cjs <email> [--revoke]`; it applies after the next
   sign-in.
 - Seed the original content with `node data/seed.cjs`. It asks for confirmation, keeps category ids and approved

@@ -1,7 +1,7 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {logKeys, statsKeys, termKeys} from "@/config";
-import type {Term} from "@/model";
-import {deleteTerm, readTermsByCategoryIds, updateTerm} from "@/services";
+import type {Category, Term} from "@/model";
+import {createTerms, deleteTerm, readTermsByCategoryIds, updateTerm} from "@/services";
 
 type TermChange = {
     term: Term
@@ -25,6 +25,11 @@ export function useTerms(categoryIds: string[] = []) {
         enabled: categoryIds.length > 0
     })
 
+    const addTerms = useMutation({
+        mutationFn: ({category, values}: { category: Category, values: string[] }) => createTerms(category, values),
+        onSuccess: invalidate
+    })
+
     const renameTerm = useMutation({
         mutationFn: ({term, categoryName, value}: TermChange & { value: string }) =>
             updateTerm(term, value, categoryName),
@@ -38,6 +43,7 @@ export function useTerms(categoryIds: string[] = []) {
 
     return {
         getTerms,
+        addTerms,
         renameTerm,
         removeTerm
     }

@@ -1,14 +1,14 @@
-import {Skeleton, Text, VStack} from "@chakra-ui/react";
+import {Button, Skeleton, Text, VStack} from "@chakra-ui/react";
 import {useContext} from "react";
 import {LogItem} from "@/components/data";
 import {AlertMessage, PageHeader} from "@/components/util";
-import {LOGS_LIMIT} from "@/config";
 import {AuthContext} from "@/context";
 import {useLogs} from "@/hooks";
 
 export function Logs() {
     const {user} = useContext(AuthContext)
-    const {data: logs, isPending, isError, refetch} = useLogs()
+    const {data, isPending, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage} = useLogs()
+    const logs = data?.pages.flatMap((page) => page.logs) ?? []
 
     const renderContent = () => {
         if (isError) {
@@ -29,8 +29,11 @@ export function Logs() {
         return (
             <>
                 {logs.map((log) => <LogItem key={log.id} log={log} currentUserId={user?.uid ?? null}/>)}
-                {logs.length === LOGS_LIMIT ? (
-                    <Text fontSize="sm" fontWeight="light">Showing the latest {LOGS_LIMIT} entries.</Text>
+                {hasNextPage ? (
+                    <Button w="100%" mt={2} variant="outline" loading={isFetchingNextPage}
+                            onClick={() => fetchNextPage()}>
+                        Load more
+                    </Button>
                 ) : null}
             </>
         )

@@ -5,6 +5,7 @@ export {useLogs} from './useLogs'
 export {useStats} from './useStats'
 export {useSuggestions} from './useSuggestions'
 export {useSuggestionsRealtime} from './useSuggestionsRealtime'
+export {useTermCounts} from './useTermCounts'
 export {useTerms} from './useTerms'
 
 export type {AnalyticsConsent} from './useAnalyticsConsent'

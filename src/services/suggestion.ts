@@ -16,12 +16,11 @@ import {
 } from "firebase/firestore";
 import type {PaginatedSuggestions, Suggestion, SuggestionData} from "@/model";
 import {checkLength, findCategoryByName, nameKey, normalizeName, parseSuggestion} from "@/utils";
-import {CATEGORIES_COLLECTION, readCategories} from "./category";
+import {readCategories} from "./category";
+import {CATEGORIES_COLLECTION, SUGGESTIONS_COLLECTION, TERMS_COLLECTION} from "./collections";
 import {db} from "./firebase";
 import {addLogToBatch} from "./log";
-import {readTermsByCategoryIds, TERMS_COLLECTION} from "./term";
-
-const SUGGESTIONS_COLLECTION = "suggestions"
+import {readTermsByCategoryIds} from "./term";
 
 export async function createSuggestion(suggestionData: SuggestionData) {
     await addDoc(collection(db, SUGGESTIONS_COLLECTION), {
@@ -96,15 +95,26 @@ async function resolveCategoryId(batch: WriteBatch, suggestion: Suggestion): Pro
     return categoryRef.id
 }
 
-async function selectNewTerms(suggestion: Suggestion, categoryId: string): Promise<string[]> {
+// The admin may approve only some of the suggested terms; anything else is not part of the suggestion.
+function pickTerms(suggestion: Suggestion, selectedTerms: string[]): string[] {
+    const suggestedKeys = new Set(suggestion.terms.map(nameKey))
+    const picked = selectedTerms.filter((term) => suggestedKeys.has(nameKey(term)))
+
+    if (picked.length === 0) {
+        throw new Error("Select at least one term to approve.")
+    }
+    return picked
+}
+
+async function selectNewTerms(terms: string[], categoryId: string): Promise<string[]> {
     const knownKeys = new Set((await readTermsByCategoryIds([categoryId])).map((term) => nameKey(term.value)))
     const newTerms: string[] = []
 
-    for (const rawTerm of suggestion.terms) {
+    for (const rawTerm of terms) {
         const term = normalizeName(rawTerm)
         const lengthError = checkLength(term, `"${term}"`)
         if (lengthError) {
-            throw new Error(`${lengthError}. Deny this suggestion instead.`)
+            throw new Error(`${lengthError}. Leave it out or deny this suggestion.`)
         }
 
         if (!knownKeys.has(nameKey(term))) {
@@ -116,16 +126,21 @@ async function selectNewTerms(suggestion: Suggestion, categoryId: string): Promi
     return newTerms
 }
 
-// One batch: the category (when new), every term, the log and the removal of the suggestion are written
+// One batch: the category (when new), the selected terms, the log and the removal of the suggestion are written
 // together or not at all. Terms that the category already has are skipped.
-export async function approveSuggestion(suggestion: Suggestion) {
+export async function approveSuggestion(suggestion: Suggestion, selectedTerms: string[] = suggestion.terms) {
     if (!suggestion.isValid) {
         throw new Error("This suggestion is malformed and can only be denied.")
     }
 
+    const terms = pickTerms(suggestion, selectedTerms)
     const batch = writeBatch(db)
     const categoryId = await resolveCategoryId(batch, suggestion)
-    const newTerms = await selectNewTerms(suggestion, categoryId)
+    const newTerms = await selectNewTerms(terms, categoryId)
+
+    if (newTerms.length === 0) {
+        throw new Error(`The selected terms are already in ${normalizeName(suggestion.category)}. Deny this suggestion instead.`)
+    }
 
     newTerms.forEach((term) => {
         batch.set(doc(collection(db, TERMS_COLLECTION)), {value: term, categoryId, isOriginal: false})

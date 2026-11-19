@@ -1,17 +1,44 @@
-import {Skeleton, Text, VStack} from "@chakra-ui/react";
-import {EditableRow} from "@/components/data";
+import {Button, Skeleton, Text, VStack} from "@chakra-ui/react";
+import {useState} from "react";
+import {FaPlus} from "react-icons/fa";
+import {useNavigate} from "react-router-dom";
+import {EditableRow, NewCategoryDialog} from "@/components/data";
 import {toaster} from "@/components/ui";
 import {AlertMessage, PageHeader} from "@/components/util";
-import {useCategories} from "@/hooks";
+import {useCategories, useTermCounts} from "@/hooks";
 import type {Category} from "@/model";
-import {checkLength, findCategoryByName, normalizeName} from "@/utils";
+import {checkLength, errorMessage, findCategoryByName, normalizeName, pluralize} from "@/utils";
 
-function toMessage(error: unknown): string {
-    return error instanceof Error ? error.message : "Something went wrong. Please try again."
+interface TermCountButtonProps {
+    category: Category
+    count: number | undefined
+}
+
+function countLabel(count: number | undefined): string {
+    if (count === undefined) return "Terms"
+    if (count === 0) return "No terms"
+    return `${count} ${pluralize(count, "term", "terms")}`
+}
+
+// Opens the category on the Terms page. A category without terms cannot be played, so it stands out.
+function TermCountButton({category, count}: TermCountButtonProps) {
+    const navigate = useNavigate()
+    const isEmpty = count === 0
+
+    return (
+        <Button size="xs" variant="subtle" colorPalette={isEmpty ? "red" : "gray"} flexShrink={0}
+                loading={count === undefined}
+                aria-label={`Open the terms of ${category.value}`}
+                onClick={() => navigate(`/terms?category=${encodeURIComponent(category.id)}`)}>
+            {countLabel(count)}
+        </Button>
+    )
 }
 
 export function Categories() {
     const {getCategories: {data: categories, isPending, isError, refetch}, renameCategory, removeCategory} = useCategories()
+    const {data: termCounts} = useTermCounts((categories ?? []).map((category) => category.id))
+    const [isNewDialogOpen, setIsNewDialogOpen] = useState<boolean>(false)
     const isBusy = renameCategory.isPending || removeCategory.isPending
 
     const rename = async (category: Category, rawValue: string): Promise<boolean> => {
@@ -30,7 +57,7 @@ export function Categories() {
             toaster.create({type: "success", title: "Category renamed", description: value})
             return true
         } catch (renameError) {
-            toaster.create({type: "error", title: "Could not rename the category", description: toMessage(renameError)})
+            toaster.create({type: "error", title: "Could not rename the category", description: errorMessage(renameError)})
             return false
         }
     }
@@ -40,7 +67,7 @@ export function Categories() {
             await removeCategory.mutateAsync(category)
             toaster.create({type: "info", title: "Category deleted", description: category.value})
         } catch (deleteError) {
-            toaster.create({type: "error", title: "Could not delete the category", description: toMessage(deleteError)})
+            toaster.create({type: "error", title: "Could not delete the category", description: errorMessage(deleteError)})
         }
     }
 
@@ -63,22 +90,34 @@ export function Categories() {
         return categories
             .slice()
             .sort((a, b) => a.value.localeCompare(b.value))
-            .map((category) => (
-                <EditableRow key={category.id}
-                             value={category.value}
-                             badge={category.isOriginal ? "Original" : "Community"}
-                             deleteTitle={`Delete "${category.value}"?`}
-                             deleteText="The category and all of its terms will be deleted. This cannot be undone."
-                             isBusy={isBusy}
-                             onRename={(value) => rename(category, value)}
-                             onDelete={() => remove(category)}/>
-            ))
+            .map((category) => {
+                const count = termCounts?.[category.id]
+                const itsTerms = count === undefined ? "its terms" : `its ${count} ${pluralize(count, "term", "terms")}`
+                return (
+                    <EditableRow key={category.id}
+                                 value={category.value}
+                                 badge={category.isOriginal ? "Original" : "Community"}
+                                 deleteTitle={`Delete "${category.value}"?`}
+                                 deleteText={`The category and ${itsTerms} will be deleted. This cannot be undone.`}
+                                 isBusy={isBusy}
+                                 onRename={(value) => rename(category, value)}
+                                 onDelete={() => remove(category)}>
+                        <TermCountButton category={category} count={count}/>
+                    </EditableRow>
+                )
+            })
     }
 
     return (
         <VStack maxW="500px" w="90%" flex={1} gap={2}>
-            <PageHeader title="Categories" backTo="/manage-data"/>
+            <PageHeader title="Categories" backTo="/manage-data" mb={6}/>
+            <Button w="100%" mb={4} variant="outline" disabled={isPending || isError}
+                    onClick={() => setIsNewDialogOpen(true)}>
+                <FaPlus/> New category
+            </Button>
             {renderContent()}
+
+            <NewCategoryDialog open={isNewDialogOpen} setOpen={setIsNewDialogOpen} categories={categories ?? []}/>
         </VStack>
     )
 }

@@ -3,6 +3,8 @@
 interface ImportMetaEnv {
     // Development only: an App Check debug token registered in the Firebase console (see README).
     readonly VITE_FIREBASE_APPCHECK_DEBUG_TOKEN?: string
+    // Development only: "true" connects to the local Auth and Firestore emulators (`npm run dev:emulators`).
+    readonly VITE_FIREBASE_EMULATORS?: string
 }
 
 interface ImportMeta {

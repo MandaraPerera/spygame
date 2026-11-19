@@ -15,8 +15,9 @@ export function useSuggestions() {
         mutationFn: (suggestionData: SuggestionData) => createSuggestion(suggestionData)
     })
 
+    // Without `terms`, every suggested term is approved.
     const approveSuggestion = useMutation({
-        mutationFn: (suggestion: Suggestion) => approve(suggestion),
+        mutationFn: ({suggestion, terms}: { suggestion: Suggestion, terms?: string[] }) => approve(suggestion, terms),
         onSuccess: () => invalidate([suggestionKeys.all, categoryKeys.all, termKeys.all, statsKeys.all, logKeys.all])
     })
 

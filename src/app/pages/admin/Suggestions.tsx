@@ -44,7 +44,7 @@ export function Suggestions() {
 
         return (
             <>
-                <Accordion.Root collapsible variant="subtle" value={value} spaceY={2} w="100%"
+                <Accordion.Root collapsible lazyMount variant="subtle" value={value} spaceY={2} w="100%"
                                 onValueChange={(e) => setValue(e.value)}>
                     {suggestions.map((suggestion) => (
                         <SuggestionItem suggestion={suggestion} key={suggestion.id}/>

@@ -8,6 +8,7 @@ export {
 } from './auth'
 
 export {
+    createCategory,
     deleteCategory,
     readAmountOfCategories,
     readCategories,
@@ -16,7 +17,7 @@ export {
 
 export {
     readAmountOfLogs,
-    readLogs
+    readLogsPaginated
 } from './log'
 
 export {
@@ -29,8 +30,10 @@ export {
 } from './suggestion'
 
 export {
+    createTerms,
     deleteTerm,
     readAmountOfTerms,
+    readTermCounts,
     readTermsByCategoryIds,
     updateTerm
 } from './term'

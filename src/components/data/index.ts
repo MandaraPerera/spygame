@@ -1,4 +1,6 @@
+export {AddTermsDialog} from './AddTermsDialog'
 export {EditableRow} from './EditableRow'
 export {LogItem} from './LogItem'
 export {ManageDataSkeleton} from './ManageDataSkeleton'
+export {NewCategoryDialog} from './NewCategoryDialog'
 export {SuggestionItem} from './SuggestionItem'

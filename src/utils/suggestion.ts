@@ -5,6 +5,7 @@ import {
     NAME_MIN_LENGTH
 } from "@/config";
 import type {Category, Suggestion, SuggestionData} from "@/model";
+import {isStringList, toDate} from "./parse";
 
 export type SuggestionDraft = {
     isNewCategory: boolean
@@ -89,19 +90,6 @@ export function validateSuggestion(draft: SuggestionDraft, categories: Category[
     if (!Array.isArray(terms)) return terms
 
     return {ok: true, suggestion: {category, terms, isNewCategory: draft.isNewCategory}}
-}
-
-function isStringList(value: unknown): value is string[] {
-    return Array.isArray(value) && value.every((item) => typeof item === "string")
-}
-
-function toDate(value: unknown): Date | null {
-    if (value instanceof Date) return value
-    if (typeof value === "object" && value !== null && "toDate" in value && typeof value.toDate === "function") {
-        const date: unknown = value.toDate()
-        return date instanceof Date ? date : null
-    }
-    return null
 }
 
 // Suggestions are written by anonymous visitors, so a stored document can have any shape.

@@ -5,7 +5,9 @@ import {afterEach, vi} from 'vitest'
 // Unit tests never talk to Firebase: the service layer is replaced for every test file.
 vi.mock('@/services', () => ({
     approveSuggestion: vi.fn(),
+    createCategory: vi.fn(),
     createSuggestion: vi.fn(),
+    createTerms: vi.fn(),
     deleteCategory: vi.fn(),
     deleteTerm: vi.fn(),
     denySuggestion: vi.fn(),
@@ -17,8 +19,9 @@ vi.mock('@/services', () => ({
     readAmountOfTerms: vi.fn(),
     readCategories: vi.fn(),
     readIsAdmin: vi.fn(),
-    readLogs: vi.fn(),
+    readLogsPaginated: vi.fn(),
     readSuggestionsPaginated: vi.fn(),
+    readTermCounts: vi.fn(),
     readTermsByCategoryIds: vi.fn(),
     signIn: vi.fn(),
     signOut: vi.fn(),

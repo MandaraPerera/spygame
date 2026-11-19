@@ -9,7 +9,8 @@ export const suggestionKeys = {
 
 export const termKeys = {
     all: ['terms'] as const,
-    byCategories: (categoryIds: string[]) => ['terms', 'categories', [...categoryIds].sort()] as const
+    byCategories: (categoryIds: string[]) => ['terms', 'categories', [...categoryIds].sort()] as const,
+    counts: (categoryIds: string[]) => ['terms', 'counts', [...categoryIds].sort()] as const
 }
 
 export const statsKeys = {
@@ -17,5 +18,6 @@ export const statsKeys = {
 }
 
 export const logKeys = {
-    all: ['logs'] as const
+    all: ['logs'] as const,
+    paginated: ['logs', 'paginated'] as const
 }

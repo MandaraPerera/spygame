@@ -1,5 +1,5 @@
 import {Badge, Editable, HStack, IconButton} from "@chakra-ui/react";
-import {useState} from "react";
+import {type ReactNode, useState} from "react";
 import {FaTrash} from "react-icons/fa";
 import {LuCheck, LuPencilLine, LuX} from "react-icons/lu";
 import {ConfirmDialog} from "@/components/util";
@@ -13,10 +13,12 @@ interface EditableRowProps {
     isBusy: boolean
     onRename: (value: string) => Promise<boolean>
     onDelete: () => Promise<void>
+    // Shown between the name and the delete button, such as a term count.
+    children?: ReactNode
 }
 
 // One row of the admin lists: rename in place, or delete after a confirmation.
-export function EditableRow({value, badge, deleteTitle, deleteText, isBusy, onRename, onDelete}: EditableRowProps) {
+export function EditableRow({value, badge, deleteTitle, deleteText, isBusy, onRename, onDelete, children}: EditableRowProps) {
     const [draft, setDraft] = useState<string>(value)
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
 
@@ -32,12 +34,12 @@ export function EditableRow({value, badge, deleteTitle, deleteText, isBusy, onRe
     }
 
     return (
-        <HStack w="100%" justify="space-between">
-            <Editable.Root value={draft} maxLength={NAME_MAX_LENGTH} disabled={isBusy}
+        <HStack w="100%" gap={2}>
+            <Editable.Root flex={1} minW={0} value={draft} maxLength={NAME_MAX_LENGTH} disabled={isBusy}
                            onValueChange={(e) => setDraft(e.value)}
                            onValueCommit={(e) => commit(e.value)}
                            onValueRevert={() => setDraft(value)}>
-                <Editable.Preview/>
+                <Editable.Preview truncate/>
                 <Editable.Input aria-label={`Rename ${value}`}/>
                 <Editable.Control>
                     <Editable.EditTrigger asChild>
@@ -57,6 +59,7 @@ export function EditableRow({value, badge, deleteTitle, deleteText, isBusy, onRe
                     </Editable.SubmitTrigger>
                 </Editable.Control>
             </Editable.Root>
+            {children}
             {badge ? <Badge>{badge}</Badge> : null}
             <IconButton variant="outline" size="sm" aria-label={`Delete ${value}`} disabled={isBusy}
                         onClick={() => setIsDeleteDialogOpen(true)}>

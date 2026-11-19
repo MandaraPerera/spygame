@@ -136,6 +136,12 @@ describe("logs", () => {
         await assertFails(addDoc(collection(signedIn(), "logs"), log({userId: "visitor"})))
     })
 
+    it("accept every action the app writes", async () => {
+        for (const action of ["approved", "denied", "created", "updated", "deleted"]) {
+            await assertSucceeds(addDoc(collection(admin(), "logs"), log({action})))
+        }
+    })
+
     it("cannot be changed or deleted", async () => {
         const logRef = await addDoc(collection(admin(), "logs"), log())
         await assertFails(setDoc(logRef, log({action: "denied"})))
@@ -167,5 +173,37 @@ describe("approving a suggestion", () => {
 
         await assertFails(batch.commit())
         await assertSucceeds(getDocs(collection(admin(), "suggestions")))
+    })
+})
+
+describe("admin edits", () => {
+    it("create a category with its terms and a log as one batch", async () => {
+        const db = admin()
+        const batch = writeBatch(db)
+        const categoryRef = doc(collection(db, "categories"))
+        batch.set(categoryRef, {value: "Animals", isOriginal: false})
+        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: categoryRef.id, isOriginal: false})
+        batch.set(doc(collection(db, "logs")), log({type: "category", action: "created", isNewCategory: null}))
+
+        await assertSucceeds(batch.commit())
+    })
+
+    it("add terms with a log as one batch", async () => {
+        const db = admin()
+        const batch = writeBatch(db)
+        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: "animals", isOriginal: false})
+        batch.set(doc(collection(db, "terms")), {value: "Tiger", categoryId: "animals", isOriginal: false})
+        batch.set(doc(collection(db, "logs")), log({type: "term", action: "created", isNewCategory: null}))
+
+        await assertSucceeds(batch.commit())
+    })
+
+    it("are refused to signed-in non-admins", async () => {
+        const db = signedIn()
+        const batch = writeBatch(db)
+        batch.set(doc(collection(db, "categories")), {value: "Animals", isOriginal: false})
+        batch.set(doc(collection(db, "logs")), log({userId: "visitor", type: "category", action: "created"}))
+
+        await assertFails(batch.commit())
     })
 })

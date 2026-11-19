@@ -10,3 +10,8 @@ export function formatDate(timestamp: Date | null): string {
 
     return `${day}/${month}/${year} - ${hour}:${minute}`
 }
+
+// A message for a toast or an inline alert. Firebase errors carry a readable message.
+export function errorMessage(error: unknown): string {
+    return error instanceof Error && error.message ? error.message : "Something went wrong. Please try again."
+}

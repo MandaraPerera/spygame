@@ -78,7 +78,7 @@ service cloud.firestore {
         && hasExactly(['userId', 'type', 'action', 'category', 'terms', 'isNewCategory', 'timestamp'])
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.type in ['suggestion', 'category', 'term']
-        && request.resource.data.action in ['approved', 'denied', 'updated', 'deleted']
+        && request.resource.data.action in ['approved', 'denied', 'created', 'updated', 'deleted']
         && request.resource.data.category is string
         && request.resource.data.terms is list
         && request.resource.data.timestamp == request.time;
