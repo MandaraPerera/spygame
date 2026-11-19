@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {clampPlayers, clampSpies, maxSpies, pickSpies} from "./game";
+import {clampPlayers, clampSpies, maxSpies, pickSpies, pickTerm} from "./game";
 
 describe("maxSpies", () => {
     it("allows one spy for every two players, and at least one", () => {
@@ -57,5 +57,24 @@ describe("pickSpies", () => {
 
     it("uses the random source it is given", () => {
         expect(pickSpies(4, 2, () => 0)).toEqual([1, 2])
+    })
+})
+
+describe("pickTerm", () => {
+    it("picks by the seed", () => {
+        expect(pickTerm(["Lion", "Tiger", "Zebra"], 0)).toBe("Lion")
+        expect(pickTerm(["Lion", "Tiger", "Zebra"], 0.99)).toBe("Zebra")
+    })
+
+    it("skips the previous subject when there is another one", () => {
+        expect(pickTerm(["Lion", "Tiger"], 0, "Lion")).toBe("Tiger")
+    })
+
+    it("repeats the only subject there is", () => {
+        expect(pickTerm(["Lion"], 0.5, "Lion")).toBe("Lion")
+    })
+
+    it("has nothing to pick without terms", () => {
+        expect(pickTerm([], 0.5)).toBeNull()
     })
 })

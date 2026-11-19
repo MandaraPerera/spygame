@@ -19,19 +19,19 @@ export function LogItem({log, currentUserId}: LogItemProps) {
     const {title, detail} = describeLog(log)
 
     return (
-        <Box w="100%" bgColor="gray.900" borderRadius="md" p={3}>
+        <Box px="4" py="3">
             <HStack justify="space-between" mb={1}>
                 <HStack>
-                    <Badge colorPalette={log.action ? ACTION_COLORS[log.action] : "gray"}>{log.action ?? "unknown"}</Badge>
-                    {log.type ? <Text fontSize="sm">{log.type}</Text> : null}
+                    <Badge variant="subtle" colorPalette={log.action ? ACTION_COLORS[log.action] : "gray"}>{log.action ?? "unknown"}</Badge>
+                    {log.type ? <Text textStyle="sm" color="fg.muted">{log.type}</Text> : null}
                 </HStack>
-                <Text fontSize="xs" fontWeight="light">{formatDate(log.timestamp)}</Text>
+                <Text textStyle="xs" color="fg.muted">{formatDate(log.timestamp)}</Text>
             </HStack>
-            <Text fontSize="sm" fontWeight="semibold" truncate>{title}</Text>
+            <Text fontWeight="semibold" truncate>{title}</Text>
             {detail ? (
-                <Text fontSize="sm" fontWeight="light" lineClamp={2}>{detail}</Text>
+                <Text textStyle="sm" color="fg.muted" lineClamp={2}>{detail}</Text>
             ) : null}
-            <Text fontSize="xs" fontWeight="light" mt={1}>
+            <Text textStyle="xs" color="fg.muted" mt="1">
                 By {describeLogAuthor(log, currentUserId)}
             </Text>
         </Box>

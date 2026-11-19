@@ -14,10 +14,10 @@
 1. Set the amount of players
 2. Set the amount of spies
 3. Select one or more categories
-4. Click Play
-5. Player 1 clicks (without anyone else looking) on the card on the device.
+4. Tap Deal roles
+5. Player 1 taps (without anyone else looking) the file on the screen.
 6. Next it will either show the subject or _SPY_. Player 1 now knows their role.
-7. Player 1 clicks on the card again to hide the content and passes the phone to player 2.
+7. Player 1 taps the file again to close it and passes the phone to player 2.
 8. Repeat steps 5-7 for each player.
 
 ## 3. Rounds
@@ -61,7 +61,7 @@ Be creative and think of funny questions.
 
 ## 5. Submit Categories and Words
 
-`Settings -> Suggest category or word`
+`Settings -> Suggest words`
 
 The more categories and words, the better! If you would like to add some of your own, you can do so through the
 settings. Once they are approved by an admin, you will see your content in the game!

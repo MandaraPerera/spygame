@@ -1,26 +1,24 @@
-import {Heading, HStack, Separator, Skeleton, VStack} from "@chakra-ui/react";
-import {PageHeader} from "@/components/util";
+import {Heading, HStack, Skeleton, Stack} from "@chakra-ui/react";
+import {PageHeader, Screen} from "@/components/util";
 import {SuggestIntro} from "./SuggestIntro";
 
 export function SuggestSkeleton() {
     return (
-        <VStack maxW="500px" w="90%" flex={1}>
-            <PageHeader title="Suggest Content" closeTo="/" mb={2}/>
+        <Screen header={<PageHeader title="Suggest words" backTo="/"/>}>
             <SuggestIntro/>
-            <HStack w="100%" mt={6} justify="space-between">
-                <Heading>Category</Heading>
-                <Skeleton w="110px" h="5"/>
-            </HStack>
-            <Skeleton minW="170px" width="50%" h="9" alignSelf="start"/>
-            <Separator w="100%"/>
-            <Heading w="100%" mt={4}>Terms</Heading>
-            <HStack w="100%" justify="space-between">
-                <Skeleton flex={1} h="10"/>
-                <Skeleton w="10" h="10"/>
-            </HStack>
-            <Skeleton w="120px" h="8" alignSelf="start"/>
-            <Separator w="100%"/>
-            <Skeleton w="100px" mt={4} h="10" alignSelf="end"/>
-        </VStack>
+            <Stack gap="3">
+                <Heading as="h2" textStyle="title">Category</Heading>
+                <Skeleton h="11" rounded="l2"/>
+                <Skeleton h="11" rounded="l2"/>
+            </Stack>
+            <Stack gap="3">
+                <Heading as="h2" textStyle="title">Words</Heading>
+                <HStack gap="1">
+                    <Skeleton flex="1" h="11" rounded="l2"/>
+                    <Skeleton boxSize="11" rounded="l2"/>
+                </HStack>
+                <Skeleton w="8rem" h="11" rounded="l2"/>
+            </Stack>
+        </Screen>
     )
 }

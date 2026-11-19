@@ -27,11 +27,11 @@ describe("validateSuggestion", () => {
     })
 
     it("needs a selected category in Existing mode, whatever was typed in New mode", () => {
-        expect(errorOf({existingCategoryId: null, newCategory: "Pizzas"})).toBe("Category is not selected")
+        expect(errorOf({existingCategoryId: null, newCategory: "Pizzas"})).toBe("Pick a category")
     })
 
     it("needs a name in New mode", () => {
-        expect(errorOf({isNewCategory: true, newCategory: "   ", terms: fiveTerms})).toBe("Category is not set")
+        expect(errorOf({isNewCategory: true, newCategory: "   ", terms: fiveTerms})).toBe("Name the new category")
     })
 
     it("checks the category length after trimming", () => {
@@ -45,16 +45,16 @@ describe("validateSuggestion", () => {
 
     it("rejects a new category that already exists, ignoring case and spaces", () => {
         expect(errorOf({isNewCategory: true, newCategory: "  countries ", terms: fiveTerms}))
-            .toBe('"countries" already exists. Switch to Existing to add terms to it.')
+            .toBe('"countries" already exists. Pick it under Existing category to add words to it.')
     })
 
     it("needs five terms for a new category", () => {
         expect(errorOf({isNewCategory: true, newCategory: "Animals", terms: fiveTerms.slice(0, 4)}))
-            .toBe("For a new category, submit at least 5 terms")
+            .toBe("A new category needs at least 5 words")
     })
 
     it("rejects terms that are only spaces", () => {
-        expect(errorOf({terms: ["    "]})).toBe("Fill in or remove the empty terms")
+        expect(errorOf({terms: ["    "]})).toBe("Fill in or remove the empty words")
     })
 
     it("rejects duplicate terms, ignoring case", () => {
@@ -63,7 +63,7 @@ describe("validateSuggestion", () => {
 
     it("limits the number of terms", () => {
         const terms = Array.from({length: 51}, (_, index) => `Term ${index}`)
-        expect(errorOf({terms})).toBe("A suggestion can have a maximum of 50 terms")
+        expect(errorOf({terms})).toBe("A suggestion can have at most 50 words")
     })
 
     it("sends trimmed terms", () => {

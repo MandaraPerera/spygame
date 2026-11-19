@@ -40,17 +40,17 @@ export function checkLength(value: string, label: string): string | null {
 function resolveCategory(draft: SuggestionDraft, categories: Category[]): ValidationResult | string {
     if (!draft.isNewCategory) {
         const existing = categories.find((category) => category.id === draft.existingCategoryId)
-        return existing ? existing.value : {ok: false, error: "Category is not selected"}
+        return existing ? existing.value : {ok: false, error: "Pick a category"}
     }
 
     const category = normalizeName(draft.newCategory)
-    if (category.length === 0) return {ok: false, error: "Category is not set"}
+    if (category.length === 0) return {ok: false, error: "Name the new category"}
 
     const lengthError = checkLength(category, "Category")
     if (lengthError) return {ok: false, error: lengthError}
 
     if (findCategoryByName(categories, category)) {
-        return {ok: false, error: `"${category}" already exists. Switch to Existing to add terms to it.`}
+        return {ok: false, error: `"${category}" already exists. Pick it under Existing category to add words to it.`}
     }
 
     return category
@@ -59,17 +59,17 @@ function resolveCategory(draft: SuggestionDraft, categories: Category[]): Valida
 function resolveTerms(draft: SuggestionDraft): ValidationResult | string[] {
     const terms = draft.terms.map(normalizeName)
 
-    if (terms.length === 0) return {ok: false, error: "Add at least one term"}
+    if (terms.length === 0) return {ok: false, error: "Add at least one word"}
     if (terms.length > MAX_TERMS_PER_SUGGESTION) {
-        return {ok: false, error: `A suggestion can have a maximum of ${MAX_TERMS_PER_SUGGESTION} terms`}
+        return {ok: false, error: `A suggestion can have at most ${MAX_TERMS_PER_SUGGESTION} words`}
     }
     if (draft.isNewCategory && terms.length < MIN_TERMS_FOR_NEW_CATEGORY) {
-        return {ok: false, error: `For a new category, submit at least ${MIN_TERMS_FOR_NEW_CATEGORY} terms`}
+        return {ok: false, error: `A new category needs at least ${MIN_TERMS_FOR_NEW_CATEGORY} words`}
     }
 
     const seen = new Set<string>()
     for (const term of terms) {
-        if (term.length === 0) return {ok: false, error: "Fill in or remove the empty terms"}
+        if (term.length === 0) return {ok: false, error: "Fill in or remove the empty words"}
 
         const lengthError = checkLength(term, `"${term}"`)
         if (lengthError) return {ok: false, error: lengthError}

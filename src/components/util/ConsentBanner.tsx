@@ -7,17 +7,20 @@ export function ConsentBanner() {
     if (consent !== null) return null
 
     return (
-        <Box position="fixed" bottom={4} left="50%" transform="translateX(-50%)" w="90%" maxW="500px"
-             zIndex="banner" bg="gray.800" borderRadius="lg" p={4} boxShadow="lg"
-             role="region" aria-label="Analytics consent">
-            <Text fontSize="sm" mb={3}>
-                May we use Google Analytics to see how the game is used? It stores cookies on this device. You can
-                change your choice later in Settings.
-            </Text>
-            <HStack justify="end">
-                <Button size="sm" variant="outline" onClick={() => setConsent("denied")}>No thanks</Button>
-                <Button size="sm" onClick={() => setConsent("granted")}>Allow</Button>
-            </HStack>
+        <Box position="fixed" insetX="0" bottom="0" zIndex="banner" px="3"
+             pb="calc(0.75rem + env(safe-area-inset-bottom))">
+            <Box maxW="30rem" mx="auto" bg="bg.emphasized" borderWidth="1px" borderColor="border.emphasized"
+                 rounded="panel" p="4" boxShadow="0 12px 32px rgba(0, 0, 0, 0.45)"
+                 role="region" aria-label="Analytics consent">
+                <Text textStyle="sm" mb="3">
+                    Can we use Google Analytics to see how the game is played? It stores cookies on this device.
+                    You can change this later in Settings.
+                </Text>
+                <HStack gap="2">
+                    <Button flex="1" variant="outline" onClick={() => setConsent("denied")}>No thanks</Button>
+                    <Button flex="1" colorPalette="manila" onClick={() => setConsent("granted")}>Allow</Button>
+                </HStack>
+            </Box>
         </Box>
     )
 }

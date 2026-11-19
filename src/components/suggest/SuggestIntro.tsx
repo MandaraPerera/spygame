@@ -2,10 +2,9 @@ import {Text} from "@chakra-ui/react";
 
 export function SuggestIntro() {
     return (
-        <Text fontSize={"sm"} textAlign="justify" w="full">
-            Here you can suggest categories and terms that you would like to see in the game. Once they are
-            approved, you will see your content in the game! Add to an existing category using the dropdown, or
-            add your own by switching on <span style={{fontStyle: "italic"}}>New category</span>.
+        <Text color="fg.muted" pt="2">
+            Add words to a category that's already in the game, or start a new one. They show up in the game once an
+            admin approves them.
         </Text>
     )
 }

@@ -1,97 +1,127 @@
-import {Breadcrumb, Heading, List, Text, VStack} from "@chakra-ui/react";
+import {Box, Button, Circle, Heading, List, Stack, Text} from "@chakra-ui/react";
+import type {ReactNode} from "react";
 import {Link as RouterLink} from "react-router-dom";
-import {PageHeader} from "@/components/util";
+import {ListPanel, ListRow, PageHeader, Screen} from "@/components/util";
 import {MAX_PLAYERS, MIN_PLAYERS} from "@/config";
+
+const DEAL_STEPS = [
+    "Set the number of players and spies.",
+    "Pick one or more categories.",
+    "Tap Deal roles.",
+    "Player 1 opens the file without anyone else looking. It shows the secret word, or SPY.",
+    "They tap again to close it and pass the phone on. Repeat until everyone has a role."
+]
+
+const ROUND_RULES = [
+    "Each round, every player asks one question to someone and answers one. The order doesn't matter. With 3 players, everyone asks and answers two.",
+    "Questions about the word can only be answered with yes or no. The spy tries to stay hidden, the others try to find the spy.",
+    "When the round ends, someone counts down. At zero, everyone points at who they think the spy is.",
+    "If the spy is voted out, they get one guess at the word. Right, and the spy wins. Wrong, and the players win.",
+    "If the spy stays in, play another round. The last round is when three people are left: if the spy survives it, the spy wins, even without knowing the word."
+]
+
+const EXAMPLE_QUESTIONS = [
+    {
+        category: "Countries",
+        questions: [
+            "Does the country have a coastline?",
+            "Does its flag have blue in it?",
+            "Is the country in Europe?",
+            "Is the country known for its landscape?"
+        ]
+    },
+    {
+        category: "Sports",
+        questions: [
+            "Is the sport played in a team?",
+            "Is a ball used in this sport?",
+            "Is this sport in the Olympics?",
+            "Is [country] very good at this sport?"
+        ]
+    },
+    {
+        category: "Objects",
+        questions: [
+            "Does the object need electricity?",
+            "Was it invented in the last 100 years?",
+            "Is the object waterproof?",
+            "Would you find it in a bar, restaurant or house?"
+        ]
+    }
+]
+
+interface SectionProps {
+    title: string
+    children: ReactNode
+}
+
+function Section({title, children}: SectionProps) {
+    return (
+        <Stack as="section" gap="3">
+            <Heading as="h2" textStyle="title">{title}</Heading>
+            {children}
+        </Stack>
+    )
+}
 
 export function HowToPlay() {
     return (
-        <VStack maxW="500px" w="90%" flex={1} align="start">
-            <PageHeader title="How To Play?" closeTo="/" mb={0}/>
-            <Heading as="h2" size="2xl" mt={8}>1. Game Info</Heading>
-            <List.Root pl={8} mt={2}>
-                <List.Item>Players: {MIN_PLAYERS} - {MAX_PLAYERS}</List.Item>
-                <List.Item>Spies: 1 - <span style={{fontStyle: "italic"}}>[half of players]</span></List.Item>
-                <List.Item>Player's task: find out who the spy is without revealing the subject.</List.Item>
-                <List.Item>Spy's task: stay in the game and find out what the subject is.</List.Item>
-            </List.Root>
-            <Heading as="h2" size="2xl" mt={8}>2. Setup</Heading>
-            <List.Root as="ol" pl={8} mt={2}>
-                <List.Item>Set the amount of players.</List.Item>
-                <List.Item>Set the amount of spies.</List.Item>
-                <List.Item>Select one or more categories.</List.Item>
-                <List.Item>Click Play.</List.Item>
-                <List.Item>Player 1 clicks (without anyone else looking) on the card on the device.</List.Item>
-                <List.Item>Next it will either show the subject or <span style={{fontStyle: "italic"}}>SPY</span>.
-                    Player 1 now knows their role.</List.Item>
-                <List.Item>Player 1 clicks on the card again to hide the content and passes the phone to player 2.
-                </List.Item>
-                <List.Item>Repeat steps 5-7 for each player.</List.Item>
-            </List.Root>
-            <Heading as="h2" size="2xl" mt={8}>3. Rounds</Heading>
-            <List.Root pl={8} mt={2}>
-                <List.Item>In each round every player will ask one question to another. Every player must ask and
-                    receive one question, the order of which is not important.</List.Item>
-                <List.Item>When there are only 3 players, in each round 2 questions will be asked and received by
-                    every player.</List.Item>
-                <List.Item>You can only ask yes or no questions about the subject. The spy must try to stay hidden
-                    and the players must try to discover who the spy is.</List.Item>
-                <List.Item>At the end of the round someone will count down. At 0 everyone points to who they think
-                    the spy is.</List.Item>
-                <List.Item>If the spy is voted out, they can guess the subject. If correctly guessed, the spy wins.
-                    If incorrect, the players win.</List.Item>
-                <List.Item>If the spy is not voted out, another round of questions and voting begins.</List.Item>
-                <List.Item>The last round is when there are three people remaining.</List.Item>
-                <List.Item>If in the last round the spy does not get voted out, they win even if they don't know the
-                    subject.</List.Item>
-            </List.Root>
-            <Heading as="h2" size="2xl" mt={8}>4. Example Questions</Heading>
-            <Text fontStyle="italic" mt={2}>Countries</Text>
-            <List.Root pl={8}>
-                <List.Item>Does the country have a coastline?</List.Item>
-                <List.Item>Does the flag of the country contain the color blue?</List.Item>
-                <List.Item>Is the country located in Europe?</List.Item>
-                <List.Item>Is the country known for its landscape?</List.Item>
-            </List.Root>
-            <Text fontStyle="italic" mt={2}>Sports</Text>
-            <List.Root pl={8}>
-                <List.Item>Is the sport played in a team?</List.Item>
-                <List.Item>Is a ball used in this sport?</List.Item>
-                <List.Item>Is this sport featured in the Olympics?</List.Item>
-                <List.Item>Is [country] known to be very good in this sport?</List.Item>
-            </List.Root>
-            <Text fontStyle="italic" mt={2}>Objects</Text>
-            <List.Root pl={8}>
-                <List.Item>Does the object require electricity?</List.Item>
-                <List.Item>Was this object invented in the last 100 years?</List.Item>
-                <List.Item>Is the object waterproof?</List.Item>
-                <List.Item>Does this bar/restaurant/house have this object?</List.Item>
-            </List.Root>
-            <Text mt={2}>Be creative and think of funny questions.</Text>
-            <Heading as="h2" size="2xl" mt={8}>5. Submit Categories and Subjects</Heading>
-            <Breadcrumb.Root size="sm">
-                <Breadcrumb.List>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.Link asChild>
-                            <RouterLink to="/">Home</RouterLink>
-                        </Breadcrumb.Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Separator/>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.Link asChild>
-                            <RouterLink to="/" state={{openSettings: true}}>Settings</RouterLink>
-                        </Breadcrumb.Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Separator/>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.Link asChild>
-                            <RouterLink to="/suggest">Suggest Content</RouterLink>
-                        </Breadcrumb.Link>
-                    </Breadcrumb.Item>
-                </Breadcrumb.List>
-            </Breadcrumb.Root>
-            <Text mt={2}>The more categories and words, the better! If you would like to add some of your own, you can
-                do so through the settings. Once they are approved by an admin, you will see your content in the
-                game!</Text>
-        </VStack>
+        <Screen header={<PageHeader title="How to play" backTo="/"/>}>
+            <Text textStyle="lg" pt="2">
+                SpyGame is played on one phone that goes around the group. Everyone gets the same secret word,
+                except the spies.
+            </Text>
+
+            <ListPanel>
+                <ListRow label={`${MIN_PLAYERS} to ${MAX_PLAYERS} players`}
+                         description="Find the spy without giving the word away."/>
+                <ListRow label="1 spy, up to half the players"
+                         description="Stay hidden and work out the word."/>
+            </ListPanel>
+
+            <Section title="Deal the roles">
+                <List.Root as="ol" listStyle="none" gap="3">
+                    {DEAL_STEPS.map((step, index) => (
+                        <List.Item key={step} display="flex" gap="3" alignItems="start">
+                            <Circle size="7" flexShrink={0} borderWidth="1.5px" borderColor="manila.300"
+                                    color="manila.200" textStyle="sm" fontWeight="bold" aria-hidden>
+                                {index + 1}
+                            </Circle>
+                            <Text pt="0.5">{step}</Text>
+                        </List.Item>
+                    ))}
+                </List.Root>
+            </Section>
+
+            <Section title="Play the rounds">
+                <List.Root gap="2.5" ps="5" css={{"& li::marker": {color: "manila.300"}}}>
+                    {ROUND_RULES.map((rule) => <List.Item key={rule}>{rule}</List.Item>)}
+                </List.Root>
+            </Section>
+
+            <Section title="Example questions">
+                <Text color="fg.muted">Be creative: the funnier the question, the better.</Text>
+                <Stack gap="3">
+                    {EXAMPLE_QUESTIONS.map((group) => (
+                        <Box key={group.category} bg="bg.panel" rounded="panel" p="4">
+                            <Text fontWeight="semibold" mb="2">{group.category}</Text>
+                            <List.Root gap="1.5" ps="5" color="fg.muted">
+                                {group.questions.map((question) => <List.Item key={question}>{question}</List.Item>)}
+                            </List.Root>
+                        </Box>
+                    ))}
+                </Stack>
+            </Section>
+
+            <Section title="Add your own words">
+                <Text color="fg.muted">
+                    The more categories and words, the better. Send in your own and they show up in the game once an
+                    admin approves them.
+                </Text>
+                <Button asChild variant="outline" alignSelf="start">
+                    <RouterLink to="/suggest">Suggest words</RouterLink>
+                </Button>
+            </Section>
+        </Screen>
     )
 }

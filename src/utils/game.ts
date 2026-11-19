@@ -27,3 +27,12 @@ export function pickSpies(players: number, spies: number, random: () => number =
 
     return seats.slice(0, Math.min(Math.max(0, spies), seats.length))
 }
+
+// Picks the subject from the terms. `seed` is a number in [0, 1), so a deal keeps its pick while the terms are
+// the same; the previous game's subject is skipped when there is another one to play.
+export function pickTerm(terms: string[], seed: number, previousTerm: string | null = null): string | null {
+    const candidates = terms.length > 1 ? terms.filter((term) => term !== previousTerm) : terms
+    if (candidates.length === 0) return null
+
+    return candidates[Math.min(candidates.length - 1, Math.floor(seed * candidates.length))]
+}

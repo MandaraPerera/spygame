@@ -1,10 +1,10 @@
-import {Button, Skeleton, Text, VStack} from "@chakra-ui/react";
+import {Button, Skeleton, Stack, Text} from "@chakra-ui/react";
 import {useState} from "react";
-import {FaPlus} from "react-icons/fa";
+import {LuPlus} from "react-icons/lu";
 import {useNavigate} from "react-router-dom";
 import {EditableRow, NewCategoryDialog} from "@/components/data";
 import {toaster} from "@/components/ui";
-import {AlertMessage, PageHeader} from "@/components/util";
+import {AlertMessage, ListPanel, PageHeader, Screen} from "@/components/util";
 import {useCategories, useTermCounts} from "@/hooks";
 import type {Category} from "@/model";
 import {checkLength, errorMessage, findCategoryByName, normalizeName, pluralize} from "@/utils";
@@ -26,7 +26,7 @@ function TermCountButton({category, count}: TermCountButtonProps) {
     const isEmpty = count === 0
 
     return (
-        <Button size="xs" variant="subtle" colorPalette={isEmpty ? "red" : "gray"} flexShrink={0}
+        <Button size="xs" variant="subtle" rounded="full" colorPalette={isEmpty ? "red" : "gray"} flexShrink={0}
                 loading={count === undefined}
                 aria-label={`Open the terms of ${category.value}`}
                 onClick={() => navigate(`/terms?category=${encodeURIComponent(category.id)}`)}>
@@ -74,20 +74,24 @@ export function Categories() {
     const renderContent = () => {
         if (isError) {
             return (
-                <AlertMessage status="error" title="Error" text="The categories could not be loaded."
+                <AlertMessage status="error" title="Couldn't load the categories"
+                              text="Check your connection and try again."
                               action={{label: "Try again", onClick: () => refetch()}}/>
             )
         }
 
         if (isPending) {
-            return Array.from({length: 4}, (_, index) => <Skeleton key={index} w="100%" h="10"/>)
+            return <Skeleton h="20rem" rounded="panel"/>
         }
 
         if (categories.length === 0) {
-            return <Text>There are no categories yet.</Text>
+            return (
+                <AlertMessage status="info" title="No categories yet"
+                              text="Create the first one with its words, and players can pick it right away."/>
+            )
         }
 
-        return categories
+        const rows = categories
             .slice()
             .sort((a, b) => a.value.localeCompare(b.value))
             .map((category) => {
@@ -106,18 +110,27 @@ export function Categories() {
                     </EditableRow>
                 )
             })
+
+        return (
+            <Stack gap="2" pt="2">
+                <Text textStyle="sm" color="fg.muted">
+                    {categories.length} {pluralize(categories.length, "category", "categories")}
+                </Text>
+                <ListPanel>{rows}</ListPanel>
+            </Stack>
+        )
     }
 
     return (
-        <VStack maxW="500px" w="90%" flex={1} gap={2}>
-            <PageHeader title="Categories" backTo="/manage-data" mb={6}/>
-            <Button w="100%" mb={4} variant="outline" disabled={isPending || isError}
+        <Screen header={<PageHeader title="Categories" backTo="/manage-data"/>} footer={(
+            <Button size="xl" colorPalette="manila" disabled={isPending || isError}
                     onClick={() => setIsNewDialogOpen(true)}>
-                <FaPlus/> New category
+                <LuPlus/> New category
             </Button>
+        )}>
             {renderContent()}
 
             <NewCategoryDialog open={isNewDialogOpen} setOpen={setIsNewDialogOpen} categories={categories ?? []}/>
-        </VStack>
+        </Screen>
     )
 }

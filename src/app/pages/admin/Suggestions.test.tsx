@@ -29,7 +29,7 @@ describe("Suggestions", () => {
         mockQuery({isError: true})
         renderWithProviders(<Suggestions/>)
 
-        expect(screen.getByText("The suggestions could not be loaded.")).toBeInTheDocument()
+        expect(screen.getByText("Couldn't load the suggestions")).toBeInTheDocument()
         expect(screen.queryByText("There are no suggestions to be reviewed.")).not.toBeInTheDocument()
     })
 

@@ -1,6 +1,7 @@
 export {chunk, pluralize} from './array'
 export {errorMessage, formatDate} from './format'
-export {clampPlayers, clampSpies, maxSpies, pickSpies} from './game'
+export {clampPlayers, clampSpies, maxSpies, pickSpies, pickTerm} from './game'
+export {prefersReducedMotion} from './motion'
 export {describeLog, describeLogAuthor, parseLog} from './log'
 export {
     checkLength,

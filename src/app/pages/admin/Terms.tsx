@@ -1,22 +1,10 @@
-import {
-    Button,
-    createListCollection,
-    HStack,
-    Input,
-    InputGroup,
-    Portal,
-    Select,
-    Skeleton,
-    Text,
-    VStack
-} from "@chakra-ui/react";
+import {Button, Field, HStack, Input, InputGroup, NativeSelect, Skeleton, Stack, Text} from "@chakra-ui/react";
 import {useState} from "react";
-import {FaPlus} from "react-icons/fa";
-import {LuSearch} from "react-icons/lu";
+import {LuPlus, LuSearch} from "react-icons/lu";
 import {useSearchParams} from "react-router-dom";
 import {AddTermsDialog, EditableRow} from "@/components/data";
 import {toaster} from "@/components/ui";
-import {AlertMessage, PageHeader} from "@/components/util";
+import {AlertMessage, ListPanel, PageHeader, Screen} from "@/components/util";
 import {useCategories, useTerms} from "@/hooks";
 import type {Category, Term} from "@/model";
 import {checkLength, errorMessage, nameKey, normalizeName, pluralize} from "@/utils";
@@ -46,7 +34,7 @@ function TermList({category}: TermListProps) {
             toaster.create({type: "success", title: "Term renamed", description: value})
             return true
         } catch (renameError) {
-            toaster.create({type: "error", title: "Could not rename the term", description: errorMessage(renameError)})
+            toaster.create({type: "error", title: "Couldn't rename the term", description: errorMessage(renameError)})
             return false
         }
     }
@@ -56,19 +44,19 @@ function TermList({category}: TermListProps) {
             await removeTerm.mutateAsync({term, categoryName: category.value})
             toaster.create({type: "info", title: "Term deleted", description: term.value})
         } catch (deleteError) {
-            toaster.create({type: "error", title: "Could not delete the term", description: errorMessage(deleteError)})
+            toaster.create({type: "error", title: "Couldn't delete the term", description: errorMessage(deleteError)})
         }
     }
 
     if (isError) {
         return (
-            <AlertMessage status="error" title="Error" text="The terms could not be loaded."
+            <AlertMessage status="error" title="Couldn't load the terms" text="Check your connection and try again."
                           action={{label: "Try again", onClick: () => refetch()}}/>
         )
     }
 
     if (isPending) {
-        return Array.from({length: 4}, (_, index) => <Skeleton key={index} w="100%" h="10"/>)
+        return <Skeleton h="20rem" rounded="panel"/>
     }
 
     const filterKey = nameKey(filter)
@@ -78,43 +66,50 @@ function TermList({category}: TermListProps) {
 
     const renderTerms = () => {
         if (terms.length === 0) {
-            return <Text w="100%">{category.value} has no terms yet, so players cannot pick it. Add some above.</Text>
+            return (
+                <Text color="fg.muted">{category.value} has no terms yet, so players cannot pick it. Add some above.</Text>
+            )
         }
 
         if (visibleTerms.length === 0) {
-            return <Text w="100%">No term matches “{normalizeName(filter)}”.</Text>
+            return <Text color="fg.muted">No term matches “{normalizeName(filter)}”.</Text>
         }
 
-        return visibleTerms.map((term) => (
-            <EditableRow key={term.id}
-                         value={term.value}
-                         badge={term.isOriginal ? undefined : "Community"}
-                         deleteTitle={`Delete "${term.value}"?`}
-                         deleteText={`The term will be removed from ${category.value}. This cannot be undone.`}
-                         isBusy={isBusy}
-                         onRename={(value) => rename(term, value)}
-                         onDelete={() => remove(term)}/>
-        ))
+        return (
+            <ListPanel>
+                {visibleTerms.map((term) => (
+                    <EditableRow key={term.id}
+                                 value={term.value}
+                                 badge={term.isOriginal ? undefined : "Community"}
+                                 deleteTitle={`Delete "${term.value}"?`}
+                                 deleteText={`The term will be removed from ${category.value}. This cannot be undone.`}
+                                 isBusy={isBusy}
+                                 onRename={(value) => rename(term, value)}
+                                 onDelete={() => remove(term)}/>
+                ))}
+            </ListPanel>
+        )
     }
 
     return (
-        <>
-            <HStack w="100%">
-                <InputGroup flex={1} startElement={<LuSearch/>}>
-                    <Input value={filter} placeholder="Filter terms" aria-label={`Filter the terms of ${category.value}`}
+        <Stack gap="3">
+            <HStack gap="2">
+                <InputGroup flex="1" startElement={<LuSearch/>}>
+                    <Input type="search" value={filter} placeholder="Filter terms" enterKeyHint="search"
+                           aria-label={`Filter the terms of ${category.value}`}
                            onChange={(e) => setFilter(e.target.value)}/>
                 </InputGroup>
                 <Button variant="outline" onClick={() => setIsAddDialogOpen(true)}>
-                    <FaPlus/> Add terms
+                    <LuPlus/> Add terms
                 </Button>
             </HStack>
-            <Text w="100%" fontSize="sm" fontWeight="light" mb={2}>
+            <Text textStyle="sm" color="fg.muted">
                 {filterKey ? `${visibleTerms.length} of ` : ""}{terms.length} {pluralize(terms.length, "term", "terms")}
             </Text>
             {renderTerms()}
 
             <AddTermsDialog open={isAddDialogOpen} setOpen={setIsAddDialogOpen} category={category}/>
-        </>
+        </Stack>
     )
 }
 
@@ -126,11 +121,6 @@ export function Terms() {
 
     const sortedCategories = (categories ?? []).slice().sort((a, b) => a.value.localeCompare(b.value))
     const category = sortedCategories.find((item) => item.id === categoryId) ?? null
-    const categoriesCollection = createListCollection({
-        items: sortedCategories,
-        itemToString: (item) => item.value,
-        itemToValue: (item) => item.id
-    })
 
     const selectCategory = (id: string | null) => {
         setSearchParams(id ? {category: id} : {}, {replace: true})
@@ -142,61 +132,47 @@ export function Terms() {
         }
 
         if (categoryId) {
-            return <Text w="100%">This category no longer exists. Select another one.</Text>
+            return <Text color="fg.muted">This category no longer exists. Select another one.</Text>
         }
 
-        return <Text w="100%">Select a category to see, add, rename and delete its terms.</Text>
+        return <Text color="fg.muted">Select a category to see, add, rename and delete its terms.</Text>
     }
 
     const renderContent = () => {
         if (isError) {
             return (
-                <AlertMessage status="error" title="Error" text="The categories could not be loaded."
+                <AlertMessage status="error" title="Couldn't load the categories"
+                              text="Check your connection and try again."
                               action={{label: "Try again", onClick: () => refetch()}}/>
             )
         }
 
         if (isPending) {
-            return <Skeleton w="100%" h="10"/>
+            return <Skeleton h="11" rounded="l2" mt="2"/>
         }
 
         return (
             <>
-                <Select.Root size="sm" w="100%" mb={4} collection={categoriesCollection}
-                             value={category ? [category.id] : []}
-                             onValueChange={(e) => selectCategory(e.value[0] ?? null)}>
-                    <Select.HiddenSelect/>
-                    <Select.Label srOnly>Category</Select.Label>
-                    <Select.Control>
-                        <Select.Trigger>
-                            <Select.ValueText placeholder="Select a category"/>
-                        </Select.Trigger>
-                        <Select.IndicatorGroup>
-                            <Select.Indicator/>
-                        </Select.IndicatorGroup>
-                    </Select.Control>
-                    <Portal>
-                        <Select.Positioner>
-                            <Select.Content>
-                                {categoriesCollection.items.map((item) => (
-                                    <Select.Item item={item} key={item.id}>
-                                        {item.value}
-                                        <Select.ItemIndicator/>
-                                    </Select.Item>
-                                ))}
-                            </Select.Content>
-                        </Select.Positioner>
-                    </Portal>
-                </Select.Root>
+                <Field.Root pt="2">
+                    <Field.Label srOnly>Category</Field.Label>
+                    <NativeSelect.Root size="lg">
+                        <NativeSelect.Field placeholder="Select a category" value={category?.id ?? ""}
+                                            onChange={(e) => selectCategory(e.target.value || null)}>
+                            {sortedCategories.map((item) => (
+                                <option key={item.id} value={item.id}>{item.value}</option>
+                            ))}
+                        </NativeSelect.Field>
+                        <NativeSelect.Indicator/>
+                    </NativeSelect.Root>
+                </Field.Root>
                 {renderSelection()}
             </>
         )
     }
 
     return (
-        <VStack maxW="500px" w="90%" flex={1} gap={2}>
-            <PageHeader title="Terms" backTo="/manage-data" mb={6}/>
+        <Screen header={<PageHeader title="Terms" backTo="/manage-data"/>}>
             {renderContent()}
-        </VStack>
+        </Screen>
     )
 }

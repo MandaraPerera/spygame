@@ -1,35 +1,23 @@
-import {Flex, Heading, HStack, IconButton} from "@chakra-ui/react";
-import {FaTimes} from "react-icons/fa";
-import {FaArrowLeftLong} from "react-icons/fa6";
-import {useNavigate} from "react-router-dom";
+import {IconButton} from "@chakra-ui/react";
+import type {ReactNode} from "react";
+import {LuChevronLeft} from "react-icons/lu";
+import {Link as RouterLink} from "react-router-dom";
+import {TopBar} from "./TopBar";
 
 interface PageHeaderProps {
     title: string
     backTo?: string
-    closeTo?: string
-    mb?: number
+    end?: ReactNode
 }
 
-export function PageHeader({title, backTo, closeTo, mb = 12}: PageHeaderProps) {
-    const navigate = useNavigate()
+export function PageHeader({title, backTo, end}: PageHeaderProps) {
+    const backButton = backTo ? (
+        <IconButton asChild variant="ghost" aria-label="Back">
+            <RouterLink to={backTo}>
+                <LuChevronLeft/>
+            </RouterLink>
+        </IconButton>
+    ) : null
 
-    return (
-        <HStack justify="space-between" w="100%" mb={mb}>
-            <Flex flex={1} justify="start">
-                {backTo ? (
-                    <IconButton variant="plain" ml="-10px" aria-label="Back" onClick={() => navigate(backTo)}>
-                        <FaArrowLeftLong/>
-                    </IconButton>
-                ) : null}
-            </Flex>
-            <Heading size="3xl" textAlign="center">{title}</Heading>
-            <Flex flex={1} justify="end">
-                {closeTo ? (
-                    <IconButton variant="plain" mr="-10px" aria-label="Close" onClick={() => navigate(closeTo)}>
-                        <FaTimes/>
-                    </IconButton>
-                ) : null}
-            </Flex>
-        </HStack>
-    )
+    return <TopBar title={title} start={backButton} end={end}/>
 }

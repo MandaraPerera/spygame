@@ -1,7 +1,7 @@
-import {Button, Skeleton, Text, VStack} from "@chakra-ui/react";
+import {Button, Skeleton, Stack} from "@chakra-ui/react";
 import {useContext} from "react";
 import {LogItem} from "@/components/data";
-import {AlertMessage, PageHeader} from "@/components/util";
+import {AlertMessage, ListPanel, PageHeader, Screen} from "@/components/util";
 import {AuthContext} from "@/context";
 import {useLogs} from "@/hooks";
 
@@ -13,36 +13,37 @@ export function Logs() {
     const renderContent = () => {
         if (isError) {
             return (
-                <AlertMessage status="error" title="Error" text="The logs could not be loaded."
+                <AlertMessage status="error" title="Couldn't load the logs" text="Check your connection and try again."
                               action={{label: "Try again", onClick: () => refetch()}}/>
             )
         }
 
         if (isPending) {
-            return Array.from({length: 4}, (_, index) => <Skeleton key={index} w="100%" h="88px"/>)
+            return <Skeleton h="24rem" rounded="panel"/>
         }
 
         if (logs.length === 0) {
-            return <Text>Approvals, denials and edits will be listed here.</Text>
+            return <AlertMessage status="info" title="No logs yet" text="Approvals, denials and edits will be listed here."/>
         }
 
         return (
-            <>
-                {logs.map((log) => <LogItem key={log.id} log={log} currentUserId={user?.uid ?? null}/>)}
+            <Stack gap="3" pt="2">
+                <ListPanel>
+                    {logs.map((log) => <LogItem key={log.id} log={log} currentUserId={user?.uid ?? null}/>)}
+                </ListPanel>
                 {hasNextPage ? (
-                    <Button w="100%" mt={2} variant="outline" loading={isFetchingNextPage}
+                    <Button variant="outline" loading={isFetchingNextPage}
                             onClick={() => fetchNextPage()}>
                         Load more
                     </Button>
                 ) : null}
-            </>
+            </Stack>
         )
     }
 
     return (
-        <VStack maxW="500px" w="90%" flex={1} gap={2}>
-            <PageHeader title="Logs" backTo="/manage-data"/>
+        <Screen header={<PageHeader title="Logs" backTo="/manage-data"/>}>
             {renderContent()}
-        </VStack>
+        </Screen>
     )
 }

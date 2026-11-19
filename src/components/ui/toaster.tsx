@@ -4,8 +4,15 @@ import {createToaster, Portal, Spinner, Stack, Toast, Toaster as ChakraToaster,}
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const toaster = createToaster({
-    placement: "bottom-end",
+    // At the top, so a toast never covers the action buttons at the bottom of the screen.
+    placement: "top",
     pauseOnPageIdle: true,
+    offsets: {
+        top: "calc(0.75rem + env(safe-area-inset-top))",
+        right: "1rem",
+        bottom: "1rem",
+        left: "1rem"
+    },
 })
 
 export const Toaster = () => {
@@ -15,7 +22,7 @@ export const Toaster = () => {
                 {(toast) => (
                     <Toast.Root width={{md: "sm"}}>
                         {toast.type === "loading" ? (
-                            <Spinner size="sm" color="blue.solid"/>
+                            <Spinner size="sm" color="manila.300"/>
                         ) : (
                             <Toast.Indicator/>
                         )}

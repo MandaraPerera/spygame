@@ -1,25 +1,27 @@
-import {AspectRatio, Button, Heading, Skeleton, Spacer, VStack} from "@chakra-ui/react";
+import {Box, HStack, IconButton, Skeleton} from "@chakra-ui/react";
+import {LuX} from "react-icons/lu";
+import {Screen, TopBar} from "@/components/util";
 
 interface PlaySkeletonProps {
     onExit: () => void
 }
 
 export function PlaySkeleton({onExit}: PlaySkeletonProps) {
+    const closeButton = (
+        <IconButton variant="ghost" aria-label="Leave game" onClick={onExit}>
+            <LuX/>
+        </IconButton>
+    )
+
     return (
-        <VStack maxW="500px" w="90%" flex={1}>
-            <Heading size="3xl" mb={4}>Spy Game</Heading>
-            <Skeleton h="5" w="75px" mb={1}/>
-            <Skeleton h="5" w="60px" mb={1}/>
-            <Skeleton h="5" w="150px" mb={8}/>
-            <Skeleton h="5" w="110px" mb={4}/>
-            <AspectRatio ratio={1} w="100%" mb={1}>
-                <Skeleton w="100%" borderRadius="2xl"/>
-            </AspectRatio>
-            <Skeleton h="5" w="180px"/>
-            <Spacer/>
-            <Button w="100%" h="50px" onClick={onExit}>
-                EXIT
-            </Button>
-        </VStack>
+        <Screen header={<TopBar start={closeButton} title={<Skeleton as="span" display="block" h="6" w="10rem"/>}/>}>
+            <HStack gap="1.5">
+                {Array.from({length: 4}, (_, index) => <Skeleton key={index} flex="1" h="1" rounded="full"/>)}
+            </HStack>
+            <Box mx="auto" w="min(100%, calc((100dvh - 16rem) * 0.8))" minW="min(100%, 16rem)" aspectRatio="4 / 5">
+                <Skeleton w="100%" h="100%" rounded="2xl"/>
+            </Box>
+            <Skeleton h="5" w="80%" mx="auto"/>
+        </Screen>
     )
 }

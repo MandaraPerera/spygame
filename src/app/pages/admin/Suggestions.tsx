@@ -1,7 +1,7 @@
-import {Accordion, Button, SimpleGrid, Skeleton, Text, VStack} from "@chakra-ui/react";
+import {Accordion, Button, Skeleton, Stack} from "@chakra-ui/react";
 import {useState} from "react";
 import {SuggestionItem} from "@/components/data";
-import {AlertMessage, PageHeader} from "@/components/util";
+import {AlertMessage, PageHeader, Screen} from "@/components/util";
 import {useSuggestionsRealtime} from "@/hooks";
 
 export function Suggestions() {
@@ -23,37 +23,35 @@ export function Suggestions() {
     const renderContent = () => {
         if (isError) {
             return (
-                <AlertMessage status="error" title="Error" text="The suggestions could not be loaded."
+                <AlertMessage status="error" title="Couldn't load the suggestions" text="Check your connection and try again."
                               action={{label: "Try again", onClick: () => refetch()}}/>
             )
         }
 
         if (isPending) {
             return (
-                <SimpleGrid w="100%">
-                    {Array.from({length: 4}, (_, index) => (
-                        <Skeleton key={index} w="100%" h="68px" mb={2}/>
-                    ))}
-                </SimpleGrid>
+                <Stack gap="2">
+                    {Array.from({length: 4}, (_, index) => <Skeleton key={index} h="4.5rem" rounded="panel"/>)}
+                </Stack>
             )
         }
 
         if (suggestions.length === 0) {
-            return <Text>There are no suggestions to be reviewed.</Text>
+            return <AlertMessage status="info" title="All caught up" text="There are no suggestions to be reviewed."/>
         }
 
         return (
             <>
-                <Accordion.Root collapsible lazyMount variant="subtle" value={value} spaceY={2} w="100%"
+                <Accordion.Root collapsible lazyMount variant="plain" value={value} spaceY="2" w="100%" pt="2"
                                 onValueChange={(e) => setValue(e.value)}>
                     {suggestions.map((suggestion) => (
                         <SuggestionItem suggestion={suggestion} key={suggestion.id}/>
                     ))}
                 </Accordion.Root>
                 {hasNextPage ? (
-                    <Button w="100%" mt={2} loading={isFetchingNextPage}
+                    <Button variant="outline" mt="2" loading={isFetchingNextPage}
                             onClick={() => fetchNextPage()}>
-                        Load More
+                        Load more
                     </Button>
                 ) : null}
             </>
@@ -61,9 +59,8 @@ export function Suggestions() {
     }
 
     return (
-        <VStack maxW="500px" w="90%" flex={1}>
-            <PageHeader title="Suggestions" backTo="/manage-data"/>
+        <Screen header={<PageHeader title="Suggestions" backTo="/manage-data"/>}>
             {renderContent()}
-        </VStack>
+        </Screen>
     )
 }

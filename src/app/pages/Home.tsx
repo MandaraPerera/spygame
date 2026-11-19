@@ -1,25 +1,67 @@
-import {AspectRatio, Button, Heading, HStack, Icon, SimpleGrid, Skeleton, Spacer, Text, VStack} from "@chakra-ui/react";
+import {Button, Heading, IconButton, Skeleton, Stack, Text} from "@chakra-ui/react";
 import {useContext, useEffect, useState} from "react";
-import {GiSpy} from "react-icons/gi";
-import {MdGroups, MdOutlineSubject, MdSettings} from "react-icons/md";
-import {useLocation, useNavigate} from "react-router-dom";
-import {SelectCategories, SelectPlayers, SelectSettings, SelectSpies} from "@/components/configuration";
-import {toaster} from "@/components/ui";
-import {AlertMessage} from "@/components/util";
+import {LuCircleHelp, LuSettings} from "react-icons/lu";
+import {Link as RouterLink, useLocation, useNavigate} from "react-router-dom";
+import {CategoriesSheet, CountStepper, SettingsSheet} from "@/components/configuration";
+import {AlertMessage, ListPanel, ListRow, Screen, TopBar} from "@/components/util";
+import {MAX_PLAYERS, MIN_PLAYERS, MIN_SPIES} from "@/config";
 import {SettingsContext} from "@/context";
 import {useCategories} from "@/hooks";
+import type {Category} from "@/model";
+import {maxSpies} from "@/utils";
+
+const MAX_NAMED_CATEGORIES = 3
+
+function describeSelection(selectedCategories: Category[]): string {
+    if (selectedCategories.length === 0) return "None picked yet"
+
+    const names = selectedCategories.map((category) => category.value).sort((a, b) => a.localeCompare(b))
+    if (names.length <= MAX_NAMED_CATEGORIES) return names.join(", ")
+
+    return `${names.slice(0, MAX_NAMED_CATEGORIES).join(", ")} and ${names.length - MAX_NAMED_CATEGORIES} more`
+}
+
+interface HomeHeaderProps {
+    onOpenSettings: () => void
+}
+
+function HomeHeader({onOpenSettings}: HomeHeaderProps) {
+    return (
+        <TopBar end={(
+            <>
+                <IconButton asChild variant="ghost" aria-label="How to play">
+                    <RouterLink to="/how-to-play"><LuCircleHelp/></RouterLink>
+                </IconButton>
+                <IconButton variant="ghost" aria-label="Settings" onClick={onOpenSettings}>
+                    <LuSettings/>
+                </IconButton>
+            </>
+        )}/>
+    )
+}
+
+function Intro() {
+    return (
+        <Stack gap="3" pt="2">
+            <Heading as="h1" textStyle="display" fontSize={{base: "4.5rem", sm: "5.5rem"}}>SpyGame</Heading>
+            <Text color="fg.muted" maxW="22rem">
+                Everyone gets the same secret word, except the spy. Ask questions, then vote out the one who
+                doesn't know it.
+            </Text>
+        </Stack>
+    )
+}
 
 export function Home() {
-    const {amountOfPlayers, amountOfSpies, selectedCategoryIds} = useContext(SettingsContext)
+    const {amountOfPlayers, setAmountOfPlayers, amountOfSpies, setAmountOfSpies, selectedCategoryIds} =
+        useContext(SettingsContext)
     const {getCategories: {data: categories, isPending, isError, refetch}} = useCategories()
     const navigate = useNavigate()
     const location = useLocation()
     const openSettings = location.state?.openSettings
 
-    const [openPlayersDialog, setOpenPlayersDialog] = useState<boolean>(false)
-    const [openSpiesDialog, setOpenSpiesDialog] = useState<boolean>(false)
-    const [openCategoriesDialog, setOpenCategoriesDialog] = useState<boolean>(false)
-    const [openSettingsDialog, setOpenSettingsDialog] = useState<boolean>(openSettings === true)
+    const [isCategoriesOpen, setIsCategoriesOpen] = useState<boolean>(false)
+    const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(openSettings === true)
 
     useEffect(() => {
         if (openSettings === true) {
@@ -29,122 +71,67 @@ export function Home() {
 
     // Ids of categories that no longer exist (renamed, deleted or re-seeded) are ignored.
     const selectedCategories = categories?.filter((category) => selectedCategoryIds.includes(category.id)) ?? []
+    const hasSelection = selectedCategories.length > 0
+    const spyLimit = maxSpies(amountOfPlayers)
 
-    const play = () => {
-        if (selectedCategories.length === 0) {
-            toaster.create({
-                type: "error",
-                title: "Select at least one category",
-                duration: 3000
-            })
-            return
+    // Without a category there is nothing to deal, so the main button leads to the categories instead.
+    const deal = () => {
+        if (hasSelection) {
+            navigate("/play")
+        } else {
+            setIsCategoriesOpen(true)
         }
-
-        navigate("/play")
     }
 
-    if (isPending) {
-        return (
-            <VStack maxW="500px" w="90%" flex={1}>
-                <Heading size="3xl" mb={16}>Spy Game</Heading>
-                <SimpleGrid columns={2} gap={4} w="100%">
-                    {Array.from({length: 4}, (_, index) => (
-                        <AspectRatio ratio={1} key={index}>
-                            <Skeleton w="100%"/>
-                        </AspectRatio>
-                    ))}
-                </SimpleGrid>
-                <Spacer/>
-                <Skeleton w="100%" h="50px"/>
-            </VStack>
-        )
-    }
+    const header = <HomeHeader onOpenSettings={() => setIsSettingsOpen(true)}/>
+    const settingsSheet = <SettingsSheet open={isSettingsOpen} setOpen={setIsSettingsOpen}/>
 
     if (isError) {
         return (
-            <AlertMessage status="error" title="Error" text="Error loading categories"
-                          action={{label: "Try again", onClick: () => refetch()}}/>
+            <Screen header={header}>
+                <AlertMessage status="error" title="Couldn't load the categories"
+                              text="Check your connection and try again."
+                              action={{label: "Try again", onClick: () => refetch()}}/>
+                {settingsSheet}
+            </Screen>
         )
     }
 
     return (
-        <VStack maxW="500px" w="90%" flex={1}>
-            <Heading size="3xl" mb={16}>Spy Game</Heading>
-            <SimpleGrid columns={2} gap={4} w="100%">
-                <AspectRatio ratio={1}>
-                    <Button onClick={() => setOpenPlayersDialog(true)}>
-                        <VStack>
-                            <HStack>
-                                <Icon boxSize="40px">
-                                    <MdGroups/>
-                                </Icon>
-                                <Spacer/>
-                                <Heading size="3xl">{amountOfPlayers}</Heading>
-                            </HStack>
-                            <Text textStyle="xl">Players</Text>
-                        </VStack>
-                    </Button>
-                </AspectRatio>
-
-                <AspectRatio ratio={1}>
-                    <Button onClick={() => {
-                        setOpenSpiesDialog(true)
-                    }}>
-                        <VStack>
-                            <HStack>
-                                <Icon boxSize="40px">
-                                    <GiSpy/>
-                                </Icon>
-                                <Spacer/>
-                                <Heading size="3xl">{amountOfSpies}</Heading>
-                            </HStack>
-                            <Text textStyle="xl">Spies</Text>
-                        </VStack>
-                    </Button>
-                </AspectRatio>
-
-                <AspectRatio ratio={1}>
-                    <Button onClick={() => {
-                        setOpenCategoriesDialog(true)
-                    }}>
-                        <VStack>
-                            <HStack>
-                                <Icon boxSize="40px">
-                                    <MdOutlineSubject/>
-                                </Icon>
-                                <Spacer/>
-                                <Heading size="3xl">{selectedCategories.length}</Heading>
-                            </HStack>
-                            <Text textStyle="xl">Categories</Text>
-                        </VStack>
-                    </Button>
-                </AspectRatio>
-
-                <AspectRatio ratio={1}>
-                    <Button onClick={() => {
-                        setOpenSettingsDialog(true)
-                    }}>
-                        <VStack>
-                            <HStack>
-                                <Icon boxSize="40px">
-                                    <MdSettings/>
-                                </Icon>
-                            </HStack>
-                            <Text textStyle="xl">Settings</Text>
-                        </VStack>
-                    </Button>
-                </AspectRatio>
-            </SimpleGrid>
-            <Spacer/>
-            <Button w="100%" h="50px" onClick={play}>
-                PLAY
+        <Screen header={header} footer={(
+            <Button size="xl" h="14" colorPalette="manila" disabled={isPending} onClick={deal}>
+                {hasSelection || isPending ? "Deal roles" : "Pick categories"}
             </Button>
+        )}>
+            <Intro/>
 
-            <SelectPlayers open={openPlayersDialog} setOpen={setOpenPlayersDialog}/>
-            <SelectSpies open={openSpiesDialog} setOpen={setOpenSpiesDialog}/>
-            <SelectCategories open={openCategoriesDialog} setOpen={setOpenCategoriesDialog}
-                              categories={categories ?? []}/>
-            <SelectSettings open={openSettingsDialog} setOpen={setOpenSettingsDialog}/>
-        </VStack>
+            <ListPanel>
+                <CountStepper label="Players" hint={`${MIN_PLAYERS} to ${MAX_PLAYERS} people`} unit="players"
+                              value={amountOfPlayers} min={MIN_PLAYERS} max={MAX_PLAYERS}
+                              decrementLabel="Remove a player" incrementLabel="Add a player"
+                              onChange={setAmountOfPlayers}/>
+                <CountStepper label="Spies" unit="spies"
+                              hint={spyLimit === 1 ? `Only 1 with ${amountOfPlayers} players` : `Up to ${spyLimit} with ${amountOfPlayers} players`}
+                              value={amountOfSpies} min={MIN_SPIES} max={spyLimit}
+                              decrementLabel="Remove a spy" incrementLabel="Add a spy"
+                              onChange={setAmountOfSpies}/>
+            </ListPanel>
+
+            {isPending ? (
+                <Skeleton h="4.5rem" rounded="panel"/>
+            ) : (
+                <ListPanel>
+                    <ListRow label="Categories" onClick={() => setIsCategoriesOpen(true)}
+                             description={(
+                                 <Text as="span" color={hasSelection ? "fg.muted" : "manila.fg"}>
+                                     {describeSelection(selectedCategories)}
+                                 </Text>
+                             )}/>
+                </ListPanel>
+            )}
+
+            <CategoriesSheet open={isCategoriesOpen} setOpen={setIsCategoriesOpen} categories={categories ?? []}/>
+            {settingsSheet}
+        </Screen>
     )
 }

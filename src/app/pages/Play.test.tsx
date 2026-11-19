@@ -57,7 +57,7 @@ describe("Play", () => {
     it("shows an error when the terms fail to load", () => {
         mockData({data: undefined, isPending: false, isError: true})
         renderWithProviders(playWith())
-        expect(screen.getByText("Error loading terms")).toBeInTheDocument()
+        expect(screen.getByText("Couldn't load the words")).toBeInTheDocument()
     })
 
     it("explains when the selected categories have no words", () => {

@@ -1,4 +1,4 @@
-import {Alert, Center, Spinner} from "@chakra-ui/react";
+import {Spinner, Text, VStack} from "@chakra-ui/react";
 
 interface LoadingProps {
     text: string;
@@ -6,16 +6,9 @@ interface LoadingProps {
 
 export function Loading({text}: LoadingProps) {
     return (
-        <Center flex={1} w="90%" maxW="500px">
-            <Alert.Root status="info">
-                <Alert.Indicator>
-                    <Spinner size="sm"/>
-                </Alert.Indicator>
-                <Alert.Content>
-                    <Alert.Title>Loading</Alert.Title>
-                    <Alert.Description>{text}</Alert.Description>
-                </Alert.Content>
-            </Alert.Root>
-        </Center>
+        <VStack flex="1" justify="center" gap="4" py="12" role="status">
+            <Spinner size="lg" color="manila.300" borderWidth="3px"/>
+            <Text color="fg.muted">{text}</Text>
+        </VStack>
     )
 }

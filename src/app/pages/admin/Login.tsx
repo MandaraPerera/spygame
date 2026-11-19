@@ -1,9 +1,9 @@
-import {Button, Field, Fieldset, Input, Stack, Text, VStack} from "@chakra-ui/react";
+import {Button, Field, Input, Stack, Text} from "@chakra-ui/react";
 import {useContext, useEffect} from "react";
 import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import {PasswordInput, toaster} from "@/components/ui";
-import {PageHeader} from "@/components/util";
+import {PageHeader, Screen} from "@/components/util";
 import {AuthContext} from "@/context";
 import {useAuth} from "@/hooks";
 
@@ -28,7 +28,7 @@ export function Login() {
         if (error) {
             toaster.create({
                 type: "error",
-                title: "Something went wrong. Please try again.",
+                title: "Couldn't sign in",
                 description: error
             })
         }
@@ -39,49 +39,38 @@ export function Login() {
     })
 
     return (
-        <VStack maxW="500px" w="90%" flex={1}>
-            <PageHeader title="Admin Login" closeTo="/"/>
-            <Stack w="100%">
-                <form onSubmit={onSubmit}>
-                    <Fieldset.Root>
-                        <Fieldset.Content>
-                            <Field.Root invalid={!!errors.email}>
-                                <Field.Label>
-                                    Email
-                                    <Text color="red.500">*</Text>
-                                </Field.Label>
-                                <Input autoComplete="email"
-                                       {...register("email", {
-                                           required: "Email is empty",
-                                           pattern: {
-                                               value: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
-                                               message: "Enter a valid email"
-                                           }
+        <Screen header={<PageHeader title="Admin sign in" backTo="/"/>}>
+            <Text color="fg.muted" pt="2">For admins who review suggestions and manage the words.</Text>
+            <form onSubmit={onSubmit} noValidate>
+                <Stack gap="5">
+                    <Field.Root required invalid={!!errors.email}>
+                        <Field.Label>Email <Field.RequiredIndicator/></Field.Label>
+                        <Input type="email" inputMode="email" autoComplete="email" autoCapitalize="none"
+                               {...register("email", {
+                                   required: "Enter your email",
+                                   pattern: {
+                                       value: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+                                       message: "Enter a valid email"
+                                   }
+                               })} />
+                        <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
+                    </Field.Root>
+
+                    <Field.Root required invalid={!!errors.password}>
+                        <Field.Label>Password <Field.RequiredIndicator/></Field.Label>
+                        <PasswordInput size="lg" autoComplete="current-password"
+                                       {...register("password", {
+                                           required: "Enter your password"
                                        })} />
-                                <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
-                            </Field.Root>
+                        <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+                    </Field.Root>
 
-                            <Field.Root invalid={!!errors.password}>
-                                <Field.Label>
-                                    Password
-                                    <Text color="red.500">*</Text>
-                                </Field.Label>
-                                <PasswordInput autoComplete="current-password"
-                                               {...register("password", {
-                                                   required: "Password is empty"
-                                               })} />
-                                <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
-                            </Field.Root>
-                        </Fieldset.Content>
-
-                        <Button mt={6}
-                                type="submit"
-                                loading={isLoadingAuth || isLoadingContext}
-                                loadingText="Signing in..."
-                        >Sign In</Button>
-                    </Fieldset.Root>
-                </form>
-            </Stack>
-        </VStack>
+                    <Button type="submit" size="xl" h="14" mt="2" colorPalette="manila"
+                            loading={isLoadingAuth || isLoadingContext} loadingText="Signing in">
+                        Sign in
+                    </Button>
+                </Stack>
+            </form>
+        </Screen>
     )
 }

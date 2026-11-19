@@ -1,6 +1,6 @@
 import {Alert, Badge, Button, Checkbox, HStack, SimpleGrid, Text} from "@chakra-ui/react";
 import {useState} from "react";
-import {FaCheck, FaTimes} from "react-icons/fa";
+import {LuCheck, LuX} from "react-icons/lu";
 import {toaster} from "@/components/ui";
 import {ConfirmDialog} from "@/components/util";
 import {useCategories, useSuggestions, useTerms} from "@/hooks";
@@ -96,7 +96,7 @@ export function SuggestionReview({suggestion}: SuggestionReviewProps) {
                 </Alert.Root>
             ) : null}
 
-            <Text fontSize="xs" fontWeight="light">Suggested {formatDate(suggestion.timestamp)}</Text>
+            <Text textStyle="xs" color="fg.muted">Suggested {formatDate(suggestion.timestamp)}</Text>
 
             {suggestion.isValid ? (
                 <>
@@ -114,7 +114,7 @@ export function SuggestionReview({suggestion}: SuggestionReviewProps) {
                     <SimpleGrid columns={{base: 1, sm: 2}} gapX={4} gapY={1} mb={3}>
                         {rows.map((row, index) => (
                             <HStack key={`${row.key}-${index}`} gap={2} minW={0}>
-                                <Checkbox.Root size="sm" minW={0} checked={row.isSelected}
+                                <Checkbox.Root size="md" minW={0} minH="9" colorPalette="manila" checked={row.isSelected}
                                                disabled={row.isExisting || isBusy || isOrphan}
                                                onCheckedChange={(e) => toggle(row.key, e.checked === true)}>
                                     <Checkbox.HiddenInput/>
@@ -133,12 +133,12 @@ export function SuggestionReview({suggestion}: SuggestionReviewProps) {
                 <Text fontSize="sm" my={2}>This suggestion is malformed and can only be denied.</Text>
             )}
 
-            <HStack>
-                <Button flex={1} size="sm" onClick={handleApprove}
+            <HStack gap="2">
+                <Button flex="1" variant="outline" onClick={() => setIsDenyDialogOpen(true)}
+                        disabled={isBusy}><LuX/>Deny</Button>
+                <Button flex="1" colorPalette="manila" onClick={handleApprove}
                         loading={approveSuggestion.isPending}
-                        disabled={isBusy || !canApprove}><FaCheck/>Approve</Button>
-                <Button flex={1} size="sm" onClick={() => setIsDenyDialogOpen(true)}
-                        disabled={isBusy}><FaTimes/>Deny</Button>
+                        disabled={isBusy || !canApprove}><LuCheck/>Approve</Button>
             </HStack>
 
             <ConfirmDialog open={isDenyDialogOpen} setOpen={setIsDenyDialogOpen}
