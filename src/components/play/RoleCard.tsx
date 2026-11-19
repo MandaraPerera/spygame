@@ -3,6 +3,7 @@ import type {ReactNode} from "react";
 import {LuPointer} from "react-icons/lu";
 
 interface RoleCardProps {
+    // The number on the front of the file.
     player: number
     // Which face is up once the current flip is done.
     isRevealed: boolean
