@@ -1,4 +1,4 @@
-export type {Category, CategoryData} from './Category'
-export type {Term, TermData, TermValue} from './Term'
-export type {Suggestion, SuggestionData} from './Suggestion'
-export type {Log, LogData} from './Log'
+export type {Category, CategoryData} from './category'
+export type {Log, LogAction, LogData, LogType, PaginatedLogs} from './log'
+export type {PaginatedSuggestions, Suggestion, SuggestionData} from './suggestion'
+export type {AddedTerms, Term, TermCounts, TermData} from './term'

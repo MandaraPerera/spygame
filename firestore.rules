@@ -1,9 +1,87 @@
 rules_version = '2';
 
+// The browser talks to Firestore directly, so these rules are the only server-side authorization.
+// Keep the limits in sync with src/config/limits.ts. Anything not matched below is denied.
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2025, 6, 26);
+
+    // Set with `node scripts/set-admin.cjs <email>`.
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function hasExactly(fields) {
+      return request.resource.data.keys().hasAll(fields)
+        && request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isName(value) {
+      return value is string && value.size() >= 4 && value.size() <= 20;
+    }
+
+    // Rules have no loops and evaluate at most 1000 expressions, so each of the (at most 50) terms is checked
+    // for its type by index, and the list as a whole for its size. Term lengths are checked again on approval.
+    function isStringAt(list, size, index) {
+      return size <= index || list[index] is string;
+    }
+
+    function isTermList(list) {
+      let size = list.size();
+      return size >= 1 && size <= 50 &&
+        isStringAt(list, size, 0) && isStringAt(list, size, 1) && isStringAt(list, size, 2) && isStringAt(list, size, 3) && isStringAt(list, size, 4) &&
+        isStringAt(list, size, 5) && isStringAt(list, size, 6) && isStringAt(list, size, 7) && isStringAt(list, size, 8) && isStringAt(list, size, 9) &&
+        isStringAt(list, size, 10) && isStringAt(list, size, 11) && isStringAt(list, size, 12) && isStringAt(list, size, 13) && isStringAt(list, size, 14) &&
+        isStringAt(list, size, 15) && isStringAt(list, size, 16) && isStringAt(list, size, 17) && isStringAt(list, size, 18) && isStringAt(list, size, 19) &&
+        isStringAt(list, size, 20) && isStringAt(list, size, 21) && isStringAt(list, size, 22) && isStringAt(list, size, 23) && isStringAt(list, size, 24) &&
+        isStringAt(list, size, 25) && isStringAt(list, size, 26) && isStringAt(list, size, 27) && isStringAt(list, size, 28) && isStringAt(list, size, 29) &&
+        isStringAt(list, size, 30) && isStringAt(list, size, 31) && isStringAt(list, size, 32) && isStringAt(list, size, 33) && isStringAt(list, size, 34) &&
+        isStringAt(list, size, 35) && isStringAt(list, size, 36) && isStringAt(list, size, 37) && isStringAt(list, size, 38) && isStringAt(list, size, 39) &&
+        isStringAt(list, size, 40) && isStringAt(list, size, 41) && isStringAt(list, size, 42) && isStringAt(list, size, 43) && isStringAt(list, size, 44) &&
+        isStringAt(list, size, 45) && isStringAt(list, size, 46) && isStringAt(list, size, 47) && isStringAt(list, size, 48) && isStringAt(list, size, 49) &&
+        list.join('').size() <= 1000;
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create, update: if isAdmin()
+        && hasExactly(['value', 'isOriginal'])
+        && isName(request.resource.data.value)
+        && request.resource.data.isOriginal is bool;
+      allow delete: if isAdmin();
+    }
+
+    match /terms/{termId} {
+      allow read: if true;
+      allow create, update: if isAdmin()
+        && hasExactly(['value', 'categoryId', 'isOriginal'])
+        && isName(request.resource.data.value)
+        && request.resource.data.categoryId is string
+        && request.resource.data.isOriginal is bool;
+      allow delete: if isAdmin();
+    }
+
+    // Anyone may suggest content. Only admins read it; approving and denying both delete the suggestion.
+    match /suggestions/{suggestionId} {
+      allow create: if hasExactly(['category', 'terms', 'isNewCategory', 'timestamp'])
+        && isName(request.resource.data.category)
+        && request.resource.data.terms is list
+        && isTermList(request.resource.data.terms)
+        && request.resource.data.isNewCategory is bool
+        && request.resource.data.timestamp == request.time;
+      allow read, delete: if isAdmin();
+    }
+
+    // An audit trail: written by admins in the same batch as the change, never edited or removed.
+    match /logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin()
+        && hasExactly(['userId', 'type', 'action', 'category', 'terms', 'isNewCategory', 'timestamp'])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.type in ['suggestion', 'category', 'term']
+        && request.resource.data.action in ['approved', 'denied', 'created', 'updated', 'deleted']
+        && request.resource.data.category is string
+        && request.resource.data.terms is list
+        && request.resource.data.timestamp == request.time;
     }
   }
 }

@@ -1,58 +1,45 @@
-import {ReactNode, useEffect, useRef, useState} from "react";
-import {onAuthStateChanged, User} from "firebase/auth";
-import {AuthContext} from "@/context";
-import {auth} from "@/services/firebase.ts";
+import type {User} from "firebase/auth";
+import {type ReactNode, useEffect, useRef, useState} from "react";
 import {toaster} from "@/components/ui";
+import {listenAuthState, readIsAdmin} from "@/services";
+import {AuthContext, type IAuthContext} from "./AuthContext";
 
 interface AuthContextProviderProps {
     children: ReactNode;
 }
 
+// Toasts only on a real sign-in or sign-out, not when a session is restored on page load.
+function announceAuthChange(previousUserId: string | null | undefined, user: User | null) {
+    const userId = user?.uid ?? null
+    if (previousUserId === undefined || previousUserId === userId) return
+
+    queueMicrotask(() => {
+        toaster.create(user
+            ? {title: "Welcome!", description: user.email, type: "success"}
+            : {title: "Signed Out!", type: "warning"})
+    })
+}
+
 export function AuthContextProvider({children}: AuthContextProviderProps) {
-    const isFirstRender = useRef<boolean>(true);
-    const [user, setUser] = useState<User | null>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    // Loading until Firebase reports the first auth state, so a restored session is never shown as signed out.
+    const [authState, setAuthState] = useState<IAuthContext>({user: null, isAdmin: false, isLoading: true})
+    const previousUserId = useRef<string | null | undefined>(undefined)
+    const latestChange = useRef<number>(0)
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setIsLoading(true);
-            setUser(currentUser);
-            setIsLoading(false);
-        });
+        return listenAuthState(async (currentUser) => {
+            const change = ++latestChange.current
+            const isAdmin = currentUser ? await readIsAdmin(currentUser).catch(() => false) : false
+            if (change !== latestChange.current) return
 
-        return () => unsubscribe();
+            announceAuthChange(previousUserId.current, currentUser)
+            previousUserId.current = currentUser?.uid ?? null
+            setAuthState({user: currentUser, isAdmin, isLoading: false})
+        });
     }, []);
 
-    useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false
-            return
-        }
-
-        if (user) {
-            queueMicrotask(() => {
-                toaster.create({
-                    title: "Welcome!",
-                    description: user.email,
-                    type: "success",
-                })
-            })
-        } else {
-            queueMicrotask(() => {
-                toaster.create({
-                    title: "Signed Out!",
-                    type: "warning",
-                })
-            })
-        }
-    }, [user]);
-
     return (
-        <AuthContext.Provider
-            value={{
-                user, isLoading
-            }}
-        >
+        <AuthContext.Provider value={authState}>
             {children}
         </AuthContext.Provider>
     )

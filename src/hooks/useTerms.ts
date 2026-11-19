@@ -1,27 +1,50 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {createTerm, getAllTermsByCategoryId} from "@/services/firestore";
-import {TermData} from "@/model";
+import {logKeys, statsKeys, termKeys} from "@/config";
+import type {Category, Term} from "@/model";
+import {createTerms, deleteTerm, readTermsByCategoryIds, updateTerm} from "@/services";
 
-export const useTerms = (categoryIds?: string[]) => {
+type TermChange = {
+    term: Term
+    categoryName: string
+}
+
+export function useTerms(categoryIds: string[] = []) {
     const queryClient = useQueryClient()
 
-    const addTerm = useMutation({
-        mutationFn: (termData: TermData) => createTerm(termData),
-        onSuccess: async (term) => {
-            await queryClient.invalidateQueries({queryKey: ['terms']})
-            await queryClient.invalidateQueries({queryKey: ['terms', term.id]})
-        }
+    const invalidate = async () => {
+        await Promise.all([termKeys.all, statsKeys.all, logKeys.all]
+            .map((queryKey) => queryClient.invalidateQueries({queryKey})))
+    }
+
+    // Terms only change when an admin approves or edits content, so they can stay cached for a game session.
+    const getTerms = useQuery({
+        queryKey: termKeys.byCategories(categoryIds),
+        queryFn: () => readTermsByCategoryIds(categoryIds),
+        staleTime: 30 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        enabled: categoryIds.length > 0
     })
 
-    const getTerms = useQuery({
-        queryKey: ["terms", categoryIds!],
-        queryFn: () => getAllTermsByCategoryId(categoryIds!),
-        staleTime: 1000 * 60 * 5,
-        enabled: !!categoryIds
+    const addTerms = useMutation({
+        mutationFn: ({category, values}: { category: Category, values: string[] }) => createTerms(category, values),
+        onSuccess: invalidate
+    })
+
+    const renameTerm = useMutation({
+        mutationFn: ({term, categoryName, value}: TermChange & { value: string }) =>
+            updateTerm(term, value, categoryName),
+        onSuccess: invalidate
+    })
+
+    const removeTerm = useMutation({
+        mutationFn: ({term, categoryName}: TermChange) => deleteTerm(term, categoryName),
+        onSuccess: invalidate
     })
 
     return {
-        addTerm,
-        getTerms
+        getTerms,
+        addTerms,
+        renameTerm,
+        removeTerm
     }
 }

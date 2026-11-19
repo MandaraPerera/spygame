@@ -1,23 +1,23 @@
 import {createContext} from "react";
-import {Category} from "@/model";
+import {MIN_PLAYERS, MIN_SPIES} from "@/config";
 
-interface ISettingsContext {
+export interface ISettingsContext {
     amountOfPlayers: number;
     setAmountOfPlayers: (players: number) => void;
     amountOfSpies: number;
     setAmountOfSpies: (amountOfSpies: number) => void;
-    selectedCategories: Category[];
-    setSelectedCategories: (selectedCategories: Category[]) => void;
+    selectedCategoryIds: string[];
+    setSelectedCategoryIds: (selectedCategoryIds: string[]) => void;
 }
 
 export const SettingsContext = createContext<ISettingsContext>({
-    amountOfPlayers: 3,
+    amountOfPlayers: MIN_PLAYERS,
     setAmountOfPlayers: () => {
     },
-    amountOfSpies: 1,
+    amountOfSpies: MIN_SPIES,
     setAmountOfSpies: () => {
     },
-    selectedCategories: [],
-    setSelectedCategories: () => {
+    selectedCategoryIds: [],
+    setSelectedCategoryIds: () => {
     }
 });

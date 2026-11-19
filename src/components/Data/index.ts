@@ -1,7 +1,0 @@
-export {Categories} from './Categories'
-export {Terms} from './Terms'
-export {ManageData} from './ManageData'
-export {ManageDataSkeleton} from './ManageDataSkeleton'
-export {SuggestionItem} from './SuggestionItem'
-export {Suggestions} from './Suggestions'
-export {Logs} from './Logs'

@@ -11,10 +11,19 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+coverage
 *.local
 **/.env
+**/.env.*
+!.env.example
+!.env.emulators
 
-admin
+# Service-account keys: keep them outside the repo
+*-firebase-adminsdk-*.json
+service-account*.json
+
+# A local folder for admin keys and tools at the repo root
+/admin/
 
 # Editor directories and files
 .vscode/*

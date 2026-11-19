@@ -1,9 +1,9 @@
-import {InfiniteData, useInfiniteQuery, useQueryClient} from "@tanstack/react-query";
-import {QueryDocumentSnapshot} from "firebase/firestore";
-import {useEffect, useRef} from "react";
-import {getAllSuggestionsPaginated, listenSuggestions, PaginatedSuggestions} from "@/services/firestore";
-
-const PAGE_SIZE = 10
+import {type InfiniteData, useInfiniteQuery, useQueryClient} from "@tanstack/react-query";
+import type {QueryDocumentSnapshot} from "firebase/firestore";
+import {useEffect} from "react";
+import {statsKeys, suggestionKeys, SUGGESTIONS_PAGE_SIZE} from "@/config";
+import type {PaginatedSuggestions} from "@/model";
+import {listenNewSuggestions, readSuggestionsPaginated} from "@/services";
 
 export function useSuggestionsRealtime() {
     const queryClient = useQueryClient()
@@ -12,37 +12,26 @@ export function useSuggestionsRealtime() {
         PaginatedSuggestions,
         Error,
         InfiniteData<PaginatedSuggestions>,
-        ['suggestions', 'paginated'],
+        typeof suggestionKeys.paginated,
         QueryDocumentSnapshot | undefined
     >({
-        queryKey: ['suggestions', 'paginated'],
+        queryKey: suggestionKeys.paginated,
         initialPageParam: undefined,
-        queryFn: ({pageParam}) => getAllSuggestionsPaginated(PAGE_SIZE, pageParam),
+        queryFn: ({pageParam}) => readSuggestionsPaginated(SUGGESTIONS_PAGE_SIZE, pageParam),
         getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
         staleTime: 1000 * 60 * 5
     })
 
-    const unsubscribeRef = useRef<() => void>(() => {
-    })
-
+    // One listener for the lifetime of the page; it only refetches when another device adds a suggestion.
     useEffect(() => {
-        const totalSize = PAGE_SIZE * (getSuggestionsPaginated.data?.pages.length ?? 1)
-
-        if (unsubscribeRef.current) {
-            unsubscribeRef.current()
-        }
-
-        unsubscribeRef.current = listenSuggestions(
-            totalSize,
-            () => queryClient.invalidateQueries({queryKey: ['suggestions', 'paginated']})
+        return listenNewSuggestions(
+            () => {
+                void queryClient.invalidateQueries({queryKey: suggestionKeys.paginated})
+                void queryClient.invalidateQueries({queryKey: statsKeys.all})
+            },
+            (error) => console.error("Suggestions listener failed:", error)
         )
-
-        return () => {
-            if (unsubscribeRef.current) {
-                unsubscribeRef.current()
-            }
-        }
-    }, [getSuggestionsPaginated.data?.pages.length, queryClient]);
+    }, [queryClient]);
 
     return {getSuggestionsPaginated}
 }
