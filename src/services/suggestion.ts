@@ -91,7 +91,7 @@ async function resolveCategoryId(batch: WriteBatch, suggestion: Suggestion): Pro
     }
 
     const categoryRef = doc(collection(db, CATEGORIES_COLLECTION))
-    batch.set(categoryRef, {value: normalizeName(suggestion.category), isOriginal: false})
+    batch.set(categoryRef, {value: normalizeName(suggestion.category), source: "community"})
     return categoryRef.id
 }
 
@@ -143,7 +143,7 @@ export async function approveSuggestion(suggestion: Suggestion, selectedTerms: s
     }
 
     newTerms.forEach((term) => {
-        batch.set(doc(collection(db, TERMS_COLLECTION)), {value: term, categoryId, isOriginal: false})
+        batch.set(doc(collection(db, TERMS_COLLECTION)), {value: term, categoryId, source: "community"})
     })
     addLogToBatch(batch, {
         type: "suggestion",

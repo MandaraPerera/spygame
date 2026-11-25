@@ -3,8 +3,8 @@ import type {Category} from "@/model";
 import {normalizeName, parseSuggestion, type SuggestionDraft, validateSuggestion} from "./suggestion";
 
 const categories: Category[] = [
-    {id: "countries", value: "Countries", isOriginal: true},
-    {id: "sports", value: "Sports", isOriginal: true}
+    {id: "countries", value: "Countries", source: "original"},
+    {id: "sports", value: "Sports", source: "original"}
 ]
 
 const fiveTerms = ["Lion", "Tiger", "Zebra", "Giraffe", "Elephant"]
@@ -59,6 +59,12 @@ describe("validateSuggestion", () => {
 
     it("rejects duplicate terms, ignoring case", () => {
         expect(errorOf({terms: ["Belgium", "belgium "]})).toBe('"belgium" is in the list twice')
+    })
+
+    it("rejects a term the existing category already has, ignoring case and spaces", () => {
+        expect(validateSuggestion(draft({terms: ["Japan", " belgium "]}), categories, ["Belgium", "France"]))
+            .toEqual({ok: false, error: '"belgium" is already in Countries'})
+        expect(validateSuggestion(draft({terms: ["Japan"]}), categories, ["Belgium"]).ok).toBe(true)
     })
 
     it("limits the number of terms", () => {

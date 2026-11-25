@@ -61,8 +61,10 @@ function resolveCategory(draft: SuggestionDraft, categories: Category[]): Valida
     return category
 }
 
-function resolveTerms(draft: SuggestionDraft): ValidationResult | string[] {
+// existingTerms are the terms the picked category already has; a new category has none.
+function resolveTerms(draft: SuggestionDraft, category: string, existingTerms: string[]): ValidationResult | string[] {
     const terms = draft.terms.map(normalizeName)
+    const existingKeys = new Set(existingTerms.map(nameKey))
 
     if (terms.length === 0) return {ok: false, error: "Add at least one word"}
     if (terms.length > MAX_TERMS_PER_SUGGESTION) {
@@ -81,17 +83,19 @@ function resolveTerms(draft: SuggestionDraft): ValidationResult | string[] {
 
         const key = nameKey(term)
         if (seen.has(key)) return {ok: false, error: `"${term}" is in the list twice`}
+        if (existingKeys.has(key)) return {ok: false, error: `"${term}" is already in ${category}`}
         seen.add(key)
     }
 
     return terms
 }
 
-export function validateSuggestion(draft: SuggestionDraft, categories: Category[]): ValidationResult {
+export function validateSuggestion(draft: SuggestionDraft, categories: Category[],
+                                   existingTerms: string[] = []): ValidationResult {
     const category = resolveCategory(draft, categories)
     if (typeof category !== "string") return category
 
-    const terms = resolveTerms(draft)
+    const terms = resolveTerms(draft, category, draft.isNewCategory ? [] : existingTerms)
     if (!Array.isArray(terms)) return terms
 
     return {ok: true, suggestion: {category, terms, isNewCategory: draft.isNewCategory}}

@@ -1,19 +1,21 @@
 import {screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {beforeEach, describe, expect, it, vi} from "vitest";
+import type {Category} from "@/model";
 import {createTerms, readCategories, readTermsByCategoryIds} from "@/services";
 import {renderWithProviders} from "@/test/render";
 import {Terms} from "./Terms";
 
-const countries = {id: "countries", value: "Countries", isOriginal: true}
+const countries: Category = {id: "countries", value: "Countries", source: "original"}
 
 describe("Terms", () => {
     beforeEach(() => {
         vi.mocked(readCategories).mockResolvedValue([countries])
         vi.mocked(readTermsByCategoryIds).mockResolvedValue([
-            {id: "t1", value: "Belgium", categoryId: "countries", isOriginal: true},
-            {id: "t2", value: "Canada", categoryId: "countries", isOriginal: true},
-            {id: "t3", value: "Brazil", categoryId: "countries", isOriginal: false}
+            {id: "t1", value: "Belgium", categoryId: "countries", source: "original"},
+            {id: "t2", value: "Canada", categoryId: "countries", source: "original"},
+            {id: "t3", value: "Brazil", categoryId: "countries", source: "community"},
+            {id: "t4", value: "Chile", categoryId: "countries", source: "admin"}
         ])
     })
 
@@ -25,12 +27,19 @@ describe("Terms", () => {
     it("opens the category named in the URL and filters its terms", async () => {
         renderWithProviders(<Terms/>, "/terms?category=countries")
 
-        expect(await screen.findByText("3 terms")).toBeInTheDocument()
+        expect(await screen.findByText("4 terms")).toBeInTheDocument()
         await userEvent.type(screen.getByLabelText("Filter the terms of Countries"), "b")
 
-        expect(screen.getByText("2 of 3 terms")).toBeInTheDocument()
+        expect(screen.getByText("2 of 4 terms")).toBeInTheDocument()
         expect(screen.getByRole("button", {name: "Delete Belgium"})).toBeInTheDocument()
         expect(screen.queryByRole("button", {name: "Delete Canada"})).not.toBeInTheDocument()
+    })
+
+    it("marks only terms from approved suggestions as Community", async () => {
+        renderWithProviders(<Terms/>, "/terms?category=countries")
+
+        expect(await screen.findByText("4 terms")).toBeInTheDocument()
+        expect(screen.getAllByText("Community")).toHaveLength(1)
     })
 
     it("adds terms, one per line", async () => {

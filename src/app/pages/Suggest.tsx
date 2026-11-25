@@ -18,7 +18,7 @@ import {SuggestIntro, SuggestSkeleton} from "@/components/suggest";
 import {toaster} from "@/components/ui";
 import {AlertMessage, ConfirmDialog, PageHeader, Screen} from "@/components/util";
 import {MAX_TERMS_PER_SUGGESTION, MIN_TERMS_FOR_NEW_CATEGORY, NAME_MAX_LENGTH, NAME_MIN_LENGTH, TERM_MIN_LENGTH} from "@/config";
-import {useCategories, useSuggestions} from "@/hooks";
+import {useCategories, useSuggestions, useTerms} from "@/hooks";
 import type {SuggestionData} from "@/model";
 import {validateSuggestion} from "@/utils";
 
@@ -50,6 +50,10 @@ export function Suggest() {
     const [addedTermId, setAddedTermId] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [pendingSuggestion, setPendingSuggestion] = useState<SuggestionData | null>(null)
+
+    // The picked category's terms, so a word it already has is caught before it reaches an admin.
+    const checkedCategoryIds = !isNewCategory && existingCategoryId ? [existingCategoryId] : []
+    const {getTerms: {data: existingTerms, isFetching: isFetchingTerms}} = useTerms(checkedCategoryIds)
 
     const sortedCategories = (categories ?? []).slice().sort((a, b) => a.value.localeCompare(b.value))
 
@@ -94,7 +98,7 @@ export function Suggest() {
             newCategory,
             existingCategoryId,
             terms: terms.map((term) => term.value)
-        }, categories ?? [])
+        }, categories ?? [], (existingTerms ?? []).map((term) => term.value))
 
         if (!result.ok) {
             setError(result.error)
@@ -146,7 +150,8 @@ export function Suggest() {
                 {error ? (
                     <Text role="alert" textStyle="sm" color="red.fg" textAlign="center">{error}</Text>
                 ) : null}
-                <Button size="xl" h="14" colorPalette="manila" onClick={reviewSuggestion}>Send suggestion</Button>
+                <Button size="xl" h="14" colorPalette="manila" loading={isFetchingTerms}
+                        onClick={reviewSuggestion}>Send suggestion</Button>
             </>
         )}>
             <SuggestIntro/>

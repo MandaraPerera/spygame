@@ -1,6 +1,6 @@
 import {collection, doc, getCountFromServer, getDocs, writeBatch} from "firebase/firestore";
 import type {Category} from "@/model";
-import {checkLength, chunk, findCategoryByName, normalizeName, validateTermList} from "@/utils";
+import {checkLength, chunk, findCategoryByName, normalizeName, toContentSource, validateTermList} from "@/utils";
 import {BATCH_SIZE, CATEGORIES_COLLECTION, TERMS_COLLECTION} from "./collections";
 import {db} from "./firebase";
 import {addLogToBatch} from "./log";
@@ -8,10 +8,10 @@ import {readTermsByCategoryIds} from "./term";
 
 export async function readCategories(): Promise<Category[]> {
     const querySnapshot = await getDocs(collection(db, CATEGORIES_COLLECTION))
-    return querySnapshot.docs.map((categoryDoc) => ({
-        id: categoryDoc.id,
-        ...categoryDoc.data()
-    })) as Category[]
+    return querySnapshot.docs.map((categoryDoc): Category => {
+        const data = categoryDoc.data()
+        return {id: categoryDoc.id, value: data.value, source: toContentSource(data)}
+    })
 }
 
 export async function readAmountOfCategories() {
@@ -35,9 +35,9 @@ export async function createCategory(name: string, terms: string[]): Promise<Cat
 
     const batch = writeBatch(db)
     const categoryRef = doc(collection(db, CATEGORIES_COLLECTION))
-    batch.set(categoryRef, {value, isOriginal: false})
+    batch.set(categoryRef, {value, source: "admin"})
     termList.terms.forEach((term) => {
-        batch.set(doc(collection(db, TERMS_COLLECTION)), {value: term, categoryId: categoryRef.id, isOriginal: false})
+        batch.set(doc(collection(db, TERMS_COLLECTION)), {value: term, categoryId: categoryRef.id, source: "admin"})
     })
     addLogToBatch(batch, {
         type: "category",
@@ -48,7 +48,7 @@ export async function createCategory(name: string, terms: string[]): Promise<Cat
     })
     await batch.commit()
 
-    return {id: categoryRef.id, value, isOriginal: false}
+    return {id: categoryRef.id, value, source: "admin"}
 }
 
 export async function updateCategory(category: Category, value: string) {

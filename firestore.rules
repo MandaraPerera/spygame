@@ -23,6 +23,11 @@ service cloud.firestore {
       return value is string && value.size() >= 2 && value.size() <= 20;
     }
 
+    // Keep in sync with ContentSource in src/model/source.ts.
+    function isSource(value) {
+      return value in ['original', 'admin', 'community'];
+    }
+
     // Rules have no loops and evaluate at most 1000 expressions, so each of the (at most 50) terms is checked
     // for its type by index, and the list as a whole for its size. Term lengths are checked again on approval.
     function isStringAt(list, size, index) {
@@ -48,19 +53,19 @@ service cloud.firestore {
     match /categories/{categoryId} {
       allow read: if true;
       allow create, update: if isAdmin()
-        && hasExactly(['value', 'isOriginal'])
+        && hasExactly(['value', 'source'])
         && isName(request.resource.data.value)
-        && request.resource.data.isOriginal is bool;
+        && isSource(request.resource.data.source);
       allow delete: if isAdmin();
     }
 
     match /terms/{termId} {
       allow read: if true;
       allow create, update: if isAdmin()
-        && hasExactly(['value', 'categoryId', 'isOriginal'])
+        && hasExactly(['value', 'categoryId', 'source'])
         && isTerm(request.resource.data.value)
         && request.resource.data.categoryId is string
-        && request.resource.data.isOriginal is bool;
+        && isSource(request.resource.data.source);
       allow delete: if isAdmin();
     }
 

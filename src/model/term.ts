@@ -1,8 +1,10 @@
+import type {ContentSource} from "./source";
+
 export type Term = {
     id: string
     value: string
     categoryId: string
-    isOriginal: boolean
+    source: ContentSource
 }
 
 export type TermData = Omit<Term, "id">

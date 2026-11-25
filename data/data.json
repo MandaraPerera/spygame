@@ -2,1001 +2,1001 @@
   "categories": [
     {
       "value": "Countries",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Objects",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Places",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Sports",
-      "isOriginal": true
+      "source": "original"
     }
   ],
   "terms": [
     {
       "value": "United States",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Canada",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Mexico",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Brazil",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Argentina",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "United Kingdom",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "France",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Germany",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Italy",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Spain",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Portugal",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Netherlands",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Belgium",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Switzerland",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Sweden",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Norway",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Denmark",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Russia",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "China",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Japan",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "South Korea",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "India",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Pakistan",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Indonesia",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Thailand",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Philippines",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Australia",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "New Zealand",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Egypt",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "South Africa",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Morocco",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Turkey",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Saudi Arabia",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "United Arab Emirates",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Greece",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Iran",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Iraq",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Vietnam",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Malaysia",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Singapore",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Cuba",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Colombia",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Peru",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Chile",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Venezuela",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Nigeria",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Kenya",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Ireland",
       "categoryId": "1",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Smartphone",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Laptop",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Microwave",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Light Bulb",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Car",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bicycle",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Motorcycle",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Airplane",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Train",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Boat",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Scissors",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Hammer",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Umbrella",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Backpack",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Mirror",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Clock",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Glasses",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Wallet",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Toothbrush",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Candle",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Camera",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Drone",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Headphones",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Sofa",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bed",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Pillow",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Suitcase",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Knife",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Speaker",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Chair",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Table",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Phone Charger",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Plant",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Deck of Cards",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Lighter",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Tissue Box",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Trash Can",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Sunglasses",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Chalkboard",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bottle Opener",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Painting",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Lamp",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Handbag",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Guitar",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "TV Remote",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Toaster",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Computer Keyboard",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Coffee Machine",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Beer Tap",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Sink",
       "categoryId": "2",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Cinema",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Restaurant",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Hospital",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Supermarket",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Gym",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "School",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Airport",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Stadium",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Train Station",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bus Stop",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Hotel Lobby",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Library",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Beach",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Park",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Office",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Zoo",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bakery",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Museum",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Post Office",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Nightclub",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Coffee Shop",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Barbershop",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Garage",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Concert Hall",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Theater",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Pharmacy",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Mall",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Gas Station",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Police Station",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Fire Station",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Aquarium",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Amusement Park",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Wedding Hall",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Recording Studio",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Laundry",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Dentist's Office",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Hardware Store",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bookstore",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bowling Alley",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Swimming Pool",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Clothing Store",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Ice Rink",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Camping Ground",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Art Gallery",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Courthouse",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "TV Studio",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Dog Park",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bar",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Garage Sale",
       "categoryId": "3",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Soccer",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Basketball",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Tennis",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Baseball",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Golf",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Swimming",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Boxing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Volleyball",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Badminton",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Cricket",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Table Tennis",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Rugby",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Hockey",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Cycling",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Karate",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Judo",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Skateboarding",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Surfing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Snowboarding",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Skiing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Wrestling",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Fencing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Archery",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Diving",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Rowing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Horse Racing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Formula 1",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Handball",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Padel",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Water Polo",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Polo",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Ice Hockey",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bowling",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Snooker",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Paintball",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Darts",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Rock Climbing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Triathlon",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Paragliding",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Kickboxing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Weightlifting",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "CrossFit",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Parkour",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Running",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Squash",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Canoeing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "BMX Racing",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Bodyboarding",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     },
     {
       "value": "Lacrosse",
       "categoryId": "4",
-      "isOriginal": true
+      "source": "original"
     }
   ]
 }

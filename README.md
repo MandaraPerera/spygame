@@ -127,8 +127,14 @@ See `.env.example`. Never commit the real files; they are git-ignored.
   action `created`, which only these rules allow: deploy them before using those pages on the live site.
 - Grant or revoke the admin claim with `node scripts/set-admin.cjs <email> [--revoke]`; it applies after the next
   sign-in.
-- Seed the original content with `node data/seed.cjs`. It asks for confirmation, keeps category ids and approved
-  terms, and only replaces the original terms. With `FIRESTORE_EMULATOR_HOST` set it seeds the emulator instead.
+- Seed the original content with `node data/seed.cjs`. It asks for confirmation, keeps category ids and the terms
+  added by admins or approved suggestions, and only replaces the original terms. With `FIRESTORE_EMULATOR_HOST` set
+  it seeds the emulator instead.
+- Categories and terms have a `source`: `original` (seed data), `admin` or `community` (approved suggestion); only
+  `community` ones get the Community badge. Documents from before that field have `isOriginal` instead: deploy the
+  rules, then run `node scripts/migrate-source.cjs` (a dry run that lists what it would change) and again with
+  `--write`. It tells admin-added content from approved suggestions with the logs. Until it has run, admins cannot
+  rename those older documents.
 - `firebase deploy` of hosting builds and runs the bundle check first (see `firebase.json`).
 
 ## 7. Conventions

@@ -19,13 +19,13 @@ vi.mock("@/utils", async (importOriginal) => ({
     prefersReducedMotion: vi.fn(() => true)
 }))
 
-const lion: Term = {id: "t1", value: "Lion", categoryId: "animals", isOriginal: true}
+const lion: Term = {id: "t1", value: "Lion", categoryId: "animals", source: "original"}
 
 type TermsState = { data?: Term[], isPending: boolean, isError: boolean }
 
 function mockData(terms: TermsState) {
     vi.mocked(useCategories).mockReturnValue({
-        getCategories: {data: [{id: "animals", value: "Animals", isOriginal: true}], isPending: false, isError: false}
+        getCategories: {data: [{id: "animals", value: "Animals", source: "original"}], isPending: false, isError: false}
     } as unknown as ReturnType<typeof useCategories>)
     vi.mocked(useTerms).mockReturnValue({getTerms: terms} as unknown as ReturnType<typeof useTerms>)
 }

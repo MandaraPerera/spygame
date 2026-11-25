@@ -1,7 +1,7 @@
 // Seeds the original categories and terms from data/data.json.
 // Usage: node data/seed.cjs [--yes]
 // - A category is matched by name and keeps its id, so saved selections and approved terms keep working.
-// - Only original terms (isOriginal: true) are replaced; terms from approved suggestions are kept.
+// - Only original terms (source: "original") are replaced; terms added by admins or approved suggestions are kept.
 // - With FIRESTORE_EMULATOR_HOST set, it seeds the local emulator instead of the live project.
 require("dotenv").config({quiet: true});
 
@@ -68,15 +68,20 @@ async function seed(db, data) {
         throw new Error(`Term "${unknownCategory.value}" points to unknown category ${unknownCategory.categoryId}.`);
     }
 
-    const originalTerms = await termsRef.where("isOriginal", "==", true).get();
-    operations.push(...originalTerms.docs.map((doc) => (batch) => batch.delete(doc.ref)));
+    // Terms seeded before the source field have isOriginal: true instead.
+    const [originalTerms, legacyOriginalTerms] = await Promise.all([
+        termsRef.where("source", "==", "original").get(),
+        termsRef.where("isOriginal", "==", true).get()
+    ]);
+    const originalRefs = new Map([...originalTerms.docs, ...legacyOriginalTerms.docs].map((doc) => [doc.id, doc.ref]));
+    operations.push(...[...originalRefs.values()].map((ref) => (batch) => batch.delete(ref)));
     operations.push(...data.terms.map((term) => (batch) =>
         batch.set(termsRef.doc(), {...term, categoryId: categoryIds[term.categoryId]})));
 
     // With today's data this is a single batch, so the game never sees a half-seeded state.
     await commitInBatches(db, operations);
     console.log(`Seeded ${data.categories.length} categories and ${data.terms.length} terms; ` +
-        `replaced ${originalTerms.size} original terms.`);
+        `replaced ${originalRefs.size} original terms.`);
 }
 
 async function main() {

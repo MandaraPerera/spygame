@@ -75,20 +75,28 @@ describe("categories and terms", () => {
     })
 
     it("cannot be written by visitors or signed-in non-admins", async () => {
-        const term = {value: "Lion", categoryId: "animals", isOriginal: false}
+        const term = {value: "Lion", categoryId: "animals", source: "admin"}
         await assertFails(addDoc(collection(anonymous(), "terms"), term))
         await assertFails(addDoc(collection(signedIn(), "terms"), term))
-        await assertFails(addDoc(collection(signedIn(), "categories"), {value: "Animals", isOriginal: false}))
+        await assertFails(addDoc(collection(signedIn(), "categories"), {value: "Animals", source: "admin"}))
     })
 
     it("can be written by admins in the expected shape only", async () => {
-        await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "Lion", categoryId: "a", isOriginal: false}))
-        await assertFails(addDoc(collection(admin(), "terms"), {value: "Lion", categoryId: "a", isOriginal: false, x: 1}))
-        await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "BMW", categoryId: "a", isOriginal: false}))
-        await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "Ox", categoryId: "a", isOriginal: false}))
-        await assertFails(addDoc(collection(admin(), "terms"), {value: "X", categoryId: "a", isOriginal: false}))
-        await assertFails(addDoc(collection(admin(), "terms"), {value: "a".repeat(21), categoryId: "a", isOriginal: false}))
-        await assertFails(addDoc(collection(admin(), "categories"), {value: "Abc", isOriginal: false}))
+        await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "Lion", categoryId: "a", source: "admin"}))
+        await assertFails(addDoc(collection(admin(), "terms"), {value: "Lion", categoryId: "a", source: "admin", x: 1}))
+        await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "BMW", categoryId: "a", source: "admin"}))
+        await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "Ox", categoryId: "a", source: "admin"}))
+        await assertFails(addDoc(collection(admin(), "terms"), {value: "X", categoryId: "a", source: "admin"}))
+        await assertFails(addDoc(collection(admin(), "terms"), {value: "a".repeat(21), categoryId: "a", source: "admin"}))
+        await assertFails(addDoc(collection(admin(), "categories"), {value: "Abc", source: "admin"}))
+    })
+
+    it("needs a known source", async () => {
+        await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "Lion", categoryId: "a", source: "community"}))
+        await assertSucceeds(addDoc(collection(admin(), "categories"), {value: "Animals", source: "original"}))
+        await assertFails(addDoc(collection(admin(), "terms"), {value: "Lion", categoryId: "a", source: "visitor"}))
+        await assertFails(addDoc(collection(admin(), "terms"), {value: "Lion", categoryId: "a", isOriginal: false}))
+        await assertFails(addDoc(collection(admin(), "categories"), {value: "Animals", isOriginal: false}))
     })
 })
 
@@ -158,8 +166,8 @@ describe("approving a suggestion", () => {
         const db = admin()
         const batch = writeBatch(db)
         const categoryRef = doc(collection(db, "categories"))
-        batch.set(categoryRef, {value: "Animals", isOriginal: false})
-        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: categoryRef.id, isOriginal: false})
+        batch.set(categoryRef, {value: "Animals", source: "admin"})
+        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: categoryRef.id, source: "admin"})
         batch.set(doc(collection(db, "logs")), log())
         batch.delete(doc(db, "suggestions", "s1"))
 
@@ -170,8 +178,8 @@ describe("approving a suggestion", () => {
         await seedSuggestion("s1")
         const db = admin()
         const batch = writeBatch(db)
-        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: "a", isOriginal: false})
-        batch.set(doc(collection(db, "terms")), {value: "x".repeat(21), categoryId: "a", isOriginal: false})
+        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: "a", source: "admin"})
+        batch.set(doc(collection(db, "terms")), {value: "x".repeat(21), categoryId: "a", source: "admin"})
         batch.delete(doc(db, "suggestions", "s1"))
 
         await assertFails(batch.commit())
@@ -184,8 +192,8 @@ describe("admin edits", () => {
         const db = admin()
         const batch = writeBatch(db)
         const categoryRef = doc(collection(db, "categories"))
-        batch.set(categoryRef, {value: "Animals", isOriginal: false})
-        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: categoryRef.id, isOriginal: false})
+        batch.set(categoryRef, {value: "Animals", source: "admin"})
+        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: categoryRef.id, source: "admin"})
         batch.set(doc(collection(db, "logs")), log({type: "category", action: "created", isNewCategory: null}))
 
         await assertSucceeds(batch.commit())
@@ -194,8 +202,8 @@ describe("admin edits", () => {
     it("add terms with a log as one batch", async () => {
         const db = admin()
         const batch = writeBatch(db)
-        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: "animals", isOriginal: false})
-        batch.set(doc(collection(db, "terms")), {value: "Tiger", categoryId: "animals", isOriginal: false})
+        batch.set(doc(collection(db, "terms")), {value: "Lion", categoryId: "animals", source: "admin"})
+        batch.set(doc(collection(db, "terms")), {value: "Tiger", categoryId: "animals", source: "admin"})
         batch.set(doc(collection(db, "logs")), log({type: "term", action: "created", isNewCategory: null}))
 
         await assertSucceeds(batch.commit())
@@ -204,7 +212,7 @@ describe("admin edits", () => {
     it("are refused to signed-in non-admins", async () => {
         const db = signedIn()
         const batch = writeBatch(db)
-        batch.set(doc(collection(db, "categories")), {value: "Animals", isOriginal: false})
+        batch.set(doc(collection(db, "categories")), {value: "Animals", source: "admin"})
         batch.set(doc(collection(db, "logs")), log({userId: "visitor", type: "category", action: "created"}))
 
         await assertFails(batch.commit())

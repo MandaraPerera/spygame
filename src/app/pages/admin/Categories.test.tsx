@@ -8,8 +8,8 @@ import {Categories} from "./Categories";
 describe("Categories", () => {
     beforeEach(() => {
         vi.mocked(readCategories).mockResolvedValue([
-            {id: "countries", value: "Countries", isOriginal: true},
-            {id: "planets", value: "Planets", isOriginal: false}
+            {id: "countries", value: "Countries", source: "original"},
+            {id: "planets", value: "Planets", source: "community"}
         ])
         vi.mocked(readTermCounts).mockResolvedValue({countries: 40, planets: 0})
     })
@@ -23,7 +23,7 @@ describe("Categories", () => {
     })
 
     it("creates a category with its first terms", async () => {
-        vi.mocked(createCategory).mockResolvedValue({id: "animals", value: "Animals", isOriginal: false})
+        vi.mocked(createCategory).mockResolvedValue({id: "animals", value: "Animals", source: "admin"})
         renderWithProviders(<Categories/>)
 
         await userEvent.click(await screen.findByRole("button", {name: "New category"}))

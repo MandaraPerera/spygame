@@ -6,12 +6,18 @@ import {EditableRow, NewCategoryDialog} from "@/components/data";
 import {toaster} from "@/components/ui";
 import {AlertMessage, ListPanel, PageHeader, Screen} from "@/components/util";
 import {useCategories, useTermCounts} from "@/hooks";
-import type {Category} from "@/model";
+import type {Category, ContentSource} from "@/model";
 import {checkLength, errorMessage, findCategoryByName, normalizeName, pluralize} from "@/utils";
 
 interface TermCountButtonProps {
     category: Category
     count: number | undefined
+}
+
+const SOURCE_BADGES: Record<ContentSource, string> = {
+    original: "Original",
+    admin: "Admin",
+    community: "Community"
 }
 
 function countLabel(count: number | undefined): string {
@@ -100,7 +106,7 @@ export function Categories() {
                 return (
                     <EditableRow key={category.id}
                                  value={category.value}
-                                 badge={category.isOriginal ? "Original" : "Community"}
+                                 badge={SOURCE_BADGES[category.source]}
                                  deleteTitle={`Delete "${category.value}"?`}
                                  deleteText={`The category and ${itsTerms} will be deleted. This cannot be undone.`}
                                  isBusy={isBusy}

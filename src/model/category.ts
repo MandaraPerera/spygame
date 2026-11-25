@@ -1,7 +1,9 @@
+import type {ContentSource} from "./source";
+
 export type Category = {
     id: string
     value: string
-    isOriginal: boolean
+    source: ContentSource
 }
 
 export type CategoryData = Omit<Category, "id">

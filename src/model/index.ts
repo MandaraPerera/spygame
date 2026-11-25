@@ -1,4 +1,6 @@
 export type {Category, CategoryData} from './category'
 export type {Log, LogAction, LogData, LogType, PaginatedLogs} from './log'
 export type {PaginatedSuggestions, Suggestion, SuggestionData} from './suggestion'
+export {CONTENT_SOURCES} from './source'
+export type {ContentSource} from './source'
 export type {AddedTerms, Term, TermCounts, TermData} from './term'

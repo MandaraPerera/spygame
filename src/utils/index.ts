@@ -3,6 +3,7 @@ export {errorMessage, formatDate} from './format'
 export {clampPlayers, clampSpies, maxSpies, pickSpies, pickTerm} from './game'
 export {prefersReducedMotion} from './motion'
 export {describeLog, describeLogAuthor, parseLog} from './log'
+export {toContentSource} from './parse'
 export {
     checkLength,
     checkTermLength,

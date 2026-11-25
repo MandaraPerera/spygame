@@ -40,9 +40,9 @@ function renderItem(item: Suggestion = suggestion) {
 
 describe("SuggestionItem", () => {
     beforeEach(() => {
-        vi.mocked(readCategories).mockResolvedValue([{id: "countries", value: "Countries", isOriginal: true}])
+        vi.mocked(readCategories).mockResolvedValue([{id: "countries", value: "Countries", source: "original"}])
         vi.mocked(readTermsByCategoryIds).mockResolvedValue([
-            {id: "t1", value: "Belgium", categoryId: "countries", isOriginal: true}
+            {id: "t1", value: "Belgium", categoryId: "countries", source: "original"}
         ])
     })
 

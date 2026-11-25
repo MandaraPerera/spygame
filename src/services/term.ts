@@ -9,7 +9,7 @@ import {
     writeBatch
 } from "firebase/firestore";
 import type {AddedTerms, Category, Term, TermCounts} from "@/model";
-import {chunk, nameKey, validateTermList} from "@/utils";
+import {chunk, nameKey, toContentSource, validateTermList} from "@/utils";
 import {CATEGORIES_COLLECTION, TERMS_COLLECTION} from "./collections";
 import {db} from "./firebase";
 import {addLogToBatch} from "./log";
@@ -24,7 +24,10 @@ export async function readTermsByCategoryIds(categoryIds: string[]): Promise<Ter
     )
 
     return snapshots.flatMap((querySnapshot) =>
-        querySnapshot.docs.map((termDoc) => ({id: termDoc.id, ...termDoc.data()}) as Term))
+        querySnapshot.docs.map((termDoc): Term => {
+            const data = termDoc.data()
+            return {id: termDoc.id, value: data.value, categoryId: data.categoryId, source: toContentSource(data)}
+        }))
 }
 
 export async function readAmountOfTerms() {
@@ -66,7 +69,7 @@ export async function createTerms(category: Category, values: string[]): Promise
 
     const batch = writeBatch(db)
     added.forEach((term) => {
-        batch.set(doc(collection(db, TERMS_COLLECTION)), {value: term, categoryId: category.id, isOriginal: false})
+        batch.set(doc(collection(db, TERMS_COLLECTION)), {value: term, categoryId: category.id, source: "admin"})
     })
     addLogToBatch(batch, {
         type: "term",

@@ -80,7 +80,7 @@ function TermList({category}: TermListProps) {
                 {visibleTerms.map((term) => (
                     <EditableRow key={term.id}
                                  value={term.value}
-                                 badge={term.isOriginal ? undefined : "Community"}
+                                 badge={term.source === "community" ? "Community" : undefined}
                                  deleteTitle={`Delete "${term.value}"?`}
                                  deleteText={`The term will be removed from ${category.value}. This cannot be undone.`}
                                  isBusy={isBusy}
