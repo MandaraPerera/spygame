@@ -5,6 +5,7 @@ export {prefersReducedMotion} from './motion'
 export {describeLog, describeLogAuthor, parseLog} from './log'
 export {
     checkLength,
+    checkTermLength,
     findCategoryByName,
     nameKey,
     normalizeName,

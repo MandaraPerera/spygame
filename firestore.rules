@@ -19,6 +19,10 @@ service cloud.firestore {
       return value is string && value.size() >= 4 && value.size() <= 20;
     }
 
+    function isTerm(value) {
+      return value is string && value.size() >= 2 && value.size() <= 20;
+    }
+
     // Rules have no loops and evaluate at most 1000 expressions, so each of the (at most 50) terms is checked
     // for its type by index, and the list as a whole for its size. Term lengths are checked again on approval.
     function isStringAt(list, size, index) {
@@ -54,7 +58,7 @@ service cloud.firestore {
       allow read: if true;
       allow create, update: if isAdmin()
         && hasExactly(['value', 'categoryId', 'isOriginal'])
-        && isName(request.resource.data.value)
+        && isTerm(request.resource.data.value)
         && request.resource.data.categoryId is string
         && request.resource.data.isOriginal is bool;
       allow delete: if isAdmin();

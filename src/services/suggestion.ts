@@ -15,7 +15,7 @@ import {
     writeBatch
 } from "firebase/firestore";
 import type {PaginatedSuggestions, Suggestion, SuggestionData} from "@/model";
-import {checkLength, findCategoryByName, nameKey, normalizeName, parseSuggestion} from "@/utils";
+import {checkLength, checkTermLength, findCategoryByName, nameKey, normalizeName, parseSuggestion} from "@/utils";
 import {readCategories} from "./category";
 import {CATEGORIES_COLLECTION, SUGGESTIONS_COLLECTION, TERMS_COLLECTION} from "./collections";
 import {db} from "./firebase";
@@ -112,7 +112,7 @@ async function selectNewTerms(terms: string[], categoryId: string): Promise<stri
 
     for (const rawTerm of terms) {
         const term = normalizeName(rawTerm)
-        const lengthError = checkLength(term, `"${term}"`)
+        const lengthError = checkTermLength(term, `"${term}"`)
         if (lengthError) {
             throw new Error(`${lengthError}. Leave it out or deny this suggestion.`)
         }

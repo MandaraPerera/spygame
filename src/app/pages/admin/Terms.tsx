@@ -7,7 +7,7 @@ import {toaster} from "@/components/ui";
 import {AlertMessage, ListPanel, PageHeader, Screen} from "@/components/util";
 import {useCategories, useTerms} from "@/hooks";
 import type {Category, Term} from "@/model";
-import {checkLength, errorMessage, nameKey, normalizeName, pluralize} from "@/utils";
+import {checkTermLength, errorMessage, nameKey, normalizeName, pluralize} from "@/utils";
 
 interface TermListProps {
     category: Category
@@ -22,7 +22,7 @@ function TermList({category}: TermListProps) {
     const rename = async (term: Term, rawValue: string): Promise<boolean> => {
         const value = normalizeName(rawValue)
         const isDuplicate = (terms ?? []).some((other) => other.id !== term.id && nameKey(other.value) === nameKey(value))
-        const error = checkLength(value, "A term") ?? (isDuplicate ? `"${value}" is already in ${category.value}` : null)
+        const error = checkTermLength(value, "A term") ?? (isDuplicate ? `"${value}" is already in ${category.value}` : null)
 
         if (error) {
             toaster.create({type: "error", title: error})

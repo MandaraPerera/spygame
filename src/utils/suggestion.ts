@@ -2,7 +2,8 @@ import {
     MAX_TERMS_PER_SUGGESTION,
     MIN_TERMS_FOR_NEW_CATEGORY,
     NAME_MAX_LENGTH,
-    NAME_MIN_LENGTH
+    NAME_MIN_LENGTH,
+    TERM_MIN_LENGTH
 } from "@/config";
 import type {Category, Suggestion, SuggestionData} from "@/model";
 import {isStringList, toDate} from "./parse";
@@ -31,10 +32,14 @@ export function findCategoryByName(categories: Category[], name: string): Catego
     return categories.find((category) => nameKey(category.value) === key)
 }
 
-export function checkLength(value: string, label: string): string | null {
-    if (value.length < NAME_MIN_LENGTH) return `${label} needs a minimum of ${NAME_MIN_LENGTH} characters`
+export function checkLength(value: string, label: string, minLength = NAME_MIN_LENGTH): string | null {
+    if (value.length < minLength) return `${label} needs a minimum of ${minLength} characters`
     if (value.length > NAME_MAX_LENGTH) return `${label} can have a maximum of ${NAME_MAX_LENGTH} characters`
     return null
+}
+
+export function checkTermLength(value: string, label: string): string | null {
+    return checkLength(value, label, TERM_MIN_LENGTH)
 }
 
 function resolveCategory(draft: SuggestionDraft, categories: Category[]): ValidationResult | string {
@@ -71,7 +76,7 @@ function resolveTerms(draft: SuggestionDraft): ValidationResult | string[] {
     for (const term of terms) {
         if (term.length === 0) return {ok: false, error: "Fill in or remove the empty words"}
 
-        const lengthError = checkLength(term, `"${term}"`)
+        const lengthError = checkTermLength(term, `"${term}"`)
         if (lengthError) return {ok: false, error: lengthError}
 
         const key = nameKey(term)

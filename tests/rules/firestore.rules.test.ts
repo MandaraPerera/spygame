@@ -84,6 +84,9 @@ describe("categories and terms", () => {
     it("can be written by admins in the expected shape only", async () => {
         await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "Lion", categoryId: "a", isOriginal: false}))
         await assertFails(addDoc(collection(admin(), "terms"), {value: "Lion", categoryId: "a", isOriginal: false, x: 1}))
+        await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "BMW", categoryId: "a", isOriginal: false}))
+        await assertSucceeds(addDoc(collection(admin(), "terms"), {value: "Ox", categoryId: "a", isOriginal: false}))
+        await assertFails(addDoc(collection(admin(), "terms"), {value: "X", categoryId: "a", isOriginal: false}))
         await assertFails(addDoc(collection(admin(), "terms"), {value: "a".repeat(21), categoryId: "a", isOriginal: false}))
         await assertFails(addDoc(collection(admin(), "categories"), {value: "Abc", isOriginal: false}))
     })

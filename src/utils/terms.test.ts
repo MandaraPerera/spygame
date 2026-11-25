@@ -17,7 +17,8 @@ describe("validateTermList", () => {
     })
 
     it("checks the length of each term", () => {
-        expect(validateTermList(["Lion", "Ox"])).toEqual({ok: false, error: '"Ox" needs a minimum of 4 characters'})
+        expect(validateTermList(["Lion", "X"])).toEqual({ok: false, error: '"X" needs a minimum of 2 characters'})
+        expect(validateTermList(["BMW", "Kia", "BYD", "Ox"])).toEqual({ok: true, terms: ["BMW", "Kia", "BYD", "Ox"]})
     })
 
     it("rejects a term that is in the list twice, ignoring case", () => {

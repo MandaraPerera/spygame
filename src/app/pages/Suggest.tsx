@@ -17,7 +17,7 @@ import {v4 as uuid} from 'uuid';
 import {SuggestIntro, SuggestSkeleton} from "@/components/suggest";
 import {toaster} from "@/components/ui";
 import {AlertMessage, ConfirmDialog, PageHeader, Screen} from "@/components/util";
-import {MAX_TERMS_PER_SUGGESTION, MIN_TERMS_FOR_NEW_CATEGORY, NAME_MAX_LENGTH, NAME_MIN_LENGTH} from "@/config";
+import {MAX_TERMS_PER_SUGGESTION, MIN_TERMS_FOR_NEW_CATEGORY, NAME_MAX_LENGTH, NAME_MIN_LENGTH, TERM_MIN_LENGTH} from "@/config";
 import {useCategories, useSuggestions} from "@/hooks";
 import type {SuggestionData} from "@/model";
 import {validateSuggestion} from "@/utils";
@@ -198,7 +198,7 @@ export function Suggest() {
             <Stack as="section" gap="3" aria-labelledby="suggest-words">
                 <HStack justify="space-between" align="baseline">
                     <Heading as="h2" id="suggest-words" textStyle="title">Words</Heading>
-                    <Text textStyle="sm" color="fg.muted">{NAME_MIN_LENGTH} to {NAME_MAX_LENGTH} characters each</Text>
+                    <Text textStyle="sm" color="fg.muted">{TERM_MIN_LENGTH} to {NAME_MAX_LENGTH} characters each</Text>
                 </HStack>
                 {terms.map((term, index) => (
                     <HStack key={term.id} gap="1">

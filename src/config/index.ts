@@ -8,7 +8,8 @@ export {
     MIN_TERMS_FOR_NEW_CATEGORY,
     NAME_MAX_LENGTH,
     NAME_MIN_LENGTH,
-    SUGGESTIONS_PAGE_SIZE
+    SUGGESTIONS_PAGE_SIZE,
+    TERM_MIN_LENGTH
 } from './limits'
 
 export {

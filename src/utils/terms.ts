@@ -1,5 +1,5 @@
 import {MAX_TERMS_PER_ADD} from "@/config";
-import {checkLength, nameKey, normalizeName} from "./suggestion";
+import {checkTermLength, nameKey, normalizeName} from "./suggestion";
 
 export type TermListResult =
     | { ok: true, terms: string[] }
@@ -24,7 +24,7 @@ export function validateTermList(terms: string[], minTerms = 1): TermListResult 
 
     const seen = new Set<string>()
     for (const term of normalized) {
-        const lengthError = checkLength(term, `"${term}"`)
+        const lengthError = checkTermLength(term, `"${term}"`)
         if (lengthError) return {ok: false, error: lengthError}
 
         const key = nameKey(term)
