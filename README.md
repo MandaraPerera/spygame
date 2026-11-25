@@ -130,8 +130,8 @@ See `.env.example`. Never commit the real files; they are git-ignored.
 - Seed the original content with `node data/seed.cjs`. It asks for confirmation, keeps category ids and the terms
   added by admins or approved suggestions, and only replaces the original terms. With `FIRESTORE_EMULATOR_HOST` set
   it seeds the emulator instead.
-- Categories and terms have a `source`: `original` (seed data), `admin` or `community` (approved suggestion); only
-  `community` ones get the Community badge. Documents from before that field have `isOriginal` instead: deploy the
+- Categories and terms have a `source`: `original` (seed data), `admin` or `community` (approved suggestion), shown as a
+  badge in the admin pages. Documents from before that field have `isOriginal` instead: deploy the
   rules, then run `node scripts/migrate-source.cjs` (a dry run that lists what it would change) and again with
   `--write`. It tells admin-added content from approved suggestions with the logs. Until it has run, admins cannot
   rename those older documents.

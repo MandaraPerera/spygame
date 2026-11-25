@@ -35,11 +35,13 @@ describe("Terms", () => {
         expect(screen.queryByRole("button", {name: "Delete Canada"})).not.toBeInTheDocument()
     })
 
-    it("marks only terms from approved suggestions as Community", async () => {
+    it("shows where each term comes from", async () => {
         renderWithProviders(<Terms/>, "/terms?category=countries")
 
         expect(await screen.findByText("4 terms")).toBeInTheDocument()
+        expect(screen.getAllByText("Original")).toHaveLength(2)
         expect(screen.getAllByText("Community")).toHaveLength(1)
+        expect(screen.getAllByText("Admin")).toHaveLength(1)
     })
 
     it("adds terms, one per line", async () => {

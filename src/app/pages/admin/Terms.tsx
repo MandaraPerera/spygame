@@ -7,7 +7,7 @@ import {toaster} from "@/components/ui";
 import {AlertMessage, ListPanel, PageHeader, Screen} from "@/components/util";
 import {useCategories, useTerms} from "@/hooks";
 import type {Category, Term} from "@/model";
-import {checkTermLength, errorMessage, nameKey, normalizeName, pluralize} from "@/utils";
+import {checkTermLength, errorMessage, nameKey, normalizeName, pluralize, sourceLabel} from "@/utils";
 
 interface TermListProps {
     category: Category
@@ -80,7 +80,7 @@ function TermList({category}: TermListProps) {
                 {visibleTerms.map((term) => (
                     <EditableRow key={term.id}
                                  value={term.value}
-                                 badge={term.source === "community" ? "Community" : undefined}
+                                 badge={sourceLabel(term.source)}
                                  deleteTitle={`Delete "${term.value}"?`}
                                  deleteText={`The term will be removed from ${category.value}. This cannot be undone.`}
                                  isBusy={isBusy}

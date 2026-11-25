@@ -1,8 +1,9 @@
 # Plan 02: Multiplayer
 
-Draft of 25 November 2026, written against `main` at `6f3b876`. Nothing in this plan is built yet. Where your
-description or the rules of the game leave a choice open, the plan picks a default and says so; §18 lists the ones I
-want your answer on.
+Draft of 25 November 2026, written against `main` at `6f3b876`, with your decisions of the same day (§18). Nothing
+in this plan is built yet. Where your description or the rules of the game leave a choice open, the plan picks a
+default and says so; §18 lists what you decided and what is still open. `main` moved to `f8af0b6` the same day (a
+`source` field on categories and terms, a shorter minimum for terms); neither changes anything here.
 
 SpyGame gets a second way to play: everyone on their own phone, in one session. A host opens a session and the others
 join with a link, a QR code or a six-digit code. A server deals the roles, so no phone knows more than its owner
@@ -28,7 +29,8 @@ round, until someone wins. The last phase adds accounts and a friend list. The o
 - The native apps (plan 01). §17 says what this plan leaves ready for them and in which order I would build.
 - Chat and voice, public lobbies with strangers, watching without playing, scores across evenings, your own word list
   for a session, a big-screen view, push notifications on the web, languages other than English.
-- A time limit per round or per vote. You mentioned it as a later setting; §5.7 keeps the door open, nothing is built.
+- A time limit per round. You mentioned it as a later setting; §5.7 keeps the door open, nothing is built. The vote
+  does get a time limit (§3).
 
 ## 2. How a game goes
 
@@ -44,12 +46,15 @@ round, until someone wins. The last phase adds accounts and a friend list. The o
 5. **Questions.** Every phone shows the same thing: the round's stopwatch, "Ana asks Carl" in large type, and the next
    two pairs small underneath. Anyone in the game can tap Next or Previous, and all phones follow. Your own phone
    says "You ask Carl" or "Ana asks you" when it is your turn.
-6. **Vote.** After the last question, Next becomes "Go to the vote". Everyone picks who they think the spy is and
-   locks it in. Nobody sees a vote before the reveal, only who has locked in.
-7. **Reveal.** When the last vote is in, all phones count down 3, 2, 1 together, then show who voted for whom, who is
-   out, and whether that player was a spy.
-8. **Elimination.** A player who was not a spy is out and watches the rest. A spy gets one guess at the word on their
-   own phone: right and the spies win, wrong and that spy is out.
+6. **Vote.** After the last question, Next becomes "Go to the vote". A countdown runs on every phone: the time to
+   choose. Everyone picks who they think the spy is. Nobody sees a vote before the reveal, only who has locked in.
+7. **Reveal.** When the time is up, or earlier when everyone has locked in, all phones count down 3, 2, 1 together,
+   then show who voted for whom, who is out, and whether that player was a spy. A tie is voted on once more, between
+   the tied players; a second tie is settled by chance.
+8. **Elimination.** A player who was not a spy is out and watches the rest. A spy who is voted out gets one guess at
+   the word, said out loud. It is the only moment a spy may guess, and the only way to turn being caught into a win.
+   The players who know the word confirm on their phones whether it was right: right and the spies win, wrong and
+   that spy is out.
 9. **Next round or the end.** If nobody has won, a new round starts with a new order and a fresh stopwatch. The game
    ends as in the README: the players win when every spy is out, the spies win on a right guess or by surviving the
    final round (three players left).
@@ -63,13 +68,14 @@ lobby ─▶ roles ─▶ questions ─▶ voting ─▶ reveal ─▶ guess, if
            └──────────────────────────────────── play again ◀────────────────────────────────────────────┘
 ```
 
-A tie adds one extra vote between the tied players before the reveal settles (§3). "Back to lobby" on the result
-screen returns to the lobby instead of dealing again.
+A tie adds one extra vote between the tied players, and chance settles a second tie (§3). "Back to lobby" on the
+result screen returns to the lobby instead of dealing again.
 
 ## 3. Rules the app now has to decide
 
-Around a table, people settle these on the spot. An app has to pick one answer. These are my defaults; each is one
-function in the shared game logic, so changing one later is cheap.
+Around a table, people settle these on the spot. An app has to pick one answer. These are the answers the plan
+uses: yours of 25 November where the last column says so, my defaults elsewhere. Each is one function in the shared
+game logic, so changing one later is cheap.
 
 | Situation | Default | Other options |
 |---|---|---|
@@ -77,12 +83,13 @@ function in the shared game logic, so changing one later is cheap.
 | Three players | The circle twice, the second time in reverse, so everyone asks and answers both others. That is the README's rule of two questions each. | – |
 | Ending a round | After the last question, Next becomes "Go to the vote". The host can skip to the vote earlier, and cancel a vote that was started by accident. | Any player may call a vote at any time. |
 | Who votes | Everyone still in, spies too. Not for yourself. Players who are out watch. | – |
-| The ballot | Pick, then "Lock in vote". Locked is final. Others see who has locked in, never for whom. | Changeable until everyone is in: invites waiting games. |
-| A voter who is not responding | The host can close the vote. Missing votes do not count. | A vote timer (the later setting). |
-| Tie for most votes | One runoff between the tied players, everyone still in votes again. Still tied, or everyone tied: nobody is out and a new round starts. In the final round that means the spy survived. | No runoff: a tie means nobody is out. Or: a random tied player is out. |
+| The ballot | Time to choose: a countdown of 20 seconds, 10 in a runoff. Tap a player; tap another to change your mind. At zero the player you have picked counts. "Lock in" makes it final early, and when everyone has locked in the rest of the time is skipped. Others see who has locked in, never for whom. | Decided 25 November: the countdown is time to choose. The lengths are my numbers. |
+| A voter who picks nobody | No vote from them. The time limit closes the ballot, so nobody has to wait for anybody. | – |
+| Tie for most votes | One runoff: everyone still in votes again, between the tied players only. Still tied: chance picks one of them, and the reveal says so. If nobody voted at all, nobody is out; in the final round that means the spy survived. | Decided 25 November: a runoff, then chance. That the tied players vote in their own runoff, and the case of no votes at all, are my reading. |
 | Voted out, no spy | Out for this game. The file is shown to all: not a spy. They watch and keep quiet. | – |
-| Voted out, a spy | One guess, on their own phone, picked from the words of the session's categories by typing (§8). Right: the spies win. Wrong: that spy is out. | Typed freely and compared by the app (typos and synonyms become arguments), or said out loud and judged by the host (the host may be a spy). |
-| More than one spy | Spies do not know each other, as today. The players win when every spy is out. The spies win on one right guess, or when a spy is still in after the final round. | Spies know each other; the game stops as soon as the players cannot win any more. |
+| Voted out, a spy | One guess at the word, said out loud. A spy can only guess when voted out: the goal is to stay in, and the guess is the one way to win after being caught. Right: the spies win. Wrong: that spy is out. | Decided 25 November. |
+| Was the guess right? | The table decides, as it would without an app. The spy taps "I said it". Everyone still in then gets the same two buttons: "That was the word" and "That was not it". Only the answers of players who hold the word count, those who are out included. A spy who is still in taps along and is ignored, so the buttons expose nobody. The majority decides, a split counts as wrong, and only the verdict is shown, never who answered what. | Decided 25 November. Set aside: the spy also enters the guess on the phone and the app compares (no judging and no argument, but a second step; kept as a later setting, §17). The host decides (the host may be a spy). The phone listens (unreliable with accents, names and noise). |
+| More than one spy | Spies do not know each other, as today. The players win when every spy is out. The spies win on one right guess, or when a spy is still in after the final round. | Decided 25 November. |
 | What a spy knows | Which categories are in play and how many spies there are, as today. Not the word. | – |
 | Who becomes a spy | A fresh random draw every game, so the same player can be the spy twice in a row. | A draw that rotates: fairer over an evening, but it tells everyone who it probably is not. |
 | Final round | A vote that starts with three (or fewer) players in. If a spy is still in afterwards, the spies win. | – |
@@ -104,15 +111,16 @@ function in the shared game logic, so changing one later is cheap.
 | 4.7 | Players get their own Firebase app instance inside the multiplayer code, with its own Auth, Firestore and Functions clients. The existing instance, with the admin session that ends with the tab, is not touched. | An admin sign-in on the shared instance would replace the player on that device and end with the tab; a player who stays signed in would turn the admin session into a permanent one. Two instances keep both behaviours, and no admin code changes. |
 | 4.8 | One code for everything: six digits. The link and the QR code carry the same code. | Digits sound the same in Dutch, French and English, and a phone shows a large number pad for them. A million codes, short-lived, with limits on wrong tries (§11). |
 | 4.9 | No QR scanner inside the website. The phone's camera opens the link. | It works on every phone without a camera permission, and the site's `Permissions-Policy` keeps the camera off. The browser's own API for reading codes only works in Chrome on Android. The native apps get a scanner. |
-| 4.10 | Presence is a heartbeat in Firestore: each phone marks itself every 30 seconds, others show it as away after 75. The host gets tools (remove, close the vote, start anyway) instead of the app removing people by itself. | People are usually in the same room, so "is Tom still there?" is answered out loud. Rejected for now: Realtime Database presence, which notices a lost connection by itself and costs nothing per beat. It is the upgrade if the heartbeat proves too slow or too costly. |
+| 4.10 | Presence is a heartbeat in Firestore: each phone marks itself every 30 seconds, others show it as away after 75. The host gets tools (remove, start anyway, settle a guess) instead of the app removing people by itself. | People are usually in the same room, so "is Tom still there?" is answered out loud. Rejected for now: Realtime Database presence, which notices a lost connection by itself and costs nothing per beat. It is the upgrade if the heartbeat proves too slow or too costly. |
 | 4.11 | Time comes from the server. Each phone measures its offset to the server clock; the stopwatch and the countdown are computed from timestamps. | Phone clocks differ by seconds, and timers stop when a phone sleeps. Computed time is right the moment the screen wakes. |
 | 4.12 | No chat and no free text except names. | The game is spoken. Every text field is a moderation duty, on the web and later in the stores. |
 | 4.13 | Anyone in the game moves it forward. Only the host changes the setup, removes people or overrides a wait. | What you asked for, extended to the other steps. A host-only game stalls when the host looks away. |
 | 4.14 | Multiplayer sits beside the one-phone game and loads as its own chunk. | The one-phone game needs no network round trip and no account, and its players should not download multiplayer. The main bundle is already 1.4 MB. |
 | 4.15 | The function runs in `europe-west1`. | That is where the project's Firestore database is (checked with the Firebase CLI on 25 November), so every action stays inside one region. |
-| 4.16 | No scheduled jobs and no database triggers. Deadlines are checked when a phone asks, and old sessions are removed by Firestore's TTL. | Fewer moving parts. A game with nobody connected does not need to advance. |
+| 4.16 | No scheduled jobs and no database triggers. A deadline, such as the end of the time to choose, is checked by the server when a phone asks for it, and old sessions are removed by Firestore's TTL. | Fewer moving parts. A game with nobody connected does not need to advance, and one connected phone is enough to close a ballot on time. |
 | 4.17 | Every call carries a protocol version. The server refuses a client that is too old, and the app then asks to reload. | A tab can stay open for days across deploys. |
-| 4.18 | Friends come last, need an account, and are made by code, link, QR or from someone you just played with. No search by name. | Session links already cover joining. No search means no way to look up strangers. |
+| 4.18 | Friends come last, need an account, and are made by code, link, QR or from someone you just played with. No search by name. Sign-in with Google, Apple, or email and a password. | Session links already cover joining. No search means no way to look up strangers. The sign-in methods are your decision. |
+| 4.19 | Playing apart works: nothing in the app needs the players to be in one room, as long as they can hear each other. | Your decision. The game is spoken, so a group that is apart is on a call anyway, and what is said there, the spy's guess included, reaches everyone. The app carries the rest. |
 
 ## 5. Architecture
 
@@ -182,9 +190,9 @@ sessions/{sessionId}                    members read, nobody writes
     ready                               roles: who has closed their file
     turns, turnIndex                    questions: the order and where we are
     clock                               elapsedMs and runningSince: the round's stopwatch
-    ballot                              candidates, who has locked in, isRunoff
-    reveal                              at, votes (voter → target), tally, tied, eliminated, wasSpy
-    guess                               spy, the guessed word, isCorrect
+    ballot                              candidates, endsAt, who has locked in, isRunoff
+    reveal                              at, votes (voter → target), tally, tied, eliminated, byChance, wasSpy
+    guess                               spy, saidAt, who has answered, isCorrect
     result                              winner, reason, the word, its category, the spies
     history                             one entry per round, for the result screen
 
@@ -193,7 +201,7 @@ sessions/{sessionId}/private/{uid}      only that player reads
 
 sessions/{sessionId}/presence/all       one document: player → last seen; a player updates only their own entry
 sessions/{sessionId}/server/state       nobody reads
-  term, spies, votes not yet revealed, words already used in this session, removed players
+  term, spies, picks not yet revealed, answers on a guess, words already used, removed players
 
 sessionCodes/{code}                     server only: which session, until when
 rateLimits/{key}                        server only: counters with an end time
@@ -204,7 +212,9 @@ Three points carry the secrecy:
 - The public document never names a spy or the word before the game is over, except "was a spy" for a player who was
   just voted out. A test serialises the public state after every step of a simulated game and searches it for the
   word and for the spies.
-- A vote sits in the server document until the reveal. The public document only lists who has voted.
+- A pick sits in the server document until the reveal, and an answer on a guess stays there for good. The public
+  document only lists who has locked in and who has answered. Who answered what would tell everyone which players
+  do not hold the word.
 - The private document carries the game's number. A phone ignores a file that belongs to the previous game, so "Play
   again" can never flash the old role while the new one is on its way.
 
@@ -230,13 +240,15 @@ repeated or late tap changes nothing (§10.4).
 | `ready` | a dealt player | roles | Marks the caller. The last one starts round 1. |
 | `startAnyway` | host | roles, after 15 s | Starts round 1 without waiting for the rest. They stay in the game and can still look at their file. |
 | `turn` | a player still in | questions | From question i to i+1 or i−1, only if the game is still at i. |
-| `startVote` | a player still in, at the last question; host at any question | questions | Stops the stopwatch, opens the ballot. |
-| `cancelVote` | host | voting | Back to the last question; the stopwatch runs on. |
-| `vote` | a player still in | voting | Stores the vote. The last one counts them and sets the reveal. |
-| `closeVote` | host | voting | Counts what is there. |
+| `startVote` | a player still in, at the last question; host at any question | questions | Stops the stopwatch, opens the ballot and starts its countdown. |
+| `cancelVote` | host | voting, first ballot only | Back to the last question; the stopwatch runs on. |
+| `pick` | a player still in | voting, until the time is up or they locked in | Stores or replaces the caller's choice. |
+| `lockVote` | a player still in | voting | Makes the choice final. The last one closes the ballot early. |
+| `closeVote` | any phone in the session | voting, once the time is up | The server checks the time on its own clock, counts the choices, settles a second tie by chance, and sets the reveal. A second phone asking changes nothing. |
 | `continue` | a player still in, or the host | reveal or guess, once it has played | To the runoff, the guess, the next round or the result. |
-| `guess` | the spy who is out | guess | Compares with the word. |
-| `skipGuess` | host | guess | Counts as a wrong guess, for a spy who is gone. |
+| `saidIt` | the spy who is out | guess | Opens the question to the table. |
+| `judge` | a player still in, or one who is out and holds the word | guess, after `saidIt` | Stores the answer. An answer from a player without the word is accepted and ignored. The last answer that counts settles it. |
+| `closeGuess` | host | guess | Before `saidIt`, after 30 s: a wrong guess, for a spy who is gone. After it: settles with the answers that are there. |
 | `again` | host | result | Deals a new game with everyone present, waiting players included. |
 | `toLobby` | host | result | Back to the lobby with the same people. |
 | `end` | host | always | Closes the session for everyone. |
@@ -279,9 +291,13 @@ Rules tests cover each row from four seats: a member, another member, a signed-i
   runningSince)` and redraws once a second. Stopping for the vote and resuming after a cancelled vote are just
   changes to these two fields. A pause button or a limit per round would be too: a limit is one more field,
   `endsAt`, which the server checks when a phone reports that time is up.
-- **Countdown.** The reveal carries a moment four seconds in the future. Every phone counts down to that moment on
-  its corrected clock, so the room reaches zero together. A phone that gets the message late skips ahead to where
-  the others are.
+- **Time to choose.** The ballot carries the moment it closes: 20 seconds after it opens, 10 for a runoff. Both are
+  constants in the shared code and can become a host setting. Phones count down to that moment on their corrected
+  clock, and at zero each one asks the server to close the ballot. The server checks its own clock, so an eager
+  phone cannot close it early, one phone is enough to close it on time, and a pick that arrives late is refused.
+- **Countdown to the reveal.** The reveal carries a moment four seconds in the future. Every phone counts down to
+  that moment on its corrected clock, so everyone reaches zero together, in one room or apart. A phone that gets
+  the message late skips ahead to where the others are.
 - **Reveal.** The animation is a fixed sequence from that moment: votes, count, who is out, the stamp. "Continue"
   appears when it has played, so nobody can cut it short for the others.
 
@@ -332,8 +348,16 @@ The limits live in `packages/core`, next to the ones in `limits.ts` today, so th
 **Accounts (phase 6)**
 
 - "Create an account" upgrades the guest in place: the same identity gains a sign-in, so nothing is lost.
-- Sign-in methods: Google and Apple (default; §18). The App Store requires a privacy-minded sign-in next to a
-  social one (guideline 4.8), and Sign in with Apple is the usual way to meet that, so the iOS app needs it anyway.
+- Sign-in methods: Google, Apple, and email with a password (your decision). The App Store requires a
+  privacy-minded sign-in next to a social one (guideline 4.8), and Sign in with Apple is the usual way to meet
+  that, so the iOS app needs it anyway.
+- Email and a password brings three things with it: a confirmation email before the account can have friends, so
+  nobody signs up with someone else's address; "Forgot password" by email; and the wording of those emails, which
+  you set in the Firebase console. The password field is the one the admin sign-in already uses.
+- Admins sign in with email and a password in the same Firebase project, so sign-up has to stay switched on there;
+  the review of 19 November suggested switching it off. Nothing opens up: a player's account has no admin claim,
+  and the rules trust only the claim. One thing has to change. The settings sheet says "Signed in as admin" for
+  anyone who is signed in on the admin page, and it has to look at the claim instead.
 - Sign-in opens in a popup, which Firebase documents as the alternative to its redirect flow on browsers that block
   third-party storage. Should popups prove awkward on phones, the redirect flow needs the site's own domain as
   `authDomain`; the players instance can set that for itself (4.7). Google refuses to sign in inside the browsers
@@ -374,9 +398,9 @@ entered cold after a reload.
 | Invite sheet | QR code, code, Share link, Copy link. Later: Invite friends. | |
 | Roles | Your file with your name on the front, the hint under it, "3 of 5 ready" with the players ticking off. | The existing `RoleCard`, with the front text as a parameter. It closes by itself when the page goes to the background. |
 | Round | Top: round number, "Final round" when it is, the stopwatch. Middle: the current pair, large. Under it the next two, small. A row of dots for the questions. "Sam tapped Next". Bottom: Previous and Next. | "You ask Carl" and "Ana asks you" on the two phones involved. "My file" (hold) and "Order" (the whole list, who is in and out) as small buttons. |
-| Ballot | "Who is the spy?" The players still in, without you. Tap one, "Lock in vote". Then who is still deciding. | A runoff names the tie: "Vote again: Ana or Carl". |
-| Reveal | 3, 2, 1. The votes land on the suspects one by one and the counts tick up. The file with the most votes comes forward, flips, and gets its stamp: SPY in red, or NOT A SPY. Then one line on what follows. | Built with GSAP, which the card flip already uses. Reduced motion gets the same steps as plain panels. |
-| Guess | For the spy: "One guess. What is the word?" Typing shows matching words from the session's categories; picking one asks for confirmation. For the others: "Carl is guessing the word". Then the guess and its stamp. | The word list is public data today, so showing matches gives nothing away. |
+| Ballot | "Who is the spy?" with the time to choose counting down. The players still in, without you. Tap one, tap another to change, "Lock in" to be done early. Who has locked in. | At zero the player you have picked counts. A runoff names the tie: "Vote again: Ana or Carl". |
+| Reveal | 3, 2, 1. The votes land on the suspects one by one and the counts tick up. The file with the most votes comes forward, flips, and gets its stamp: SPY in red, or NOT A SPY. Then one line on what follows. | Built with GSAP, which the card flip already uses. Reduced motion gets the same steps as plain panels. A second tie shows chance picking one of the tied files. |
+| Guess | For the spy: "Say your guess out loud. You get one." and "I said it". Then, for everyone still in: "Was that the word?" with two buttons. Then the stamp: RIGHT or WRONG. | The two buttons look the same on every phone and never show the word, so they give away neither the word nor who holds it. |
 | Result | Who won, the word, who the spies were, each round's vote, the time played. "Play again" and "Back to lobby" for the host. | Later: "Add friend" next to each player. |
 | Watching | The round, ballot and reveal screens without buttons, for players who are out or waiting. | "You are out. Keep the word to yourself." |
 | Notices | Reconnecting. You were removed. The game has ended. A new version is ready, reload. | |
@@ -465,16 +489,25 @@ one-phone game).
 | Situation | What happens |
 |---|---|
 | You try to vote for yourself or for someone who is out | Not offered, and refused by the server. |
-| You lock in twice | The first counts. |
-| Someone does not vote | After 20 seconds the host gets "Close the vote". |
-| Nobody voted | Nobody is out. |
-| A tie | The reveal shows it, then the runoff starts (§3). |
+| You change your mind | Until the time is up or you lock in, your last tap counts. |
+| The time runs out before you picked anyone | No vote from you. |
+| Everyone locks in early | The rest of the time is skipped. |
+| A phone's clock is wrong | The countdown runs on the corrected clock, and the server decides when the ballot is closed. A pick that arrives after that is refused. |
+| Every phone is asleep when the time runs out | The first one to wake closes the ballot. |
+| Nobody voted | Nobody is out. In the final round that means the spy survived. |
+| A tie | The reveal shows it, then the runoff between the tied players starts, with its own 10 seconds. |
+| A second tie, or a runoff nobody voted in | Chance picks one of the tied players, and the reveal says so. |
 | Someone leaves during the vote | The vote starts over without them, with a line that says why. |
 | Your phone gets the reveal late | It joins the animation where the others are. |
 | You reload during the reveal | The same. After it has played you see its end state. |
 | The spy who must guess is gone | After 30 seconds the host gets "Skip the guess", which counts as wrong. |
-| The word was renamed or deleted by an admin during the game | The game keeps the word it was dealt. The guess is compared with that. |
-| A wrong guess while another spy is still in | Everyone sees the wrong guess. The word stays hidden. |
+| Someone answers before the spy has spoken | Not possible: the two buttons appear when the spy taps "I said it". |
+| The table does not agree on the guess | The majority of the players who hold the word decides. A split counts as wrong. |
+| A player who should answer is away | The host settles it with the answers that are there. |
+| A spy who is still in has to answer too | Their phone shows the same buttons. The answer is ignored, and nobody is shown who answered what. |
+| The players call a right guess wrong | The app does not hear the guess, so it cannot stop that. The result screen shows the word to everyone, the spy included, so it comes out. |
+| The word was renamed or deleted by an admin during the game | The game keeps the word it was dealt. |
+| A wrong guess while another spy is still in | Everyone heard it. The word stays hidden. |
 
 ### 10.6 Leaving, by phase
 
@@ -511,13 +544,25 @@ them.
 | App Check cannot verify the device | "This device could not be verified. Reload the page." |
 | Firestore or Functions are down | Multiplayer says so. The one-phone game is unaffected as long as its words are cached. |
 
+### 10.9 Playing apart
+
+| Situation | What happens |
+|---|---|
+| The group is on a video call | It works as in one room. Questions, answers and the spy's guess are heard on the call; everything else is on the phones. |
+| There is no QR code to scan | The link or the code, sent through the call's chat. |
+| The call and the game are on the same phone | The game has to stay on screen. With the call in picture-in-picture both are visible. Phase 5 tests this on purpose, and a laptop for the call next to the phone is the easy way. |
+| The sound drops during the guess | The spy says it again. The two buttons have no time limit. |
+| Nobody can see that someone walked away | The away mark after 75 seconds is the only sign, which is what the host's tools are for. |
+| The countdowns | They run on the server's clock, so everyone reaches zero together, wherever they are. |
+
 ## 11. Security, abuse, privacy and cost
 
 **Security**
 
 - The three secrecy points of §5.3, each with a test.
-- App Check on the callable, and enforced for Firestore. The review of 19 November left Firestore enforcement to
-  you; multiplayer is the reason to switch it on.
+- App Check is enforced for Firestore and for Authentication (your status of 25 November), and the callable
+  requires it in code. So every instance of the app has to start App Check before it signs in or reads: the
+  players instance of 4.7 as much as the existing one.
 - Every input is validated by the game logic: types, lengths, whose turn, which phase.
 - Names: trimmed, 2 to 16 characters, no control or invisible characters, unique in the session.
 - Randomness for spies, word and code comes from the server's cryptographic source.
@@ -534,9 +579,9 @@ them.
 
 - A guest leaves a name and the session's data, deleted when the session expires. No profile is stored. The
   counters for wrong codes keep a scrambled form of the network address for ten minutes.
-- A guest account in Firebase Authentication holds no name and no email, only an id and when it was used. Firebase
-  removes old ones by itself only with its Identity Platform upgrade, so a script deletes the guest accounts that
-  were not used for 30 days.
+- A guest account in Firebase Authentication holds no name and no email, only an id and when it was used. The
+  project runs on Firebase Authentication with Identity Platform, which App Check for Authentication requires, and
+  that can remove guest accounts older than 30 days by itself. It is one switch in the console.
 - An account adds the sign-in's email (held by Firebase Authentication), a profile and the friend list, until the
   account is deleted.
 - The privacy page that plan 01 already calls for (`/privacy`) is written in phase 5 and extended in phase 6. It is
@@ -559,6 +604,8 @@ them.
   organisation, then costs a flat 8 dollars a month up to 100,000. A phone in a session uses about four an hour:
   two app instances (4.7), each renewing its one-hour token at half time. Six phones for two hours are about 50.
   A longer token lifetime, set in the console, lowers this.
+- Authentication with Identity Platform: on Blaze the first 50,000 monthly active users are free, and guests do not
+  count once the automatic clean-up is on.
 - An instance kept warm against cold starts is billed while idle. Not planned; §16 names it as the fallback.
 
 ## 12. Quality
@@ -576,6 +623,8 @@ them.
 - **By hand, on real phones.** iPhone Safari and Android Chrome, on Wi-Fi and on mobile data: lock and unlock,
   airplane mode on and off, a link from WhatsApp, a link inside Instagram, the largest text size, VoiceOver and
   TalkBack through one game, reduced motion.
+- **Playing apart.** One whole game over a video call, once with the call on a laptop and once with the call and
+  the game on the same phone.
 - **One real evening** before it is announced: five or more people who were not part of building it.
 
 ## 13. Build, deploy and operations
@@ -616,11 +665,11 @@ Effort is my estimate in focused working days.
 | 1. Backend | The `session` function, the data model, rules, limits and identities work on the emulators | 4–5 |
 | 2. Lobby and invitations | Host, join by link, QR and code, lobby, host controls, presence | 4–5 |
 | 3. Deal and questions | Private files, ready, the question order, Next and Previous, the stopwatch | 4–6 |
-| 4. Vote to result | Ballot, countdown, reveal, elimination, the spy's guess, winning, playing again | 5–7 |
+| 4. Vote to result | Timed ballot, runoff, countdown, reveal, elimination, the spoken guess and its verdict, winning, playing again | 5–7 |
 | 5. Hardening and launch | Every row of §10, the tests of §12, the console settings, a real evening | 4–6 |
-| 6. Accounts and friends | Sign-in, friends, invitations, account deletion | 6–9 |
+| 6. Accounts and friends | Sign-in with Google, Apple and email, friends, invitations, account deletion | 7–10 |
 
-About 30 to 42 working days. Phases 0 to 5 are a complete multiplayer game without friends: 24 to 33 days.
+About 31 to 43 working days. Phases 0 to 5 are a complete multiplayer game without friends: 24 to 33 days.
 
 **Phase 0. Shared core and game logic**
 - Plan 01's phase 0: `packages/core` with the model, the limits and the pure game functions; the web barrels
@@ -635,8 +684,10 @@ About 30 to 42 working days. Phases 0 to 5 are a complete multiplayer game witho
   between the game state and the documents of §5.3; limits; the version check.
 - Rules and rules tests for §5.6; TTL settings; the emulator scripts.
 - The players instance of 4.7 with anonymous sign-in. The installed SDK keeps sign-in and App Check state per app
-  instance, so two on one page are supported by design; this phase proves it in a browser with reCAPTCHA. If it
-  does not hold, the fallback is one instance with the persistence chosen per sign-in.
+  instance, so two on one page are supported by design. App Check is enforced for Authentication, so the players
+  instance starts App Check before its first sign-in. The emulators do not check App Check; the proof is a sign-in
+  on the live site behind the flag of §13. If it does not hold, the fallback is one instance with the persistence
+  chosen per sign-in.
 - Done when: emulator tests create and join a session as two identities; a stranger reads nothing; the admin
   sign-in behaves as before.
 
@@ -653,36 +704,43 @@ About 30 to 42 working days. Phases 0 to 5 are a complete multiplayer game witho
   one player leaves.
 
 **Phase 4. Vote to result**
-- `startVote`, the ballot, `vote`, `closeVote`, `cancelVote`, the tally and the runoff.
+- `startVote`, the ballot with its time to choose, `pick`, `lockVote`, `closeVote`, `cancelVote`, the tally, the
+  runoff and the draw after a second tie.
 - The countdown and the reveal animation with its reduced-motion version.
-- The guess, the outcome rules, the result screen, `again` and `toLobby`.
+- The spoken guess: `saidIt`, `judge`, `closeGuess` and the verdict. The outcome rules, the result screen, `again`
+  and `toLobby`.
 - Done when: whole games end correctly with 3 players, with 4 players and 2 spies, and with 10; a tie, a runoff, a
-  right and a wrong guess have each been played on real phones.
+  draw, a ballot that ran out of time, a guess judged right and one judged wrong have each been played on real
+  phones.
 
 **Phase 5. Hardening and launch**
 - The remaining rows of §10, host take-over, the offline banner, the update notice, the action limits.
-- Playwright, the by-hand passes, analytics events, the privacy page, "How to play", README, Open Graph tags, the
-  script that removes old guest accounts.
-- With you: App Check enforcement for Firestore and for the function. The Blaze plan and the budget alert are
-  needed earlier, for the first deploy of the function in phase 2.
+- Playwright, the by-hand passes, analytics events, the privacy page, "How to play", README, Open Graph tags.
+- With you: the automatic clean-up of guest accounts in the console. The Blaze plan and the budget alert are needed
+  earlier, for the first deploy of the function in phase 2.
 - Removing the flag of §13.
 - Done when: the lists of §10 and §12 are ticked and one real evening ran without a blocker.
 
 **Phase 6. Accounts and friends**
-- Sign-in by upgrading the guest, the profile, friend code, link and QR, requests, the list, blocking, invitations
-  in the app, account deletion, the `social` function with its rules and tests, the privacy page update.
-- Done when: two accounts become friends by code, by link and from a result screen; an invitation arrives in the
-  open app; deleting an account leaves nothing behind.
+- Sign-in by upgrading the guest, with Google, Apple, and email with a password (confirmation email, forgotten
+  password). The admin label in the settings sheet (§6).
+- The profile, friend code, link and QR, requests, the list, blocking, invitations in the app, account deletion,
+  the `social` function with its rules and tests, the privacy page update.
+- Done when: an account can be made in each of the three ways; two accounts become friends by code, by link and
+  from a result screen; an invitation arrives in the open app; deleting an account leaves nothing behind.
 
 ## 15. Who does what
 
 **Only you can do**
 - Move the Firebase project to the Blaze plan and set a budget alert, before the first deploy of the function
   (phase 2). Phases 0 and 1 run on the emulators and need neither.
-- Switch on anonymous sign-in, and later Google and Apple, in the Firebase console.
-- Enforce App Check for Firestore and for the function, once the metrics show verified requests.
+- Switch on anonymous sign-in, and later Google and Apple, in the Firebase console. Email sign-up stays on, and its
+  two emails (confirm the address, reset the password) need your wording.
+- An Apple developer account for Sign in with Apple. Plan 01 needs the same one.
+- Switch on the automatic clean-up of anonymous accounts in the Authentication settings. App Check is already
+  enforced for Firestore and Authentication; the function requires it in code.
 - Decide what the CI's service account may deploy, or keep backend deploys by hand.
-- Answer the questions in §18.
+- Settle what is still open in §18.
 - Supply the wording and contact details for the privacy page.
 - Bring the people for the test evening, and play on your own phones.
 
@@ -696,9 +754,11 @@ About 30 to 42 working days. Phases 0 to 5 are a complete multiplayer game witho
 | Risk | What limits it |
 |---|---|
 | A rule of §3 turns out wrong at the table | Each is one function with tests; the real evening in phase 5 is there to find these |
+| The table calls a right guess wrong | The majority of the players who hold the word decides, and the result screen shows the word to everyone. The spy entering the guess on the phone is the alternative, one setting away |
+| The time to choose feels too short or too long | Two numbers in the shared code. The real evening decides, and a host setting is a small step |
 | Cold starts make the first tap feel broken | `ping` on the host and join screens; loading states; one function for all actions. A permanently warm instance is the paid fallback |
 | The heartbeat is too slow or too costly | The interval is one number. Realtime Database presence is the prepared alternative (4.10) |
-| App Check with two app instances on one page | Proven in phase 1, with a fallback named there |
+| App Check with two app instances on one page, now that Authentication enforces it too | Proven in phase 1 with a sign-in on the live site, with a fallback named there |
 | Costs after the free allowances | Budget alert, instance cap, limits per identity and address. A normal evening is a few thousand reads |
 | Safari deleting a guest's identity between evenings | Harmless for guests; the reason friends need an account |
 | More than 100 new players behind one network address within an hour (a school, a festival): Firebase's limit on new accounts | Not a living-room problem. The join screen says to try again later; an event of that size gets its own plan |
@@ -729,44 +789,52 @@ About 30 to 42 working days. Phases 0 to 5 are a complete multiplayer game witho
   name is entered, reporting and blocking inside the app, and account deletion both in the app and on a web page.
   Player names fit Google's definition of user content literally; Apple names no threshold, so plan for all of it.
 
-**Order.** I would build multiplayer on the web first and then the apps with multiplayer in them. Phase 0 is shared
-by both plans. Building the apps first means building the game screens twice, and going through store review once
-without accounts and names and again with them.
+**Order (decided 25 November).** Multiplayer on the web first. The apps are a later to-do and get multiplayer from
+their first version. Phase 0 is shared by both plans.
 
 **Later ideas, none of them planned**
 
-- A time limit per round and per vote (prepared in §5.7). A pause button.
+- A time limit per round (prepared in §5.7), the time to choose as a host setting, a pause button.
+- The spy entering the guess on the phone, as a setting for groups that want the app to decide.
 - A score per session: who won how often tonight.
 - The round board for the one-phone game: after dealing, the phone on the table shows the order and the stopwatch.
 - A big-screen view for a TV or laptop.
 - Recovering a seat after losing a guest identity.
 - Your own words for one session.
 
-## 18. Open questions for you
+## 18. Decisions of 25 November
 
-Each has my default. Where you say nothing, the default goes in.
+| Question | Your answer | Where it lands |
+|---|---|---|
+| The Blaze plan | Yes | 4.1, §11, §15 |
+| Order | Multiplayer on the web first; the apps are a later to-do | §17 |
+| Friends | Last phase, with an account. Sign-in with Google, Apple, and email with a password | 4.18, §6, §9 |
+| Ties | A runoff between the tied players, then chance | §3, §10.5 |
+| More than one spy | As proposed: spies do not know each other, one right guess wins for all, the players need every spy out | §3 |
+| The spy's guess | Said out loud, and only when voted out: it is the way to win after being caught | §3, §8 |
+| The vote | A countdown as time to choose, and a countdown before the reveal | §3, §5.7, §8 |
+| Playing apart | Yes | 4.19, §10.9, §12 |
+| Whether a spoken guess was right | The table confirms | §3, §8, §10.5 |
+| Console status | The rules in the repo are the live ones. App Check is enforced for Firestore and for Authentication | §11, §14, §15 |
 
-1. **Blaze.** Multiplayer needs Cloud Functions, and that needs the pay-as-you-go plan. Is that acceptable? Without
-   it, the only way is the host's phone as dealer (4.1), which I would not build.
-2. **Order.** Multiplayer on the web before the native apps (§17)?
-3. **Friends.** Last phase, and only with an account? And which sign-in: Google and Apple (default), or email link
-   as well?
-4. **Ties.** One runoff and then nobody out (default), no runoff, or a random tied player?
-5. **More than one spy.** The defaults in §3: spies do not know each other, one right guess wins it for all spies,
-   the players need every spy out. Is that how you play it?
-6. **The spy's guess.** Picked from the session's words by typing (default), typed freely, or said out loud?
-7. **The vote.** Secret, locked in, then a countdown to the reveal, and the reveal shows who voted for whom. Or did
-   you mean the countdown as time to choose?
-8. **Who moves the game.** Anyone still in for Next, Previous, "Go to the vote" and "Continue"; the host for the
-   rest (default). Or more for the host?
-9. **Leaving.** A game that drops under three players, or loses its last spy to a closed tab, ends without a
-   winner (default). Or should the other side win?
-10. **Playing apart.** Should a group on a video call be able to play? Nothing here prevents it, and the typed
-    guess supports it, but I would test it on purpose if it matters to you.
-11. **The code.** Six digits (default), or letters?
-12. **The one-phone game.** It stays as it is (default). Should "Together" be the first choice on the home screen?
-13. **Console items from the review.** Are the rules in the repo the live ones, is App Check enforced for
-    Firestore, and is email sign-up off? Multiplayer builds on all three.
+Two answers differ from what I proposed: a second tie is settled by chance instead of putting nobody out, and the
+guess is spoken instead of picked on the phone. A third adds something: the ballot gets a time limit. All three are
+worked into the sections above.
+
+**What your answers left for me to fill in**
+
+1. **The time to choose.** 20 seconds, and 10 in a runoff.
+2. **The runoff.** Everyone still in votes in it, the tied players too.
+3. **No votes at all.** Nobody is out.
+
+**Still open, each with my default**
+
+1. **Who moves the game.** Anyone still in for Next, Previous, "Go to the vote" and "Continue"; the host for the
+   rest. Or more for the host?
+2. **Leaving.** A game that drops under three players, or loses its last spy to a closed tab, ends without a
+   winner. Or should the other side win?
+3. **The code.** Six digits, or letters?
+4. **The one-phone game.** It stays as it is. Should "Together" be the first choice on the home screen?
 
 ## 19. References
 
@@ -779,8 +847,11 @@ Checked on 25 November 2026.
 - Firebase JS SDK 13.4 keeps sign-in and App Check state per app instance (read in `node_modules`).
 - Firebase CLI 15.37: Node 22 and 24 are current function runtimes; `firestore.indexes.json` accepts a `ttl` flag
   per field.
-- The rules of §3, played as 480,000 random games with 3 to 10 players and every allowed number of spies: every
-  game ended, and every round's order had each player asking once and answering once (twice with three players).
+- The question order of §3, over random games with 3 to 10 players: in every round each player asks once and
+  answers once (twice with three players), also after someone leaves.
+- The rules of §3 as decided (timed ballot, runoff, chance, a spoken guess judged by the table), played as 960,000
+  random games with every allowed number of spies, once with few and once with many empty ballots: every game
+  ended in a win or was called off for the two reasons of §10.6.
 
 **Firebase**
 
@@ -795,6 +866,10 @@ Checked on 25 November 2026.
   [rules conditions](https://firebase.google.com/docs/firestore/security/rules-conditions)
 - 100 new accounts an hour per address, guests included:
   [Authentication limits](https://firebase.google.com/docs/auth/limits)
+- App Check for Authentication needs Identity Platform, which also brings the 30-day clean-up of guest accounts:
+  [Authentication FAQ](https://firebase.google.com/docs/auth/faq-and-troubleshooting),
+  [enforcing App Check](https://firebase.google.com/docs/app-check/enable-enforcement),
+  [anonymous sign-in](https://firebase.google.com/docs/auth/web/anonymous-auth)
 - Presence needs Realtime Database:
   [presence in Firestore](https://firebase.google.com/docs/firestore/solutions/presence)
 - Shared code outside `functions/`:
